@@ -1,0 +1,34 @@
+# Spooky action at a distance
+
+`OUT` is not the only register that can control the pins of port `P0`. The `OUTSET` register also lets
+you change the value of the pins, as can `OUTCLR`. However, `OUTSET` and `OUTCLR` don't let you
+retrieve the current output status of port `P0`.
+
+`OUTSET` is documented in the [Product Specification]:
+
+> Subsection 6.8.2.2. OUTSET - Page 145
+
+Let's look at below program. The key to this program is `fn print_out`. This function prints the
+current value in `OUT` to the `RTT` console (`examples/spooky.rs`):
+
+``` rust
+{{#include examples/spooky.rs}}
+```
+
+You'll see this if you run this program:
+
+``` console
+$ cargo embed
+# cargo-embed's console
+(..)
+15:13:24.055: P0.OUT = 0x000000
+15:13:24.055: P0.OUT = 0x200000
+15:13:24.055: P0.OUT = 0x280000
+15:13:24.055: P0.OUT = 0x080000
+15:13:24.055: P0.OUT = 0x000000
+```
+
+Side effects! Although we are reading the same address multiple times without actually modifying it,
+we still see its value change every time `OUTSET` or `OUTCLR` is written to.
+
+[Product Specification]: https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf
