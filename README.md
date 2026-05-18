@@ -1,78 +1,57 @@
 # `micro::bit v2 Embedded Discovery Book`
 
-The published text of this book is at
-<https://docs.rust-embedded.org/discovery-mb2> for your
-perusing pleasure.
+El texto publibado de este libro se encuentra en
+<https://docs.rust-embedded.org/discovery-mb2> para que disfrutes leyéndolo.
 
 -----
 
-Discover the world of microcontrollers through
-[Rust](https://www.rust-lang.org/)! This book provides an
-introduction to microcontrollers and how to use Rust with
-them.
+Descubre el mundo de los microcontroladores a través de
+[Rust](https://www.rust-lang.org/)! Este libro proporciona una introducción a los microcontroladores y cómo usar Rust con ellos.
 
 ## Book Versions
 
-This book is the current and best-maintained version of the
-Rust Embedded Discovery Book. It is intended to be used with
-the [BBC Micro:Bit v2](https://microbit.org/new-microbit/)
-(MB2) development circuit board.
+Este libro es la versión actual y mejor mantenida del
+Rust Embedded Discovery Book. Está destinado a ser utilizado con
+la placa [BBC Micro:Bit v2](https://microbit.org/new-microbit/) (MB2).
 
-(There are currently two *deprecated* older versions of this
-book. [One
+(Actualmente, hay dos versiones *desaconsejadas* más antiguas de libro. [La primera
 version](https://docs.rust-embedded.org/discovery/f3discovery)
-is based on the [STM F3
-Discovery](https://www.st.com/en/evaluation-tools/stm32f3discovery.html)
-development board.  The [second
-version](https://docs.rust-embedded.org/discovery/microbit)
-is slightly newer and is based on the [BBC Micro:Bit
-v1](https://microbit.org/get-started/features/overview/#original-micro:bit)
-and v2 circuit boards.  Unless you are determined to work
-with older and less-well-supported hardware, and
-corresponding older and less-well-supported books, we
-recommend getting an MB2 and using this book instead. The
-MB2 is available for about US$20 from many online
-suppliers.)
+está basada en la placa [STM F3 Discovery](https://www.st.com/en/evaluation-tools/stm32f3discovery.html).  
+La [segunda](https://docs.rust-embedded.org/discovery/microbit) es un poco más nueva y está basada en la placa [BBC Micro:Bit
+versión 1](https://microbit.org/get-started/features/overview/#original-micro:bit) y la versión 2 de la misma.
+A menos que sea necesario trabajar con hardware más antiguo y menos compatible, y libros más antiguos, recomendamos obtener una placa MB2 y usar este libro en su lugar. La placa MB2 está disponible por alrededor de US$20 de muchos proveedores en línea.)
 
-## What Do You Want To Do?
+## ¿Qué quieres hacer?
 
-Here's some ways to get started:
+Aquí tienes algunas ideas para empezar:
 
-- Work through [this
-  book](https://docs.rust-embedded.org/discovery-mb2) with
-  an MB2
-- Start working on the examples from this repository
-- You've got questions?
-    - Have a look at our [discussions section on
-      GitHub](https://github.com/rust-embedded/discovery-mb2/discussions)
-    - Maybe it has already been answered
-    - If not, start a new discussion
-- You've found an issue?
-    - Have a look at our [issues on
-      GitHub](https://github.com/rust-embedded/discovery-mb2/issues)
-    - Maybe there is already a workaround
-    - If not, please open a new one - or even better - a [pull
-      request](https://github.com/rust-embedded/discovery-mb2/pulls) for solving
-      it
-- You want to talk to a human being directly?
-    - The general Rust [Embedded Matrix
-      chat](https://matrix.to/#/#rust-embedded:matrix.org)
-      is good for questions beyond the basics. Please be
-      respectful of the bandwidth of folks there, though:
-      it's a busy place
+- Repasa [este libro](https://docs.rust-embedded.org/discovery-mb2) sobre la placa MB2.
+- Trabaja con los ejemplos de este repositorio.
+- Si tienes algunas preguntas:
+    - Echa un vistazo al [foro de discusión en  GitHub](https://github.com/rust-embedded/discovery-mb2/discussions).
+    - Probablemente ya esté constestada.
+    - Si no, comienza una nueva discusión.
+- Si has detectado un probelma?
+    - Echa un vistazo a [problemas en GitHub](https://github.com/rust-embedded/discovery-mb2/issues)
+    - Probablemente, ya haya una solución.
+    - Si no, abre un nuevo informe - o incluso mejor - haz [pull request](https://github.com/rust-embedded/discovery-mb2/pulls) para resolverlo.
+- Si prefieres hablar con una persona
+    - Existe el char general en  [Embedded Matrix chat](https://matrix.to/#/#rust-embedded:matrix.org)
+      es ideal para preguntas que van más allá de lo básico. Eso sí,
+      por favor, respeta el tiempo de los demás: es un sitio muy concurrido
 
-Have fun and enjoy!
+¿Diviértete y disfruta!
 
-This project is developed and maintained by the [Resources team][team].
+Este proyecto está desarrollado y mantenido por [Resources team][team].
 
-## Licenses and Attribution
+## Licencias y atribución
+**Este párrafo está intencionadamente en Inglés para que sea claro para todos los lectores.**
 
 The documentation is licensed under "Creative Commons
 CC-BY-4.0" and the source code is licensed under licensee's
 choice of the "Apache License" or the "MIT License".
 
-See the book's [Licenses and
-Attribution](mdbook/src/appendix/4-licenses-and-attribution)
+See the book's [Licenses and Attribution](mdbook/src/appendix/4-licenses-and-attribution)
 section for license details.
 
 ### Contribution
@@ -94,12 +73,17 @@ uphold that code of conduct.
 
 ## Translations
 
-We are extremely grateful to those who have provided
-translations of this book: more are welcome.
+Estamos muy agradecidos a quienes han proporcionado
+las traducciones de este libro; se aceptan más colaboraciones.
 
-Note that these translations are of the older versions
-referenced above, and may not be monitored for accuracy or
-currency.
+
+Traducción de este libro a otros idiomas:
+* [Castellano](https://github.com/csanjuanp-ies/discovery-mb2/)
+  ([repository](https://github.com/csanjuanp-ies/discovery-mb2/))
+
+
+Tenga en cuenta que las siguientes traducciones corresponden a las versiones anteriores
+mencionadas anteriormente, y es posible que no se compruebe su exactitud ni su actualidad.
 
 * [Japanese](https://tomoyuki-nakabayashi.github.io/discovery/)
   ([repository](https://github.com/tomoyuki-nakabayashi/discovery))
@@ -107,3 +91,4 @@ currency.
   ([repository](https://github.com/jzow/discovery))
 * [Portuguese (Brazilian)](https://allyssan.github.io/discovery/)
   ([repository](https://github.com/allyssan/discovery))
+
