@@ -3,3 +3,10 @@ Cargo.lock
 target/
 .cargo/
 .vscode/
+/.idea/.gitignore
+/.idea/discovery-mb2.iml
+/.idea/encodings.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
