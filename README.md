@@ -8,15 +8,14 @@ El texto publibado de este libro se encuentra en
 Descubre el mundo de los microcontroladores a través de
 [Rust](https://www.rust-lang.org/)! Este libro proporciona una introducción a los microcontroladores y cómo usar Rust con ellos.
 
-## Book Versions
+## Versiones del libro
 
 Este libro es la versión actual y mejor mantenida del
 Rust Embedded Discovery Book. Está destinado a ser utilizado con
 la placa [BBC Micro:Bit v2](https://microbit.org/new-microbit/) (MB2).
 
 (Actualmente, hay dos versiones *desaconsejadas* más antiguas de libro. [La primera
-version](https://docs.rust-embedded.org/discovery/f3discovery)
-está basada en la placa [STM F3 Discovery](https://www.st.com/en/evaluation-tools/stm32f3discovery.html).  
+version](https://docs.rust-embedded.org/discovery/f3discovery) está basada en la placa [STM F3 Discovery](https://www.st.com/en/evaluation-tools/stm32f3discovery.html).  
 La [segunda](https://docs.rust-embedded.org/discovery/microbit) es un poco más nueva y está basada en la placa [BBC Micro:Bit
 versión 1](https://microbit.org/get-started/features/overview/#original-micro:bit) y la versión 2 de la misma.
 A menos que sea necesario trabajar con hardware más antiguo y menos compatible, y libros más antiguos, recomendamos obtener una placa MB2 y usar este libro en su lugar. La placa MB2 está disponible por alrededor de US$20 de muchos proveedores en línea.)
@@ -40,7 +39,7 @@ Aquí tienes algunas ideas para empezar:
       es ideal para preguntas que van más allá de lo básico. Eso sí,
       por favor, respeta el tiempo de los demás: es un sitio muy concurrido
 
-¿Diviértete y disfruta!
+¡Diviértete y disfruta!
 
 Este proyecto está desarrollado y mantenido por [Resources team][team].
 
@@ -71,7 +70,7 @@ uphold that code of conduct.
 [CoC]: CODE_OF_CONDUCT.md
 [team]: https://github.com/rust-embedded/wg#the-resources-team
 
-## Translations
+## Traducciones
 
 Estamos muy agradecidos a quienes han proporcionado
 las traducciones de este libro; se aceptan más colaboraciones.
