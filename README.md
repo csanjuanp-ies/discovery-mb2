@@ -14,10 +14,10 @@ Este libro es la versión actual y mejor mantenida del
 Rust Embedded Discovery Book. Está destinado a ser utilizado con
 la placa [BBC Micro:Bit v2](https://microbit.org/new-microbit/) (MB2).
 
-(Actualmente, hay dos versiones *desaconsejadas* más antiguas de libro. [La primera
+(Actualmente, hay dos versiones *desaconsejadas* más antiguas del libro. [La primera
 version](https://docs.rust-embedded.org/discovery/f3discovery) está basada en la placa [STM F3 Discovery](https://www.st.com/en/evaluation-tools/stm32f3discovery.html).  
-La [segunda](https://docs.rust-embedded.org/discovery/microbit) es un poco más nueva y está basada en la placa [BBC Micro:Bit
-versión 1](https://microbit.org/get-started/features/overview/#original-micro:bit) y la versión 2 de la misma.
+La [segunda](https://docs.rust-embedded.org/discovery/microbit) es un poco más nueva y se utiliza la placa [BBC Micro:Bit
+versión 1 y 2](https://microbit.org/get-started/features/overview/#original-micro:bit).
 A menos que sea necesario trabajar con hardware más antiguo y menos compatible, y libros más antiguos, recomendamos obtener una placa MB2 y usar este libro en su lugar. La placa MB2 está disponible por alrededor de US$20 de muchos proveedores en línea.)
 
 ## ¿Qué quieres hacer?
@@ -27,17 +27,17 @@ Aquí tienes algunas ideas para empezar:
 - Repasa [este libro](https://docs.rust-embedded.org/discovery-mb2) sobre la placa MB2.
 - Trabaja con los ejemplos de este repositorio.
 - Si tienes algunas preguntas:
-    - Echa un vistazo al [foro de discusión en  GitHub](https://github.com/rust-embedded/discovery-mb2/discussions).
+    - Echa un vistazo al [foro de discusión en GitHub](https://github.com/rust-embedded/discovery-mb2/discussions).
     - Probablemente ya esté constestada.
     - Si no, comienza una nueva discusión.
-- Si has detectado un probelma?
+- Si has detectado un probelma
     - Echa un vistazo a [problemas en GitHub](https://github.com/rust-embedded/discovery-mb2/issues)
     - Probablemente, ya haya una solución.
-    - Si no, abre un nuevo informe - o incluso mejor - haz [pull request](https://github.com/rust-embedded/discovery-mb2/pulls) para resolverlo.
+    - Si no, abre un nuevo informe - o incluso mejor - haz un [pull request](https://github.com/rust-embedded/discovery-mb2/pulls) para resolverlo.
 - Si prefieres hablar con una persona
-    - Existe el char general en  [Embedded Matrix chat](https://matrix.to/#/#rust-embedded:matrix.org)
+    - Existe el char general en [Embedded Matrix chat](https://matrix.to/#/#rust-embedded:matrix.org),
       es ideal para preguntas que van más allá de lo básico. Eso sí,
-      por favor, respeta el tiempo de los demás: es un sitio muy concurrido
+      por favor, respeta el tiempo de los demás: es un sitio muy concurrido.
 
 ¡Diviértete y disfruta!
 
@@ -81,7 +81,7 @@ Traducción de este libro a otros idiomas:
   ([repository](https://github.com/csanjuanp-ies/discovery-mb2/))
 
 
-Tenga en cuenta que las siguientes traducciones corresponden a las versiones anteriores
+Ten en cuenta que las siguientes traducciones corresponden a las versiones 
 mencionadas anteriormente, y es posible que no se compruebe su exactitud ni su actualidad.
 
 * [Japanese](https://tomoyuki-nakabayashi.github.io/discovery/)
