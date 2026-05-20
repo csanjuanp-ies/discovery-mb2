@@ -1,4 +1,4 @@
-[Introduction](README.md)
+[Introducción](README.md)
 - [Background](01-background/README.md)
 - [Hardware/knowledge requirements](02-requirements/README.md)
 - [Setting up a development environment](03-setup/README.md)
@@ -78,7 +78,7 @@
   - [Controls](16-snake-game/controls.md)
   - [Non-blocking display](16-snake-game/nonblocking-display.md)
   - [Final assembly](16-snake-game/final-assembly.md)
-- [What's left for you to explore](explore.md)
+- [¿Qué queda por descubrir?](explore.md)
 
 ---
 [Download epub version of the book](DOWNLOAD.md)

@@ -2,7 +2,7 @@
 title = "Rust Embedded MB2 Discovery Book"
 description = "Discover the world of microcontrollers through Rust with the BBC micro:bit v2"
 authors = ["Rust Embedded Resources Team"]
-language = "en"
+language = "es"
 
 [output.html]
 git-repository-url = "https://github.com/rust-embedded/discovery-mb2/"

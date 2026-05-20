@@ -1,67 +1,55 @@
 # `micro::bit v2 Embedded Discovery Book`
 
-> Discover the world of microcontrollers through [Rust]!
+> ¡Descubriendo el mundo de los microcontraldores a través de [Rust]!
 
 [Rust]: https://www.rust-lang.org/
 
-This book is an introductory course on microcontroller-based embedded systems that uses Rust as the
-teaching language rather than the usual C/C++.
+Este libro es un curso introductorio sobre sistemas embebidos basados en microcontroladores que utiliza Rust como lenguaje de enseñanza en lugar del habitual C/C++.
 
-## Scope
+## Ámbito
+Se desarrollarán los siguientes temas:
+- Cómo escribir, compilar, flashear y depurar un programa "embebido" (en Rust).
 
-The following topics will be covered (eventually, I hope):
+- Fundamentos ("periféricos") básicos de microcontroladores: Entrada y salida digital, temporizadores, modulación por ancho de pulso (PWM), convertidor analógico - digital (ADC), protocolos de comunicación comunes como: Serie, I2C y SPI, etc.
 
-- How to write, build, flash and debug an "embedded" (Rust) program.
+- Conceptos de multitarea: multitarea cooperativa vs. preemptiva, interrupciones, planificadores, etc.
 
-- Functionality ("peripherals") commonly found in microcontrollers: Digital input and output, Pulse
-  Width Modulation (PWM), Analog to Digital Converters (ADC), common communication protocols like
-  Serial, I2C and SPI, etc.
+- Conceptos de sistemas de contro: sensores, calibración, filtros digitales, actuadores, control de bucle abierto, control de bucle cerrado, etc.
 
-- Multitasking concepts: cooperative vs preemptive multitasking, interrupts, schedulers, etc.
 
-- Control systems concepts: sensors, calibration, digital filters, actuators, open loop control,
-  closed loop control, etc.
+## Enfoque
 
-## Approach
+- Para principiantes. No se requiere experiencia previa con microcontroladores o sistemas embebidos.
 
-- Beginner friendly. No previous experience with microcontrollers or embedded systems is required.
+- Práctico. Se proporcionan multitud de ejercicios para poner en práctica la teoría. *Tú* serás quien haga la mayor parte del trabajo.
 
-- Hands on. Plenty of exercises to put the theory into practice. *You* will be doing most of the
-  work here.
+- Centrado en las herramientas. Haremos un amplio uso de herramientas para facilitar el desarrollo. La "depuración real", con GDB, y el registro se introducirán desde el comienzo. No abordaremos el uso de LED como mecanismo de depuración en este texto.
 
-- Tool centered. We'll make plenty use of tooling to ease development. "Real" debugging, with GDB,
-  and logging will be introduced early on. Using LEDs as a debugging mechanism has no place here.
+## No son objetivos
 
-## Non-goals
+Está fuera del ámbtio de este libro:
 
-What's out of scope for this book:
+- Enseñanza del lenguaje Rust. Ya hay mucho material sobre ese tema. Nos centraremos en microcontroladores y sistemas embebidos.
 
-- Teaching Rust. There's plenty of material on that topic already. We'll focus on microcontrollers
-  and embedded systems.
+- Ser un texto exhaustivo sobre teoría de circuitos eléctricos o electrónica. Solo cubriremos lo mínimo necesario para entender cómo funcionan algunos dispositivos.
 
-- Being a comprehensive text about electric circuit theory or electronics. We'll just cover the
-  minimum required to understand how some devices work.
+- Desarrollar detalles tales como scripts de linter y el proceso de carga. Por ejemplo, usaremos herramientas existentes para ayudar a cargar el código en la placa, pero no entraremos en detalle sobre cómo funcionan esas herramientas.
 
-- Covering details such as linker scripts and the boot process. For example, we'll use existing tools
-  to help get your code onto your board, but not go into detail about how those tools work.
+Tampoco se pretende portar este material a otras placas de desarrollo; este libro hará uso exclusivo de la placa de desarrollo micro:bit v2 (MB2).
 
-Also I don't intend to port this material to other development boards; this book will make exclusive
-use of the micro:bit development board.
+## Informando de problemas
 
-## Reporting problems
+La fuente en **ingés** de este libro está en [este repositorio]. Si hay algún tipo de errata o problema se puede comunicar mediante el [registro de incidencias].
 
-The source of this book is in [this repository]. If you encounter any typo or problem with the code
-report it on the [issue tracker].
+[este repositorio]: https://github.com/rust-embedded/discovery-mb2
+[registro de incidencias]: https://github.com/rust-embedded/discovery-mb2/issues
 
-[this repository]: https://github.com/rust-embedded/discovery-mb2
-[issue tracker]: https://github.com/rust-embedded/discovery-mb2/issues
+## Otros recursos para Rust embebido
 
-## Other embedded Rust resources
+Este libro es solo uno de varios recursos sobre Rust embebido, proporcionados por el [Grupo de Trabajo de Sistemas Embebidos]. La selección completa se puede encontrar en [La Estantería de Libros de Rust Embebido]. Esto incluye la lista de [Preguntas Frecuentes].
 
-This Discovery book is just one of several embedded Rust resources provided by the
-[Embedded Working Group]. The full selection can be found at [The Embedded Rust Bookshelf]. This
-includes the list of [Frequently Asked Questions].
 
-[Embedded Working Group]: https://github.com/rust-embedded/wg
-[The Embedded Rust Bookshelf]: https://docs.rust-embedded.org
-[Frequently Asked Questions]: https://docs.rust-embedded.org/faq.html
+
+[Grupo de Trabajo de Sistemas Embebidos]: https://github.com/rust-embedded/wg
+[La Estantería de Libros de Rust Embebido]: https://docs.rust-embedded.org
+[Preguntas Frecuentes]: https://docs.rust-embedded.org/faq.html

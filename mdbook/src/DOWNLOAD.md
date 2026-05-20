@@ -1,4 +1,4 @@
-# 📥 download ePUB version of the book
+# 📥 descarga de la versión ePUB del libro
 
 
-You can download the EPUB version of this book here:  [Download](/discovery-mb2/Rust%20Embedded%20MB2%20Discovery%20Book.epub)
+Se puede descargar la versión ePUB en inglés desde: [Descargar](/discovery-mb2/Rust%20Embedded%20MB2%20Discovery%20Book.epub)

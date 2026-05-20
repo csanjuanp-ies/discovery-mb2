@@ -1,223 +1,141 @@
-# What's left for you to explore
+# ¿Qué queda por descubrir?
 
-We have barely scratched the surface! There's lots of stuff left for you to
-explore.
+¡Apenas hemos arañado la superficie! ¡Quedan muchas cosas por descubrir!
 
-> **NOTE:** If you're reading this, and you'd like to help add examples or
-> exercises to the Discovery book for any of the items below, or any other
-> relevant embedded topics, we'd love to have your help!
->
-> Please [open an issue] if you would like to help, but need assistance or
-> mentoring for how to contribute this to the book, or open a Pull Request
-> adding the information!
+> **NOTA:** si estás leyendo esto, y te gustaría ayudar a agregar ejemplos o ejercicios
+> para el libro en cualquiera de los temas referidos a continuación, o cualquier otro tema 
+> relevante de aplicaciones embebidas, ¡nos encantaría tener tu ayuda!
+> Por favor, [abre un tema] si deseas colaborar, pero necesitas ayuda u
+> orientación sobre cómo contribuir al libro o cómo abrir una solicitud de 
+> incorporación de cambios para añadir la información.
 
-[open an issue]: https://github.com/rust-embedded/discovery-mb2/issues/new
+[abre un tema]: https://github.com/rust-embedded/discovery-mb2/issues/new
 
-## More of the MB2
+## Más allá de la MB2
+Hemos cubierto mucho del hardware de la placa MB2 en este curso, pero quedan muchos otros elementos por explorar.
 
-We touched most of the hardware on the MB2 in the course of this book. That said, there's still a
-few MB2 topics left to explore.
+## Acceso directo a memoria (DMA).
+Algunos periféricos tienen DMA, una especie de `memcpy` *asíncrono* que te permite mover datos hacia o desde la memoria sin que la CPU esté involucrada.
 
-## Direct Memory Access (DMA).
+Si estás trabajando con un micro:bit v2, en realidad ya has utilizado DMA: el HAL lo hace por ti con los periféricos UARTE y TWIM. Un DMA se puede usar para realizar transferencias masivas de datos: ya sea de RAM a RAM, de un periférico como un UARTE a RAM, o de RAM a un periférico. Puedes programar una transferencia DMA, por ejemplo "leer 256 bytes de UARTE en este búfer" y dejarla ejecutándose en segundo plano. Posteriormente, habra que verificar el registro de estado para ver si la transferencia se ha completado o pedir que se reciba una interrupción cuando la transferencia se complete. Por lo tanto, puedes programar la comunicacióm vía DMA y hacer otra tarea mientras la transferencia está en curso.
 
-Some peripherals have DMA, a kind of *asynchronous* `memcpy` that allows the peripheral to move data
-into or out of memory without the CPU being involved.
+Los detalles del DMA a bajo nivel pueden ser un poco complicados. Esperamos agregar un capítulo que cubra este tema en un futuro cercano.
 
-If you are working with a micro:bit v2 you have actually already used DMA: the HAL does this for you
-with the UARTE and TWIM peripherals. A DMA peripheral can be used to perform bulk transfers of data:
-either from RAM to RAM, from a peripheral like a UARTE, to RAM, or from RAM to a peripheral. You can
-schedule a DMA transfer — for example "read 256 bytes from UARTE into this buffer" — and leave it
-running in the background. You can check some register later to see if the transfer has completed,
-or you can ask to receive an interrupt when the transfer completes. Thus, you can schedule the DMA
-transfer and do other work while the transfer is ongoing.
+Hay implementadas algunas abstraciones para trabajar con el cobntrolador de modulación en amplitud (PWM) en el crate `embedded-hal`, [módulo `pwm`], y existen implementaciones de estos traits en `nrf52833-hal`.
 
-The details of low-level DMA can be a bit tricky. We hope to add a chapter covering this topic in
-the near future.
+[módulo `pwm`]: https://docs.rs/embedded-hal/latest/embedded_hal/pwm/index.html
 
-There are some abstraction for working with PWM in the `embedded-hal` [`pwm` module] and you will
-find implementations of these traits in `nrf52833-hal`.
 
-[`pwm` module]: https://docs.rs/embedded-hal/latest/embedded_hal/pwm/index.html
+## Entradas y salidas digitales
+Hemos usado los pines del microcontrolador como salidas digitales, para controlar los leds. Cuando construimos el juego de la serpiente, también vimos brevemente cómo estos pines pueden configurarse como entradas digitales. Como entradas digitales, estos pines pueden leer el estado binario de interruptores (encendido/apagado) o botones (presionado/no presionado).
 
-## Digital inputs and outputs
+La programación de las entradas y salidas se abstrae dentro del módulo `embedded-hal` en el [módulo `digital`] y en el [crate `nrf52833-hal`]. Ambos tienen implementación para las entradas - salidas digitales.
 
-We have used the microcontroller pins as digital outputs, to drive LEDs. When building our snake
-game, we also caught a glimpse of how these pins can be configured as digital inputs. As digital
-inputs, these pins can read the binary state of switches (on/off) or buttons (pressed/not pressed).
+(*spoiler*: leer el estado binario de interruptores / botones no es tan sencillo como parece 
+;-))
 
-Digital inputs and outputs are abstracted within the `embedded-hal` [`digital` module] and
-[`nrf52833-hal`] does have an implementation for them.
+[módulo `digital`]: https://docs.rs/embedded-hal/latest/embedded_hal/digital/index.html
+[crate `nrf52833-hal`]: https://docs.rs/nrf52833-hal/latest/nrf52833_hal/
 
-(*spoilers* reading the binary state of switches / buttons is not as straightforward as it sounds
-;-) )
+## Conversión analógica - digital (ADC)
+Se han creado multitud de sensores difgitales, que se pueden leer usando protocolos como I2C o SPI. Pero también existen sensores analógicos. Estos sensores simplemente envían una lectura a la CPU del voltaje que están midiendo en un pin de entrada ADC.
 
-[`digital` module]: https://docs.rs/embedded-hal/latest/embedded_hal/digital/index.html
+El periférico ADC puede medir un nivel de voltaje "analógico", por ejemplo, `1.25` Voltios, como un número "digital", por ejemplo, `24824`, que el procesador puede usar en sus cálculos.
 
-## Analog-to-Digital Converters (ADC)
-
-There are a lot of digital sensors out there. You can use a protocol like I2C and SPI to read
-them. But analog sensors also exist! These sensors just output a reading to the CPU of the voltage
-they are sensing at an ADC input pin.
-
-The ADC peripheral can thus be used to measure an "analog" voltage level — for example, `1.25` Volts
-— as a "digital" number — for example, `24824` — that the processor can use in its calculations.
-
-There were generic ADC traits in `embedded-hal`, but they were removed for `embedded-hal` 1.0: see
-[issue #377]. The `nrf52833-hal` crate provides a nice interface to the specific ADC built into the
-nRF52833.
+Había implementaciones genéricas de traits para ADC en `embedded-hal`, pero fueron eliminadas para la versión 1.0 de la misma (ver [issue #377]). El crate `nrf52833-hal` proporciona una interfaz fácil de usar para el ADC incorporado en el nRF52833.
 
 [issue #377]: https://github.com/rust-embedded/embedded-hal/issues/377
 
-## Digital-to-Analog Converters (DAC)
+## Conversor digital - analógica (DAC)
+Como puedes haber adivinado, un DAC es exactamente lo opuesto a un ADC. Puedes escribir un número digital en un registro para producir un voltaje específico en algún pin de salida analógica. Cuando este pin de salida analógica está conectado a la electrónica adecuada y el registro se escribe rápidamente con los valores correctos, puedes hacer cosas como producir sonidos o música.
 
-As you might expect a DAC is exactly the opposite of ADC. You can write some digital number into a
-register to produce a specific voltage on some analog output pin. When this analog output pin is
-connected to some appropriate electronics and the register is written to quickly with the right
-values you can do things like produce sounds or music.
+Ni el chip nRF52833 ni la placa MB2 tienen un DAC dedicado. Normalmente, se obtiene una especie de efecto DAC al emitir PWM y usar un poco de electrónica en la salida (filtro RC) para "suavizar" la forma de onda PWM.
 
-Neither the nRF52833 nor the MB2 board has a dedicated DAC. One typically gets a kind of DAC effect
-by outputting PWM and using a bit of electronics on the output (RC filter) to "smooth" out the PWM
-waveform.
 
-## Real Time Clock
+## Reloj de tiempo real (RTC)
+Un RTC es un periférico que mantiene un seguimiento del tiempo bajo su propia alimentación, generalmente en "formato humano": segundos, minutos, horas, días, meses y años. Algunos incluso manejan automáticamente los años bisiestos y el horario de verano.
 
-A Real-Time Clock peripheral keeps track of time under its own power, usually in "human format":
-seconds, minutes, hours, days, months and years.  Some Real-Time Clocks even handle leap years and
-Daylight Saving Time automatically.
+Ni el chip nRF52833 ni la placa MB2 contienen un reloj RTC. El nRF52833 sí contiene un "Contador de tiempo real" (RTC), un reloj de baja frecuencia que es compatible con el módulo `nrf52833-hal`. Este contador puede dedicarse a servir como un reloj de tiempo real simulado. El requisito clave, por supuesto, es mantener el periférico RTC alimentado incluso cuando la MB2 no esté en uso. Si bien la MB2 no tiene una batería a acoplada, el RTC debería poder funcionar durante mucho tiempo (posiblemente años) con una batería conectada al puerto correspondiente en la MB2 (por ejemplo, el paquete de baterías proporcionado con el kit micro::bit Go).
 
-Neither the nRF52833 nor the MB2 board contains a Real-Time Clock. The nRF52833 does contain
-"Real-Time Counter" (RTC), a low-frequency ticking clock that is supported by `nrf52833-hal`.  This
-counter can be dedicated to serve as a synthesized real-time clock. The key requirement, of course,
-is to keep the RTC peripheral powered even when the MB2 is not in use. While the MB2 does not have
-an on-board battery, the RTC should be able to run for a long time (possibly years) with a battery
-plugged into the battery port on the MB2 (for example, the battery pack provided with the micro::bit
-Go kit).
 
-## Other communication protocols
+## Otros protocolos de comunicación
+- SPI: El "Serial Peripheral Interface" es una interfaz de comunicación de alta velocidad similar en algunos aspectos a I2C. SPI está abstraído dentro del [módulo `spi` de `embedded-hal`] y es implementado por [`nrf52-hal`].
 
-- SPI: The "Serial Peripheral Interface" is a high-speed communications interface similar in some
-  ways to I2C. SPI is abstracted within the [`embedded-hal` `spi` module] and implemented by
-  [`nrf52-hal`].
-- I2S: The "Inter-IC Sound" protocol is a variant of I2C customized for audio transmission.
-  I2S is currently not abstracted within `embedded-hal`, but is implemented by [`nrf52-hal`].
-- Ethernet: there does exist a small TCP/IP stack named [`smoltcp`] which is implemented for some
-  chips. The MB2 does not have an Ethernet peripheral
-- USB: there is some experimental work on this, for example with the [`usb-device`] crate. For
-  the MB2, the USB port is managed by the interface MCU rather than the host MCU, making
-  it difficult to do custom USB things.
-- Bluetooth: the `nrf-softdevice` wrapper provided by the [Embassy] MB2 runtime is probably the
-  easiest entry into MB2 Bluetooth. Embassy also sports the Rust-native [`TrouBLE`] BLE host crate.
-- CAN, SMBUS, IrDA, etc: All kinds of specialty interfaces exist in the world; Rust sometimes has
-  support for them. Please investigate the current situation for the interface you need
+- I2S: El protocolo "Inter-IC Sound" es una variante de I2C personalizada para la transmisión de audio. I2S actualmente no está desarrollado dentro de `embedded-hal`, pero está implementado por el módulo [`nrf52-hal`].
 
-[`embedded-hal` `spi` module]: https://docs.rs/embedded-hal/0.2.6/embedded_hal/spi/index.html
+- Ethernet: Exite una implementación de una pequeña pila TCP/IP llamada [`smoltcp`] que está implementada para algunos chips. La MB2 no tiene un periférico Ethernet.
+
+- USB: hay trabajo experimental sobre esto, por ejemplo con el crate [`usb-device`]. Para la MB2, el puerto USB es gestionado por el cliente MCU en lugar del host MCU, lo que dificulta hacer cosas personalizadas con USB.
+- Bluetooth: el wrapper `nrf-softdevice` proporcionado por el runtime [Embassy] es probablemente la forma más fácil de acceder al Bluetooth con MB2. Embassy también cuenta con el crate de host BLE nativo de Rust:[`TrouBLE`].
+
+- CAN, SMBUS, IrDA, etc.: Existen muchos tipos de interfaces especializadas en el mundo; Rust a veces tiene soporte para ellas. Por favor, investiga la situación actual para la interfaz que necesitas.
+
+[`nrf52-hal`]: https://github.com/nrf-rs/nrf-hal
+[módulo `spi` de `embedded-hal`]: https://docs.rs/embedded-hal/0.2.6/embedded_hal/spi/index.html
 [`smoltcp`]: https://github.com/smoltcp-rs/smoltcp
 [`usb-device`]: https://github.com/mvirkkunen/usb-device
 [`TrouBLE`]: https://crates.io/crates/trouble-host
 
-Different applications use different communication protocols. User facing applications usually have
-a USB connector because USB is a ubiquitous protocol in PCs and smartphones. Whereas inside cars
-you'll find plenty of CAN buses. Some digital sensors use SPI, I2C or SMBUS.
+Aplicaciones diferentes usan protocolos de comunicación diferentes. Las aplicaciones orientadas al usuario generalmente tienen un conector USB porque USB es un protocolo ubicuo en PC y teléfonos inteligentes. Mientras que dentro de los automóviles encontrarás muchos buses CAN. Algunos sensores digitales usan SPI, I2C o SMBUS.
 
-If you happen to be interested in developing abstractions in the `embedded-hal` or implementations
-of peripherals in general, don't be shy to open an issue in the HAL repositories. Alternatively you
-could also join the [Rust Embedded matrix channel] and get into contact with most of the people who
-built the stuff from above.
+Si estás interesado en desarrollar para la `embedded-hal` o implementaciones de periféricos en general, no dudes en abrir un tema en los repositorios de HAL. Alternativamente, también podrías unirte al [canal de Rust Embedded en matrix] y ponerte en contacto con la mayoría de las personas que construyeron lo que se mencionó anteriormente.
 
-## General Embedded-Relevant Topics
+## Elementos relevantes para aplicaciones embebidas
+Los siguientes temas no son específicos del dispositivo, ni del hardware en él. En cambio, discuten técnicas útiles que podrían usarse en sistemas embebidos.
 
-These topics cover items that are not specific to our device, or the hardware on it. Instead, they
-discuss useful techniques that could be used on embedded systems.
+La mayoría del hardware del que hablaremos aquí no está disponible en la MB2, pero mucho de él podría agregarse fácilmente uniéndolo al conector en el borde de la MB2, ya sea controlándolo directamente o usando algo como SPI o I2C.
 
-Most of the hardware we will discuss here is not available on the MB2 — but much of it could easily
-be added by connecting a cheap piece of hardware to the MB2 edge-card connector, either driving it
-directly or using something like SPI or I2C to control it.
+### Multitarea
+La mayoría de nuestros programas se ejecutan una sola tarea. ¿Cómo podríamos lograr multitarea en un sistema sin sistema operativo, y por lo tanto sin hilos? Hay dos enfoques para la multitarea: multitarea preventiva y multitarea cooperativa.
 
-### Multitasking
+En la multitarea preventiva, una tarea que se está ejecutando puede, en cualquier momento, ser interrumpida por otra tarea. En el proceso, la primera tarea se suspenderá y el procesador ejecutará la segunda tarea. En algún momento, la primera tarea se reanudará.
+Los microcontroladores proporcionan soporte de hardware para este tipo de multitarea en forma de *interrupciones*. Introdujimos las interrupciones cuando construimos nuestro juego de la serpiente en el [capítulo 16](16-snake-game/README.md).
 
-Most of our programs executed a single task. How could we achieve multitasking in a system with no
-OS, and thus no threads? There are two main approaches to multitasking: preemptive multitasking and
-cooperative multitasking.
 
-In preemptive multitasking a task that's currently being executed can, at any point in time, be
-*preempted* (interrupted) by another task. On preemption, the first task will be suspended and the
-processor will instead execute the second task. At some point the first task will be resumed.
-Microcontrollers provide hardware support for preemption in the form of *interrupts*. We were
-introduced to interrupts when we built our snake game in [chapter 16](16-snake-game/index.md).
+En la multitarea cooperativa, una tarea que se está ejecutando seguirá así hasta que alcance un *punto de suspensión*. Cuando el procesador alcanza ese punto de suspensión, dejará de ejecutar la tarea actual y en su lugar pasará a una tarea diferente. En algún momento, la primera tarea se reanudará. La principal diferencia entre estos dos enfoques para la multitarea es que en la multitarea cooperativa *cede (yields)* el control de ejecución en *puntos de suspensión conocidos* en lugar de ser suspendida a la fuerza en cualquier parte de su código.
 
-In cooperative multitasking a task that's being executed will run until it reaches a *suspension
-point*. When the processor reaches that suspension point it will stop executing the current task and
-instead go and execute a different task. At some point the first task will be resumed. The main
-difference between these two approaches to multitasking is that in cooperative multitasking *yields*
-execution control at *known* suspension points instead of being forcefully preempted at any point of
-its execution.
+### Giroscopios
+Como parte del ejercicio de medición de golpes (Punch-o-meter), usamos el acelerómetro para medir cambios en la aceleración en tres dimensiones. Pero hay otros sensores de movimiento como los giroscopios, que nos permiten medir cambios en el "giro" en tres dimensiones.
 
-### Gyroscopes
+Puede ser miy útil para la creación de ciertos sistemas, como un robot que quiere evitar volcarse. Además, los datos de un sensor como un giroscopio también se pueden combinar con los datos de un acelerómetro utilizando una técnica llamada Sensor Fusion (ver más abajo para obtener más información).
 
-As part of our Punch-o-meter exercise, we used the Accelerometer to measure changes in acceleration
-in three dimensions. But there are other motion sensors such as gyroscopes, which allows us to
-measure changes in "spin" in three dimensions.
+### Motor Servo y paso a paso
+Mientras que algunos motores se usan principalmente para girar en una dirección u otra, por ejemplo, conduciendo un coche de control remoto hacia adelante o hacia atrás, a veces es útil medir con más precisión cómo gira un motor.
 
-This can be very useful when trying to build certain systems, such as a robot that wants to avoid
-tipping over. Additionally, the data from a sensor like a gyroscope can also be combined with data
-from accelerometer using a technique called Sensor Fusion (see below for more information).
+Un microcontrolador puede utilizarse para controlar un motor Servo o paso a paso, que permiten un control más preciso de cuántas vueltas está dando el motor, o incluso pueden posicionar el motor en un lugar específico, por ejemplo, si queremos fijar las manecillas de un reloj en una posición particular.
 
-### Servo and Stepper Motors
+### Fusión de sensores (Sensor fusion)
+La placa micro:bit contiene dos sensores de movimiento: un acelerómetro y un magnetómetro. Por sí solos, estos miden la aceleración (propia) y el campo magnético (de la Tierra). Pero estas magnitudes pueden "fusionarse" en algo más útil: una medición "robusta" de la orientación de la placa, con menos error de medición que la de cualquier sensor individual.
 
-While some motors are used primarily just to spin in one direction or the other, for example driving
-a remote control car forwards or backwards, it is sometimes useful to measure more precisely how a
-motor rotates.
-
-A microcontroller can be used to drive Servo or Stepper motors, which allow for more precise control
-of how many turns are being made by the motor, or can even position the motor in one specific place,
-for example if we wanted to move the arms of a clock to a particular direction.
-
-### Sensor fusion
-
-The micro:bit contains two motion sensors: an accelerometer and a magnetometer.  On their own these
-measure (proper) acceleration and (the Earth's) magnetic field.  But these magnitudes can be "fused"
-into something more useful: a "robust" measurement of the orientation of the board, with less
-measurement error than that of any single sensor.
-
-This idea of deriving more reliable data from different sources is known as sensor fusion.
+Esta idea de derivar datos más confiables a partir de diferentes fuentes se conoce como fusión de sensores (sensor fusion).
 
 ---
 
-So where to next? 
+¿Qué es lo siguiente? 
 
-First and foremost, join us on the [Rust Embedded matrix channel]. Lots of people who contribute or
-work on embedded software hang out there, including, for example, the people who wrote the
-`microbit` BSP, the `nrf52-hal` crate, the `embedded-hal` crates, etc. We are happy to help you get
-started or move on with embedded programming in Rust!
+Lo primero y más importante, únete al [canal de Rust Embedded en matrix]. Muchas personas que contribuyen o trabajan en software embebido se reúnen allí, incluyendo, por ejemplo, a las personas que escribieron el BSP `microbit`, el crate `nrf52-hal`, los crates `embedded-hal`, etc. ¡Estaremos felices de ayudarte a comenzar o avanzar con la programación embebida en Rust!
 
-[Rust Embedded matrix channel]: https://matrix.to/#/#rust-embedded:matrix.org
+[canal de Rust Embedded en matrix]: https://matrix.to/#/#rust-embedded:matrix.org
 
-There are many other options:
+Hay muchas más opciones:
+- Podrías revisar los ejemplos en el crate de soporte de la placa [`microbit-v2`]. Todos esos ejemplos funcionan para micro:bit.
 
-- You could check out the examples in the [`microbit-v2`] board support crate. All those examples
-  work for the micro:bit board you have.
+- Si estás buscando una descripción general de lo que está disponible en Rust Embedded en este momento, consulta la lista de [Awesome Rust Embedded].
 
-[`microbit-v2`]: https://github.com/nrf-rs/microbit/
+- Podrías revisar el sitio [Embassy]. Embassy es un marco de multitarea cooperativa moderno y eficiente que admite la ejecución concurrente utilizando Rust `async/await`.
 
-- If you are looking for a general overview of what is available in Rust Embedded right now check
-  out the [Awesome Rust Embedded] list.
+- Podrías echar un vistazo a la concurrencia basada en interrupciones en tiempo real [RTIC]. RTIC es un marco de multitarea preemptiva muy eficiente que admite la priorización de tareas y la ejecución sin bloqueos.
 
-[Awesome Rust Embedded]: https://github.com/rust-embedded/awesome-embedded-rust/
+- Podrías visitar las abstracciones que se han creado en el proyecto [`embedded-hal`] y quizá incluso intentar escribir tu propio controlador independiente de la plataforma basándote en él.
 
-- You could check out [Embassy]. This is a modern efficient cooperative multitasking framework that
-  supports concurrent execution using Rust `async/await`.
+- Podrías probar a ejecutar Rust en otra placa de desarrollo. Placas populares como la ESP-32,
+  la Raspberry Pi o Arduino cuentan con sus propias comunidades activas de desarrolladores de Rust.
 
-[Embassy]: https://embassy.dev
-
-- You could check out Real-Time Interrupt-driven Concurrency [RTIC]. RTIC is a very efficient
-  preemptive multitasking framework that supports task prioritization and deadlock-free execution.
-
-[RTIC]: https://rtic.rs
-
-- You could check out more abstractions of the [`embedded-hal`] project and maybe even try and write
-  your own platform agnostic driver based on it.
+- Podrías revisar el sitio [Tock]. Tock es un sistema operativo de código abierto para microcontroladores que se centra en la seguridad y la confiabilidad. Tock está escrito en Rust y proporciona una plataforma para ejecutar aplicaciones embebidas de manera segura.
 
 [`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
-
-- You could try running Rust on a different development board. Popular boards such as the ESP-32,
-  Raspberry Pi, or Arduino have their own active Rust developer communities.
+[RTIC]: https://rtic.rs
+[Embassy]: https://embassy.dev
+[Awesome Rust Embedded]: https://github.com/rust-embedded/awesome-embedded-rust/
+[`microbit-v2`]: https://github.com/nrf-rs/microbit/
+[Tock]: https://www.tockos.org
