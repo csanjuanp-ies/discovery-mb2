@@ -1,102 +1,63 @@
-# Background
+# Antecedentes
+Estás a punto de escribir código Rust "a nivel de sistemas" (bare-metal) para un microcontrolador. 
+Quizá nunca hayas hecho nada parecido antes. Eso es *fantástico*: ¡bienvenido a una aventura increíble!
 
-You are about to write "bare-metal" Rust for a microcontroller. Maybe you have never done anything
-like this before. That's *fantastic* — welcome to an awesome adventure!
 
-We should start by answering some basic questions you might have.
+Lo primero que debemos hacer es responder algunas preguntas.
+* **¿Qué es un microcontrolador?**
 
-* **What's a microcontroller?**
+  Un microcontrolador es un *sistema* en un chip. Mientras que el ordenador está compuesto por varios
+  componentes: un procesador, RAM, almacenamiento, puertos Ethernet, etc.; un
+  microcontrolador tiene todos esos tipos de componentes integrados en un solo "chip" o paquete. Esto
+  hace posible construir sistemas más compactos.
 
-  A microcontroller is a *system* on a chip. Whereas your computer is made up of several discrete
-  components: a processor, RAM, storage, an Ethernet port, etc.; a microcontroller has all those types
-  of components built into a single "chip" or package. This makes it possible to build systems with
-  fewer parts.
+* **¿Qué puedo hacer con un controlador?**
 
-* **What can you do with a microcontroller?**
+  Muchas cosas. Los microcontroladores son la parte central de lo que se conoce como "sistemas *embebidos*".
+  Estos sistemas están en todas partes, pero normalmente no los vemos. Controlan las máquinas que
+  lavan la ropa, imprimen documentos y cocinan la comida. Los sistemas embebidos mantienen los edificios
+  en los que se vive y trabaja a una temperatura cómoda, y controlan los componentes que hacen que los vehículos en los que viajamos funcionen.
 
-  Lots of things! Microcontrollers are the central part of what are known as "*embedded* systems".
-  Embedded systems are everywhere, but you don't usually notice them. They control the machines that
-  wash your clothes, print your documents, and cook your food. Embedded systems keep the buildings
-  that you live and work in at a comfortable temperature, and control the components that make the
-  vehicles you travel in stop and go.
+  La mayor parte de los sistemas embebidos hacen su trabajo sin intervención del usuario. Incluso si implementan una interfaz de usuario como lo hace una lavadora; la mayor parte de su operación se realiza por sí sola.
 
-  Most embedded systems operate without user intervention. Even if they expose a user interface like a
-  washing machine does; most of their operation is done on their own.
+  Los sistemas embebidos se usan para *controlar* procesos físicos. Para hacer esto posible, tienen uno o más dispositivos para indicar el estado del mundo ("sensores"), y uno o más dispositivos que permiten cambiar las cosas ("actuadores"). Por ejemplo, un sistema de control climático de un edificio podría tener:
 
-  Embedded systems are often used to *control* a physical process. To make this possible, they have
-  one or more devices to tell them about the state of the world ("sensors"), and one or more
-  devices which allow them to change things ("actuators"). For example, a building climate control
-  system might have:
+    - Sensores que miden la temperatura y la humedad en varias ubicaciones.
+    - Actuadores que controlan la velocidad de los ventiladores.
+    - Actuadores que hacen que aumentan o disminuyen la temperatura del edificio.
 
-    - Sensors which measure temperature and humidity in various locations.
-    - Actuators which control the speed of fans.
-    - Actuators which cause heat to be added or removed from the building.
+* **¿Cuándo tenemos que usar un microcontrolador?**
 
-* **When should I use a microcontroller?**
+  Muchos de los sistemas embebidos mencionados anteriormente podrían implementarse con una computadora que ejecute Linux (por ejemplo, una "Raspberry Pi"). ¿Por qué usar un microcontrolador en su lugar? Parece que podría ser más difícil desarrollar un programa.
 
-  Many of the embedded systems listed above could be implemented with a computer running Linux (for
-  example a "Raspberry Pi"). Why use a microcontroller instead? Sounds like it might be harder to
-  develop a program.
+  Algunas de las razones son:
 
-  Some reasons might include:
+    * *Coste:* Un microcontrolador es mucho más barato que una computadora de propósito general. No solo el microcontrolador es más barato; también requiere muchos menos componentes eléctricos externos para funcionar. Esto hace que el circuito impreso (PCB) sea más pequeño y barato de diseñar y fabricar.
 
-    * *Cost:* A microcontroller is much cheaper than a general purpose computer. Not only is the
-      microcontroller cheaper; it also requires many fewer external electrical components to operate.
-      This makes Printed Circuit Boards (PCB) smaller and cheaper to design and manufacture.
+    * *Consumo energético:* La mayoría de los microcontroladores consumen una fracción de la energía de un procesador completo. Para aplicaciones que funcionan con baterías, marca una gran diferencia.
+  
+    * *Capacidad de respuesta:* Para cumplir su propósito, algunos sistemas embebidos deben reaccionar dentro de un intervalo de tiempo limitado (por ejemplo, el sistema de frenado "abs" de un automóvil). Si no se cumple con este tipo de *plazo*, podría ocurrir un fallo catastrófico. Tal plazo se llama requisito de "tiempo real duro". Un sistema embebido que está sujeto a tal plazo se conoce como "sistema de tiempo real duro". Una computadora y un sistema operativo de propósito general generalmente tienen muchos componentes de software que comparten los recursos de procesamiento de la computadora. Esto hace que sea más difícil garantizar la ejecución de un programa dentro de límites de tiempo estrictos.
 
-    * *Power consumption:* Most microcontrollers consume a fraction of the power of a full blown
-      processor. For applications which run on batteries, that makes a huge difference.
+    * *Fiabilidad:* En sistemas con menos componentes (tanto de hardware como de software), ¡hay menos cosas que pueden salir mal!
 
-    * *Responsiveness:* To accomplish their purpose, some embedded systems must always react within a
-      limited time interval (e.g. the "anti-lock" braking system of a car). If the system misses this
-      type of *deadline*, a catastrophic failure might occur. Such a deadline is called a "hard real
-      time" requirement. An embedded system which is bound by such a deadline is referred to as a "hard
-      real-time system". A general purpose computer and OS usually has many software components which
-      share the computer's processing resources. This makes it harder to guarantee execution of a
-      program within tight time constraints.
+* **¿Cuándo *no* debo usar controladores?**
 
-    * *Reliability.* In systems with fewer components (both hardware and software), there is less to go
-      wrong!
+  Los microcontrolasdores no son adecuados para procesos computacionalmente intensos. Para mantener el costo y el consumo de energía bajos, los microcontroladores tienen recursos disponibles limitados.
 
-* **When should I *not* use a microcontroller?**
+  Los microcontroladores pueden ejecutar generalmente menos instrucciones por segundo que sus hermanos mayores. Las partes más lentas podrían ejecutarse a "solo" unos pocos millones de instrucciones por segundo. Además, la cantidad de trabajo por instrucción normalmente es menor. Los elementos internos de los microcontroladores suelen ser "de 32 bits", pero siguen existiendo componentes "de 16 bits": esto puede significar más instrucciones para trabajar con los tipos de datos típicos de Rust. La mayoría de los microcontroladores no tienen o tienen poca "caché", lo que implica que las instrucciones se ejecutarán tan rápido como sea el acceso a la memoria principal.
 
-  Microcontrollers are often not great at heavy computational work. To keep their cost and power
-  consumption low, microcontrollers have limited computational resources available to them.
+  Algunos microcontroladores no tienen soporte de hardware para operaciones de coma flotante. En esos dispositivos, realizar una suma de números decimales puede llevar cientos de ciclos de CPU.
 
-  Microcontrollers can typically execute fewer instructions per second than "big" processors. The
-  slowest parts might run at "only" a few million instructions per second. In addition, the amount of
-  work per instruction is typically lower. Microcontroller parts are typically "32 bit", but "16 bit"
-  parts are not uncommon: this may mean more instructions to work with typical Rust datatypes. Most
-  microcontrollers have no or little "cache", meaning instructions can run only as fast as main memory
-  can be accessed.
+  Finalmente, los microcontroladores suelen tener en conjunto, una cantidad limitada de memoria. Los tamaños pueden ser tan pequeños como 16 KB para instrucciones de programa y 4 KB para datos, lo que hace que programar para estos sistemas sea bastante desafiante. Si bien el tamaño de la memoria interna por unidad de costo y consumo de energía está aumentando constantemente, el procesador con el que trabajaremos todavía tiene "solo" 512 KB para instrucciones de programa y 256 KB para datos, mucho menos que el de una "computadora real".
 
-  Some microcontrollers don't have hardware support for floating point operations. On those
-  devices, performing a simple addition of single precision numbers can take hundreds of CPU cycles.
+* **¿Por qué no usar C?**
+ 
+  Seguramente no necesite convencerte, ya que probablemente estés familiarizado con las diferencias de lenguaje entre Rust y C. Algo que sí quiero mencionar es la gestión de paquetes. C carece de una solución de gestión de paquetes oficial y ampliamente aceptada, mientras que Rust usa Cargo. Esto hace que el desarrollo sea *mucho* más eficiente. Y, en mi opinión, una gestión de paquetes fomenta la reutilización del código porque las bibliotecas se pueden integrar fácilmente en una aplicación, lo cual también es algo bueno, ya que suelen realizarse pruebas "más exhaustivas" sobre ellas.
 
-  Finally, microcontrollers typically come with limited memory. Memory sizes may be as small as 16KB
-  for program instructions and 4KB for data, making programming for these systems quite challenging.
-  While the internal memory size per unit cost and power consumption is constantly increasing, the
-  processor we will work with still has "only" 512KB for program instructions and 256KB for data — far
-  less than that of a "real computer".
+* **¿Por qué no usar Rust?**
 
-* **Why use Rust and not C?**
+  O ¿Por qúe preferir C sobre Rust?
 
-  Hopefully, I don't need to convince you here as you are probably familiar with the language
-  differences between Rust and C. One point I do want to bring up is package management. C lacks an
-  official, widely accepted package management solution whereas Rust has Cargo. This makes development
-  *much* easier. And, IMO, easy package management encourages code reuse because libraries can be
-  easily integrated into an application which is also a good thing as libraries get more "battle
-  testing".
+  El ecosistema de C es más maduro. Existen soluciones listas para usar para varios problemas. Si se necesita controlar un proceso dependiente del tiempo, puedes comprar uno de los sistemas operativos de tiempo real (RTOS) comerciales existentes y resolver el problema. No hay RTOS comerciales en grado de producción en Rust (al momento de escribir esto), por lo que se tendría que crear uno casi desde cero o probar uno de los que están en desarrollo. Puedes encontrar una lista de estos en el repositorio [Awesome Embedded Rust].
 
-* **Why should I not use Rust?**
 
-  Or why should I prefer C over Rust?
-
-  The C ecosystem is more mature. Off-the-shelf solutions for several problems already exist. If you
-  need to control a time sensitive process, you can grab one of the existing commercial Real Time
-  Operating Systems (RTOS) out there and solve your problem. There are no commercial, production-grade
-  RTOSes in Rust (as of this writing) so you would have to either create one yourself or try one of
-  the ones that are in development. You can find a list of those in the [Awesome Embedded Rust]
-  repository.
-
-[Awesome Embedded Rust]: https://github.com/rust-embedded/awesome-embedded-rust#real-time-operating-system-rtos
