@@ -1,37 +1,35 @@
 # Linux
 
-Here are the installation commands for a few Linux distributions.
+Aquí se muestran instrucciones de instalación para algunas distribuciones:
 
-## Ubuntu 20.04 or newer / Debian 10 or newer
+## Ubuntu 20.04 o más reciente / Debian 10 o más reciente
 
-> **NOTE** `gdb-multiarch` is the GDB command you'll use to debug your Arm Cortex-M programs.
+> **NOTA** `gdb-multiarch` es el comando de GDB que utilizarás para depurar los programas de Arm Cortex-M.
 ``` console
 $ sudo apt install gdb-multiarch minicom libunwind-dev
 ```
 
-## Fedora 32 or newer
+## Fedora 32 o posterior
 
-> **NOTE** `gdb` is the GDB command you'll use to debug your Arm
-> Cortex-M programs.
+> **NOTA** `gdb` es el comando de GDB que utilizarás para depurar los programas de Arm Cortex-M.
 ``` console
 $ sudo dnf install gdb minicom libunwind-devel
 ```
 
 ## Arch Linux
 
-> **NOTE** `gdb` is the GDB command you'll use to debug your Arm
-> Cortex-M programs.
+> **NOTA** `gdb` es el comando de GDB que utilizarás para depurar los programas de Arm Cortex-M.
 ``` console
 $ sudo pacman -S arm-none-eabi-gdb minicom libunwind
 ```
 
-## Other distros
+## Otras distros
 
-> **NOTE** `arm-none-eabi-gdb` is the GDB command you'll use to debug your Arm Cortex-M programs.
+> **NOTA** `arm-none-eabi-gdb` es el comando de GDB que utilizarás para depurar los programas de Arm Cortex-M.
 
-For distros that don't have packages for [Arm's pre-built
-toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads), download the "Linux
-64-bit" file and put its `bin` directory on your path.  Here's one way to do it:
+Para aquellas distribuciones que no incorporan paquetes, usaremos [Arm's pre-built
+toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads). Hay que descargar el fichero "Linux
+64-bit" y poner los binarios en un directorio `bin` del PATH. A continuación, mostramos una manera de hacerlo:
 
 ``` console
 $ mkdir -p ~/local
@@ -39,18 +37,18 @@ $ cd ~/local
 $ tar xjf /path/to/downloaded/XXX.tar.bz2
 ```
 
-Then, use your editor of choice to append to your `PATH` in the appropriate shell init file
-(e.g. `~/.zshrc` or `~/.bashrc`):
+Después, se añade la ruta a la variable `PATH` en el correspondiente fichero de configuración shell:
+(e.j. `~/.zshrc` or `~/.bashrc`):
 
 ```
 PATH=$PATH:$HOME/local/XXX/bin
 ```
 
-## udev rules
+## reglas udev
 
-These rules let you use USB devices like the micro:bit without root privilege, i.e. `sudo`.
+Las siguientes instrucciones tienen que tener permisos de administración para poder ejecutarse (son necesarias para usar el puerto USB): p. ej. `sudo`.
 
-Create this file in `/etc/udev/rules.d` with the content shown below.
+Crea el siguiente fichero en `/etc/udev/rules.d`.
 
 ``` console
 $ cat /etc/udev/rules.d/69-microbit.rules
@@ -63,25 +61,22 @@ SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", TAG+="uaccess
 LABEL="microbit_rules_end"
 ```
 
-Then reload the udev rules with:
-
+A continuación, recarga las reglas de udev:
 ``` console
 $ sudo udevadm control --reload
 ```
 
-If you had any board plugged to your computer, unplug them and then plug them in again, or run the
-following command.
+Si tienes alguna tarjeta conectada al ordenador, desconéctala y vuelve a conectarla, o ejecuta el siguiente comando.
 
 ``` console
 $ sudo udevadm trigger
 ```
 
-## Verify permissions
+## Verificación de los permisos
 
-Connect the micro:bit to your computer using a USB cable.
+Conecta la placa micro:bit al ordenador mediante un cable USB.
 
-The micro:bit should now appear as a USB device (file) in `/dev/bus/usb`. Let's find out how it got
-enumerated:
+El micro:bit debería aparecer como un dispositivo USB (archivo) en `/dev/bus/usb`. Veamos cómo se ha identificado:
 
 ``` console
 $ lsusb | grep -i "NXP Arm mbed"
@@ -89,15 +84,15 @@ Bus 001 Device 065: ID 0d28:0204 NXP Arm mbed
 $ # ^^^        ^^^
 ```
 
-In my case, the micro:bit got connected to the bus #1 and got enumerated as the device #65. This means the
-file `/dev/bus/usb/001/065` *is* the micro:bit. Let's check the file permissions:
+En caso el microcontrolador esté conectado al bus #1 y se haya enumerado como el dispositivo #65. Esto significa que el fichero
+`/dev/bus/usb/001/065` *es* la placa MB2. Vamos a comprobar los permisos:
 
 ``` console
 $ ls -l /dev/bus/usb/001/065
 crw-rw-r--+ 1 nobody nobody 189, 64 Sep  5 14:27 /dev/bus/usb/001/065
 ```
 
-The permissions should be `crw-rw-r--+`, note the `+` at the end, then see your access rights by running the following command.
+Los permisos deberían ser `crw-rw-r--+`, fíjate en el `+` al final, a continuación, comprueba los derechos de acceso ejecutando el siguiente comando.
 
 ``` console
 $ getfacl /dev/bus/usb/001/065
@@ -112,17 +107,17 @@ mask::rw-
 other::r-
 ```
 
-You should see your username in the list above with the
-`rw-` permissions, if not ... then check your [udev rules]
-and try re-loading them with:
+Deberías ver tu nombre de usuario en la lista anterior junto con los permisos
+`rw-`, si no es así ... Comprueba de nuevo las [reglas udev]
+y prueba a recargarlas:
 
-[udev rules]: linux.md#udev-rules
+[reglas udev]: linux.md#reglas-udev
 
 ``` console
 $ sudo udevadm control --reload
 $ sudo udevadm trigger
 ```
 
-Now, go to the [next section].
+Pasa ahora a la [siguiente sección].
 
-[next section]: verify.md
+[siguiente sección]: verify.md

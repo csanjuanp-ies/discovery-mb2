@@ -2,9 +2,17 @@
 
 ## `arm-none-eabi-gdb`
 
-Arm provides `.exe` installers for Windows. Grab one from [here][gcc], and follow the instructions.
-Just before the installation process finishes tick/select the "Add path to environment variable"
-option. Then verify that the tools are in your `%PATH%`:
+
+> Hemos descargado e instalado el siguiente:
+> [Aquí](https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-mingw-w64-x86_64-arm-none-eabi.msi)
+
+
+Arm proporciona ejecutables (`.exe`) para Windows. Se pueden encontrar en [gcc](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads), solo hay que seguir las instrucciones.
+Justo antes de que finalice el proceso de instalación, hay que marcar/seleccionar la opción "Añadir ruta a la variable de entorno". Si no aparece dicha opción se tendrá que añadir desde el diálogo del sistema y añadir la siguiente ruta para la instalación por defecto:
+
+> C:\Program Files\Arm\GNU Toolchain mingw-w64-x86_64-arm-none-eabi\bin
+
+A continuación, comprobaremos que las herramientas se encuentran en el `%PATH%`:
 
 ``` console
 $ arm-none-eabi-gcc -v
@@ -12,14 +20,21 @@ $ arm-none-eabi-gcc -v
 gcc version 5.4.1 20160919 (release) (..)
 ```
 
-[gcc]: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
+En mi caso: 
+
+``` console
+$ arm-none-eabi-gcc -v
+(..)
+gcc version 15.2.1 20251203 (Arm GNU Toolchain 15.2.Rel1 (Build arm-15.86))
+```
+
 
 ## PuTTY
 
-Download the latest `putty.exe` from [this site] and place it somewhere in your `%PATH%`.
+Se puede descargar `putty.exe` desde [aquí](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) y añadirlo al `%PATH%`.
 
-[this site]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
 
-Now, go to the [next section].
 
-[next section]: verify.md
+Pasa ahora a la [siguiente sección].
+
+[siguiente sección]: verify.md

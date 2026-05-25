@@ -1,23 +1,18 @@
-# Getting the most out of your IDE
+# Cómo sacar el máximo partido a tu IDE
 
-All code in this book assumes that you use a simple terminal to build your code,
-run it, and interact with it. It also makes no assumption about your text editor.
+Todo el código de este libro parte de la base de que utilizas un terminal sencillo para compilar tu código, ejecutarlo e interactuar con él. Tampoco se hace ninguna suposición sobre el editor de texto que utilices.
 
-However, you may have your favourite IDEs, providing you auto-complete, type annotation,
-your preferred shortcuts and much more. This section explains how to get the most out
-of your IDE using the code obtained from this book's repo.
+Sin embargo, es posible que tengas un IDE favorito, que te ofrezcan autocompletado, sugerencias de tipos, atajos de teclado preferidos y mucho más. En esta sección se explica cómo sacar el máximo partido al IDE utilizando el código obtenido del repositorio de este libro.
 
-# IDE configuration
+# Configuración del IDE
 
-Below, we explain how to configure your IDE to get the most out of this book.
-If your IDE is not listed below, please improve this book by adding a section, so that the next
-reader can get the best experience out of it.
+A continuación, te explicamos cómo configurar el IDE para sacar el máximo partido a este libro.
+Si no aparece en la lista, te invitamos a mejorar este libro añadiendo una sección, para que el próximo lector pueda disfrutar de la mejor experiencia posible.
 
-## How to build with IntelliJ
+## Como configurar IntelliJ o RustRover
 
-When editing the IntelliJ build configuration, here are a few non-default values:
-* You should edit the command. When this book tells you to run `cargo embed FLAGS`,
-You'll need to replace the default value `run` by the command `embed FLAGS`,
-* You should enable "Emulate terminal in output console". Otherwise, your program will fail to print text to a terminal
-* You should ensure that the working directory is `microbit/src/N-name`, with `N-name` being the directory of the chapter you
-are reading. You can not run from the `src` directory since it contains no cargo file.
+Al editar la configuración de compilación de IntelliJ, estos son algunos valores no predeterminados:
+* Hay que modificar el comando. Cuando en este libro se indique que ejecutes `cargo embed FLAGS`,
+  tendrás que cambiar el valor predeterminado `run` por el comando `embed FLAGS`,
+* Se tiene que activar la opción "Emular terminal en la consola de salida". De lo contrario, el programa no podrá mostrar texto en un terminal.
+* Debes asegurarte de que el directorio de trabajo sea `microbit/src/N-name`, siendo `N-name` el directorio del capítulo que estás leyendo. No se puede ejecutar desde el directorio `src`, ya que no contiene ningún archivo cargo.

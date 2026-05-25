@@ -1,6 +1,6 @@
 # macOS
 
-All the tools can be installed using [Homebrew]:
+Se puden instalar todas las herramientas mediante [Homebrew]:
 
 [Homebrew]: http://brew.sh/
 
@@ -15,6 +15,6 @@ $ # lsusb lists USB ports
 $ brew install lsusb
 ```
 
-That's all! Go to the [next section].
+Pasa ahora a la [siguiente sección].
 
-[next section]: verify.md
+[siguiente sección]: verify.md

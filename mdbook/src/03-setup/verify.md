@@ -1,18 +1,14 @@
-# Verify the installation
+# Verificación de la instalación
 
-Let's verify that all the tools were installed correctly.
+Vamos a verificar que todas las herramientas están correctamente instaladas y funciona de acorde a lo esperado.
 
-## Verifying cargo-embed
+## Verificación de cargo-embed
 
-First, connect the micro:bit to your Computer using a USB cable.
+En primer lugar, conectamos el micro:bit al ordenador mediante un cable USB.
 
-At least an orange LED right next to the USB port of the micro:bit should light up.  Furthermore, if
-you have never flashed another program on to your micro:bit, the default program the micro:bit ships
-with should start blinking the red LEDs on its back: you can ignore them, or you can play with the
-demo app.
+Debería encenderse al menos un LED naranja situado justo al lado del puerto USB del micro:bit. Además, si nunca has flasheado otro programa en tu micro:bit, el programa predeterminado con el que viene el micro:bit debería hacer que los LED rojos de la parte trasera empiecen a parpadear: puedes ignorarlos o puedes jugar con la aplicación de demostración.
 
-Now let's see if probe-rs, and by extensions cargo-embed can see your micro:bit. You can do this by
-running the following command:
+Ahora veamos si probe-rs, y por extensión cargo-embed, pueden detectar tu micro:bit. Ejecutaremos el siguiente comando:
 
 ``` console
 $ probe-rs list
@@ -20,7 +16,15 @@ The following debug probes were found:
 [0]: BBC micro:bit CMSIS-DAP -- 0d28:0204:990636020005282030f57fa14252d446000000006e052820 (CMSIS-DAP)
 ```
 
-Or if you want more information about the micro:bits debug capabilities then you can run:
+En mi caso
+
+``` console
+$ probe-rs list
+The following debug probes were found:
+[0]: BBC micro:bit CMSIS-DAP -- 0d28:0204-5:9906360200052820977fb3a6b908b66f000000006e052820 (CMSIS-DAP)
+```
+
+O si queremos más información sobre las funciones de depuración del micro:bit, podemos ejecutar:
 
 ``` console
 $ probe-rs info
@@ -52,20 +56,55 @@ Debugging RISC-V targets over SWD is not supported. For these targets, JTAG is t
 Debugging Xtensa targets over SWD is not supported. For these targets, JTAG is the only supported protocol. Xtensa specific information cannot be printed.
 ```
 
-Next, make sure you are in `src/03-setup` of this book's source code. Then run these commands:
+Para mi placa aparece:
+
+
+``` console
+probe-rs info
+
+Probing target via JTAG
+-----------------------
+
+Error while probing target: The protocol 'JTAG' could not be selected.
+
+Caused by:
+The probe does not support the JTAG protocol.
+Probing target via SWD
+----------------------
+
+ARM Chip with debug port Default:
+
+Debug Port: DPv1, Designer: ARM Ltd
+├── V1(0) MemoryAP
+│   └── 0 MemoryAP (AmbaAhb3)
+│       ├── 0xe00ff000 ROM Table (Class 1), Designer: Nordic VLSI ASA
+│       ├── 0xe0001000 Generic
+│       ├── 0xe0000000 Peripheral test block
+│       ├── 0xe0040000 Generic
+│       └── 0xe0041000 Cortex-M4 ETM   (Coresight Component)
+└── V1(1) Unknown AP (Designer: Nordic VLSI ASA, Class: Undefined, Type: 0x0, Variant: 0x0, Revision: 0x0)
+
+
+Debug port version DPv1 does not support SWD multidrop. Stopping here.
+```
+
+Seguidamente, tenemos que estar en el directorio `src/03-setup` de los ficheros fuente. A continuación, ejecutamos los siguientes comandos:
 
 ```
 $ rustup target add thumbv7em-none-eabihf
 $ cargo embed --target thumbv7em-none-eabihf
 ```
 
-If everything works correctly cargo-embed should first compile the small example program
-in this directory, then flash it and finally open a nice text based user interface that
-prints Hello World.
+Si todo funciona correctamente, cargo-embed debería compilar primero el pequeño programa de ejemplo
+que hay en este directorio, luego lo grabará en la memoria de la placa y, por último, abrirá una interfaz de texto en la que se muestre el mensaje "Hello World".
 
-(If it does not, check out [general troubleshooting] instructions.)
+  <p align="center">
+  <img title="micro:bit" src="../assets/hello-world.png" width="500"  alt="Hello World"/>
+  </p>
 
-[general troubleshooting]: ../appendix/1-general-troubleshooting/index.html
+(Si no funciona correctamente, habrá que comprobar las instrucciones que aparecen en [solución general de problemas].)
 
-This output is coming from the small Rust program you just flashed on to your micro:bit.
-Everything is working properly and you can continue with the next chapters!
+[solución general de problemas]: ../appendix/1-general-troubleshooting/README.md
+
+Esta salida procede del pequeño programa en Rust que acabas de cargar en tu micro:bit.
+¡Todo funciona correctamente y ya puedes continuar con los siguientes capítulos!

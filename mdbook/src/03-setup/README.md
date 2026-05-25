@@ -1,53 +1,48 @@
-# Setting up a development environment
+# Configurando el entorno de desarrollo
 
-Dealing with microcontrollers involves several tools as we'll be dealing with an architecture
-different from your computer's and we'll have to run and debug programs on a "remote" device.
+La programación de microcontroladores utilizan un conjunto de herramientas diferente al que se utiliza en los sistemas de escritorio. En particular, es necesario ejecutar y depurar programas en un dispositivo "remoto".
 
-## Documentation
+## Documentación
 
-Tooling is not everything though. Without documentation, it is pretty much impossible to work with
-microcontrollers. The official MB2 technical documentation is at <https://tech.microbit.org>. We
-will reference other technical documentation throughout the book.
+Sin embargo, las herramientas no lo son todo. Sin documentación, es prácticamente imposible trabajar con microcontroladores. La documentación técnica oficial de MB2 está en <https://tech.microbit.org>. Haremos referencia a otra documentación a lo largo del libro.
 
-## Tools
+## Herramientas
 
-We'll use all the tools listed below. Where a minimum version is not specified, any recent version
-should work but we have listed the version we have tested.
+Haremos uso a lo largo de curso de las herramientas listadas a continuación. Cuando no se especifica una versión mínima, cualquier versión reciente debería funcionar, pero hemos mostrado la versión que hemos probado.
 
-- Rust 1.79.0 or a newer toolchain.
+- Rust 1.79.0 o una toolchain más reciente.
 
-- `gdb-multiarch`. This is a debugging tool. The oldest tested version is 10.2, but other versions
-  will most likely work as well.  If your distribution/platform does not have `gdb-multiarch`
-  available `arm-none-eabi-gdb` will do the trick as well. Furthermore, some normal `gdb` binaries
-  are built with multiarch capabilities as well: you can find further information about this in the
-  debugging chapter of this book.
+- `gdb-multiarch`. Herramienta de depuración. La versión más antigua que hemos probado es la 10.2, pero es probable que otras versiones también funcionen. Si la distribución/plataforma no tiene `gdb-multiarch` disponible, podemos usar `arm-none-eabi-gdb` para depurar. Además, algunos binarios de `gdb` están construidos con capacidades multiplataforma: se puede encontrar más información sobre esto en el capítulo de depuración de este libro.
 
-- [`cargo-binutils`]. Version 0.3.6 or newer.
+- [`cargo-binutils`]. Versión 0.3.6 o posterior.
 
   [`cargo-binutils`]: https://github.com/rust-embedded/cargo-binutils
 
-- [`probe-rs-tools`]. Version 0.24.0 or newer.
+- [`probe-rs-tools`]. Versión 0.24.0 o más reciente.
 
   [`probe-rs-tools`]: https://probe.rs/docs/overview/about-probe-rs/
 
-- `minicom` on Linux and macOS. Tested version: 2.7.1. Other versions will most likely work as well
-  though.
+- `minicom` en Linux y macOS. Se ha probado la versión: 2.7.1. Esperamos que versiones posteriores también funcionen.
 
-- `PuTTY` on Windows.
+- `PuTTY` en Windows.
 
-Next, follow OS-agnostic installation instructions for a few of the tools:
+A continuación, mostramos instrucciones de instalación independientes del SSOO usado, para algunas de las herramientas especificadas:
 
 ### `rustc` & Cargo
 
-Install rustup by following the instructions at [https://rustup.rs](https://rustup.rs).
+Para instalar rustup se deben seguir las indicaciones de [https://rustup.rs](https://rustup.rs).
 
-If you already have rustup installed, double check that you are on the stable channel and your
-stable toolchain is up-to-date. `rustc -V` should return a date and version no older than the one
-shown below:
+Si ya estuviera instalado rustup, hay que asegurarse que estás en el canal estable y que la toolchain seleccionada es la estable debiendo estar actualizada. `rustc -V` debería devolver una fecha y versión no más antigua que la mostrada a continuación:
 
 ``` console
 $ rustc -V
 rustc 1.79.0 (129f3b996 2024-06-10)
+```
+
+En concreto yo he usado:
+``` console
+$ rustc -V
+rustc 1.94.0 (4a4ef493e 2026-03-02)
 ```
 
 ### `cargo-binutils`
@@ -59,12 +54,17 @@ $ cargo size --version
 cargo-size 0.3.6
 ```
 
+En mi caso:
+``` console
+$ rustup component add llvm-tools
+$ cargo install cargo-binutils --vers '^0.4'
+$ cargo size --version
+cargo-size 0.4.0
+```
+
 ### `probe-rs-tools`
 
-**NOTE** If you already have old versions of `probe-run`, `probe-rs` or `cargo-embed` installed
-on your system, remove them before starting this step, as they could conceivably cause problems
-for you down the line. In particular, `probe-run` no longer officially exists. Try these as
-needed:
+**NOTA** si existen en el sistema versiones anteriores de `probe-run`, `probe-rs` o `cargo-embed` instaladas, hay que eliminarlas antes de seguir con este punto,  ya que podrían causar problemas en el futuro. En particular, `probe-run` ya no existe oficialmente. Prueba a eliminarlas si es necesario:
 
 ```console
 $ cargo uninstall cargo-embed
@@ -73,49 +73,60 @@ $ cargo uninstall probe-rs
 $ cargo uninstall probe-rs-cli
 ```
 
-In order to install `probe-rs-tools`, go to <https://probe.rs> and follow the current installation
-instructions there.
+Para instalar `probe-rs-tools`, hay que seguir las instrucciones de la página oficial en <https://probe.rs>.
 
-* **NOTE** If you prefer to install `probe-rs-tools` using `cargo install`, you can try the
-  following steps.  Folks have experienced frequent failures with this approach, but you are
-  welcome to give it a go.
+* **NOTA** Si se prefiere instalar `probe-rs-tools` mediante `cargo install`, puedes probar los siguientes pasos.  La gente ha tenido muchos problemas con este método, pero si quieres, puedes intentarlo.
 
-  1. Upgrade to the most recent stable Rust.
+*  **NOTA del Tr.** En mi caso la instalación mediante cargo no me ha dado ningún tipo de problema.
 
-  2. Install the `probe-rs-tools` binary
-     [prerequisites](https://probe.rs/docs/getting-started/installation/).  (The linked
-     instructions are part of the more general [`probe-rs`](https://probe.rs/) embedded debugging
-     toolkit documentation.)
+```console
+$ cargo install probe-rs-tools
 
-  3. Try the install
+Finished `release` profile [optimized] target(s) in 3m 34s
+Installing C:\Users\arcipreste\.cargo\bin\cargo-embed.exe
+Installing C:\Users\arcipreste\.cargo\bin\cargo-flash.exe
+Installing C:\Users\arcipreste\.cargo\bin\probe-rs.exe
+Installed package `probe-rs-tools v0.31.0` (executables `cargo-embed.exe`, `cargo-flash.exe`, `probe-rs.exe`)
+
+C:\Users\...>probe-rs
+The probe-rs CLI
+```
+
+  1. Actualizar a la versión más estable de Rust.
+
+  2. Instalar el binario `probe-rs-tools` desde los [prerequisitos](https://probe.rs/docs/getting-started/installation/).  (Las instrucciones
+     a las que se remite el enlace forman parte de la documentación más general del kit de herramientas de depuración integrado [`probe-rs`](https://probe.rs/))
+
+  3. Probar la instalación
 
      ```console
      $ cargo install --locked probe-rs-tools
      ```
 
-Installing `probe-rs-tools` will install several useful tools, including `probe-rs` and
-`cargo-embed` (which is normally run as a Cargo command). Check that things are working before
-proceeding.
+Instalar la herramienta `probe-rs-tools` dejará en nuestro ordenador diversas herramientas muy útiles, incluyendo `probe-rs` y `cargo-embed` (que normalmente se ejecutan como un comando de Cargo). Comprueba que todo funciona correctamente antes de continuar.
 
 ```
 $ cargo embed --version
 cargo-embed 0.24.0 (git commit: crates.io)
 ```
 
-### This repository
 
-This book also contains some small Rust codebases used in various chapters: the easiest way to use
-these is to download the book's source code. You can do this in one of the following ways:
+Para mí:
+```
+$ cargo embed --version
+cargo embed 0.31.0 (git commit: crates.io)
+```
+### Este repositorio
 
-- Visit the [repository](https://github.com/rust-embedded/discovery-mb2/), click the green "Code"
-  button and then the "Download Zip" one.
+Este libro contiene algunos pequeños proyectos de Rust usados en varios capítulos: la forma más fácil de utilizarlos es descargar el código fuente del libro. Puedes hacerlo de una de las siguientes maneras:
 
-- Clone it using `git` (if you know `git` you presumably already have it installed) from the same
-  repository as linked in the Zip approach.
+- Visitando el [repositorio original](https://github.com/rust-embedded/discovery-mb2/), Pulsa en el botón verde "Code" y después en "Download Zip".
 
-### OS specific instructions
+- Clonando el repositorio usando `git` (si sabes usar `git` probablemente ya lo tengas instalado) desde el mismo repositorio en el mismo lugar que el descargable zip, se encuentra la URL para clonarlo.
 
-Now follow the instructions specific to the OS you are using:
+### Instrucciones específicas para cada Sistema Operativo
+
+A continuación, están las instrucciones específicas para cada sistema operativo, sigue las del tuyo: 
 
 - [Linux](linux.md)
 - [Windows](windows.md)
