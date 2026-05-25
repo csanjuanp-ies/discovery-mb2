@@ -55,8 +55,8 @@ Lo primero que debemos hacer es responder algunas preguntas.
   Seguramente no necesite convencerte, ya que probablemente estés familiarizado con las diferencias de lenguaje entre Rust y C. Algo que sí quiero mencionar es la gestión de paquetes. C carece de una solución de gestión de paquetes oficial y ampliamente aceptada, mientras que Rust usa Cargo. Esto hace que el desarrollo sea *mucho* más eficiente. Y, en mi opinión, una gestión de paquetes fomenta la reutilización del código porque las bibliotecas se pueden integrar fácilmente en una aplicación, lo cual también es algo bueno, ya que suelen realizarse pruebas "más exhaustivas" sobre ellas.
 
 * **¿Por qué no usar Rust?**
-
-  O ¿Por qúe preferir C sobre Rust?
+  
+* O ¿Por qué preferir C sobre Rust?
 
   El ecosistema de C es más maduro. Existen soluciones listas para usar para varios problemas. Si se necesita controlar un proceso dependiente del tiempo, puedes comprar uno de los sistemas operativos de tiempo real (RTOS) comerciales existentes y resolver el problema. No hay RTOS comerciales en grado de producción en Rust (al momento de escribir esto), por lo que se tendría que crear uno casi desde cero o probar uno de los que están en desarrollo. Puedes encontrar una lista de estos en el repositorio [Awesome Embedded Rust].
 

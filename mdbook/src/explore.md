@@ -63,9 +63,9 @@ Ni el chip nRF52833 ni la placa MB2 contienen un reloj RTC. El nRF52833 sí cont
 
 - I2S: El protocolo "Inter-IC Sound" es una variante de I2C personalizada para la transmisión de audio. I2S actualmente no está desarrollado dentro de `embedded-hal`, pero está implementado por el módulo [`nrf52-hal`].
 
-- Ethernet: Exite una implementación de una pequeña pila TCP/IP llamada [`smoltcp`] que está implementada para algunos chips. La MB2 no tiene un periférico Ethernet.
+- Ethernet: Existe una implementación de una pequeña pila TCP/IP llamada [`smoltcp`] que está implementada para algunos chips. La MB2 no tiene un periférico Ethernet.
 
-- USB: hay trabajo experimental sobre esto, por ejemplo con el crate [`usb-device`]. Para la MB2, el puerto USB es gestionado por el cliente MCU en lugar del host MCU, lo que dificulta hacer cosas personalizadas con USB.
+- USB: hay trabajo experimental sobre esto por ejemplo, con el crate [`usb-device`]. Para la MB2, el puerto USB es gestionado por el cliente MCU en lugar del host MCU, lo que dificulta hacer cosas personalizadas con USB.
 - Bluetooth: el wrapper `nrf-softdevice` proporcionado por el runtime [Embassy] es probablemente la forma más fácil de acceder al Bluetooth con MB2. Embassy también cuenta con el crate de host BLE nativo de Rust:[`TrouBLE`].
 
 - CAN, SMBUS, IrDA, etc.: Existen muchos tipos de interfaces especializadas en el mundo; Rust a veces tiene soporte para ellas. Por favor, investiga la situación actual para la interfaz que necesitas.
@@ -97,7 +97,7 @@ En la multitarea cooperativa, una tarea que se está ejecutando seguirá así ha
 ### Giroscopios
 Como parte del ejercicio de medición de golpes (Punch-o-meter), usamos el acelerómetro para medir cambios en la aceleración en tres dimensiones. Pero hay otros sensores de movimiento como los giroscopios, que nos permiten medir cambios en el "giro" en tres dimensiones.
 
-Puede ser miy útil para la creación de ciertos sistemas, como un robot que quiere evitar volcarse. Además, los datos de un sensor como un giroscopio también se pueden combinar con los datos de un acelerómetro utilizando una técnica llamada Sensor Fusion (ver más abajo para obtener más información).
+Puede ser muy útil para la creación de ciertos sistemas, como un robot que quiere evitar volcarse. Además, los datos de un sensor como un giroscopio también se pueden combinar con los datos de un acelerómetro utilizando una técnica llamada Sensor Fusion (ver más abajo para obtener más información).
 
 ### Motor Servo y paso a paso
 Mientras que algunos motores se usan principalmente para girar en una dirección u otra, por ejemplo, conduciendo un coche de control remoto hacia adelante o hacia atrás, a veces es útil medir con más precisión cómo gira un motor.
@@ -107,7 +107,7 @@ Un microcontrolador puede utilizarse para controlar un motor Servo o paso a paso
 ### Fusión de sensores (Sensor fusion)
 La placa micro:bit contiene dos sensores de movimiento: un acelerómetro y un magnetómetro. Por sí solos, estos miden la aceleración (propia) y el campo magnético (de la Tierra). Pero estas magnitudes pueden "fusionarse" en algo más útil: una medición "robusta" de la orientación de la placa, con menos error de medición que la de cualquier sensor individual.
 
-Esta idea de derivar datos más confiables a partir de diferentes fuentes se conoce como fusión de sensores (sensor fusion).
+Esta idea de derivar datos más confiables a partir de diferentes fuentes se conoce como fusión de sensores (sensor fusión).
 
 ---
 

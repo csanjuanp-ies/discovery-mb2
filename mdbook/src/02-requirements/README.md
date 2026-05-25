@@ -1,69 +1,51 @@
-# Hardware/knowledge requirements
+# Requisitos de hardware y conocimientos
+Los únicos conocimientos previos que necesitas para seguir este curso son los que se requieren para usar Rust. Es muy difícil cuantificar la profundidad necesaria. Sin embargo, es útil estar familiarizado con los conceptos de Tipos genéricos y traits. También deberías poder usar closures. Además, es importante conocer las características de la [edicion] actual de Rust.
 
-The primary knowledge requirement to read this book is to know *some* Rust. It's hard for me to
-quantify *some*. Being familiar with the basics of generics and traits is quite helpful. You do need
-to know how to *use* closures. You also need to be familiar with the idioms of the current Rust
-[edition].
+[edicion]: https://rust-lang-nursery.github.io/edition-guide/
 
-[edition]: https://rust-lang-nursery.github.io/edition-guide/
+También, se necesitará el siguiente hardware:
 
-Also, to follow this material you'll need:
-
-- A [Micro:Bit v2] (MB2) board.
+- Una placa [Micro:Bit v2] (MB2).
 
   [micro:bit v2]: https://tech.microbit.org/hardware/
 
-  You can purchase this board from many suppliers, including
-  Amazon and Ali Baba. You can get a [list][0] of suppliers
-  directly from the BBC, the manufacturers of MB2.
+Se puede comprar esta placa en muchos proveedores, incluyendo Amazon y Ali Baba. Puedes obtener una [lista][0] de proveedores directamente de la BBC, los fabricantes de MB2.
 
   [0]: https://microbit.org/buy/
 
   <p align="center">
-  <img title="micro:bit" src="../assets/microbit-v2.jpg" width="500" />
+  <img title="micro:bit" src="../assets/microbit-v2.jpg" width="500"  alt="Placa microbit v2.0"/>
   </p>
 
-  There are several versions of the `V2` board
-  available. While the material here was written for `V2.00`,
-  things should work fine with with any `V2` board.
+  Aunque hay varias versiones de la placa `V2` disponibles, el material aquí escrito fue para `V2.00`, las cosas deberían funcionar bien con cualquier placa `V2`.
 
-- A micro-B USB cable (nothing special — you probably have many of these). This is required
-  to power the micro:bit board when not on battery, and to communicate with it.  Make sure
-  that the cable supports data transfer, as some cables only support charging devices.
+- Un cable micro-B USB (nada especial, probablemente tienes varios de estos en casa). Es necesario para alimentar la placa micro:bit cuando no tiene una batería y para comunicarse con ella. Asegúrate de que el cable soporta transferencia de datos, ya que algunos solo pueden cargar dispositivos.
 
   <p align="center">
-  <img title="micro-B USB cable" src="../assets/usb-cable.jpg" width="500" />
+  <img title="micro-B USB cable" src="../assets/usb-cable.jpg" width="500" alt="Cable micro-B USB"/>
   </p>
 
-  > **NOTE** Some micro:bit kits ship with such cables.  USB cables used with other mobile
-  > devices should work, if they are micro-B and have the capability to transmit data.
+  > **Nota** Algunos kits de micro:bit incluyen cables. Los cables USB usados con otros dispositivos móviles también deberían funcionar, si son micro-B y tienen la capacidad de transmitir datos.
+  
+  El sitio oficial de `micro:bit Go` proporciona tanto el cable USB como un práctico paquete de baterías para alimentar la MB2 sin USB.
+  
+> **FAQ**: ¿Por qué necesito este hardware específico?
 
-  The official `micro:bit Go` kit provides both the USB cable and a nifty battery pack for powering
-  the MB2 without USB.
+Básicamente, porque nos hará la vida más fácil y todo mucho más sencillo.
 
-> **FAQ**: Wait, why do I need this specific hardware?
+El material es mucho, y será más accesible si no tenemos que preocuparnos por las diferencias de hardware.
 
-It makes my life and yours much easier.
+> **FAQ**: ¿Podría seguir el curso con una placa diferente?
 
-The material is much, much more approachable if we don't have to worry about hardware differences.
-Trust me on this one.
-
-> **FAQ**: Can I follow this material with a different development board?
-
-Maybe? It depends mainly on two things: your previous experience with microcontrollers and/or
-whether a high level crate already exists for your development board somewhere. You probably want at
-least a HAL crate, like [`nrf52833-hal`] used here.  You may prefer a board with a Board Support crate,
-like [`microbit-v2`] used here.  If you intend to use a different microcontroller, you can look
-through [Awesome Embedded Rust] or just search the web to find supported crates.
+Depende principalmente de dos cosas: la experiencia previa con microcontroladores que tengas y/o si ya existe un crate de alto nivel para la placa elegida en algún lugar. Probablemente, se necesite al menos un crate HAL, como [`nrf52833-hal`]. Una mejor elección sería una placa que ya tenga un crate con soporte, como [`microbit-v2`]. Si se tiene la intención de usar un microcontrolador diferente, se puede buscar en [Awesome Embedded Rust] o simplemente intentarlo en la web para encontrar crates compatibles.
 
 [`microbit-v2`]: https://docs.rs/microbit-v2
 [`nrf52833-hal`]: https://docs.rs/nrf52833-hal
 [Awesome Embedded Rust]: https://github.com/rust-embedded/awesome-embedded-rust
 
-With a different development board, this text loses most if not all its beginner friendliness and
-"easy to follow"-ness, in my opinion: you have been warned.
+Si te decides por una placa diferente, ten en cuenta que el material de este curso se escribió específicamente para la MB2 y se perderán las facilidades que presenta el curso. Por lo tanto, es posible que tengas que hacer algunos ajustes para adaptarlo a tu placa, estás advertido.
 
-If you have a different Arm-based development board and you don't consider yourself a total
-beginner, you might consider starting with the [quickstart] project template.
+Si tienes una placa de desarrollo basada en una arquitectura Arm diferente y no te consideras un principiante total, podrías considerar comenzar con la plantilla de proyecto [quickstart].
+
 
 [quickstart]: https://rust-embedded.github.io/cortex-m-quickstart/cortex_m_quickstart/

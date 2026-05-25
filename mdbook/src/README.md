@@ -14,7 +14,7 @@ Se desarrollarán los siguientes temas:
 
 - Conceptos de multitarea: multitarea cooperativa vs. preemptiva, interrupciones, planificadores, etc.
 
-- Conceptos de sistemas de contro: sensores, calibración, filtros digitales, actuadores, control de bucle abierto, control de bucle cerrado, etc.
+- Conceptos de sistemas de control: sensores, calibración, filtros digitales, actuadores, control de bucle abierto, control de bucle cerrado, etc.
 
 
 ## Enfoque
@@ -27,7 +27,7 @@ Se desarrollarán los siguientes temas:
 
 ## No son objetivos
 
-Está fuera del ámbtio de este libro:
+Está fuera del ámbito de este libro:
 
 - Enseñanza del lenguaje Rust. Ya hay mucho material sobre ese tema. Nos centraremos en microcontroladores y sistemas embebidos.
 
@@ -39,7 +39,7 @@ Tampoco se pretende portar este material a otras placas de desarrollo; este libr
 
 ## Informando de problemas
 
-La fuente en **ingés** de este libro está en [este repositorio]. Si hay algún tipo de errata o problema se puede comunicar mediante el [registro de incidencias].
+La fuente en **inglés** de este libro está en [este repositorio]. Si hay algún tipo de errata o problema se puede comunicar mediante el [registro de incidencias].
 
 [este repositorio]: https://github.com/rust-embedded/discovery-mb2
 [registro de incidencias]: https://github.com/rust-embedded/discovery-mb2/issues
