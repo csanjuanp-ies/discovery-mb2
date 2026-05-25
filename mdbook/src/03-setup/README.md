@@ -131,3 +131,7 @@ A continuación, están las instrucciones específicas para cada sistema operati
 - [Linux](linux.md)
 - [Windows](windows.md)
 - [macOS](macos.md)
+
+### Configuración del IDE
+
+Para instrucciones básicas para la configuración de un IDE, se puede consultar: [IDE](IDE.md).
