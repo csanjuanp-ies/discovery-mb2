@@ -1,32 +1,27 @@
-# Meet your hardware
+# Conoce el Hardware
 
-Let's get familiar with the hardware we'll be working with.
+Vamos a familiarizarnos con el hardware con el que vamos a trabajar.
 
 ## micro:bit
 
 <p align="center">
-<img title="micro:bit" src="../assets/microbit-v2.jpg" />
+<img title="micro:bit" src="../assets/microbit-v2.jpg" alt="Micro:bit" />
 </p>
 
-Here are some of the many components on the board:
+A continuación, vemos algunos de los componentes que se encuentran en la placa:
 
-- A [microcontroller].
-- A number of LEDs, most notably the LED matrix on the back
-- Two user buttons as well as a reset button (the one next to the USB port).
-- One USB port.
-- A sensor that is both a [magnetometer] and an [accelerometer]
+- Un [microcontrolador].
+- Un conjunto de Led, la mayoría de los cuales se encuentran en la parte trasera de la placa en forma de matriz.
+- Dos botones de usuario, así como un botón de reinicio (el que se encuentra junto al puerto USB).
+- Un puerto USB.
+- Un sensor que es tanto un [magnetómetro] y [acelerómetro]
 
-[microcontroller]: https://en.wikipedia.org/wiki/Microcontroller
-[accelerometer]: https://en.wikipedia.org/wiki/Accelerometer
-[magnetometer]: https://en.wikipedia.org/wiki/Magnetometer
+[microcontrolador]: https://en.wikipedia.org/wiki/Microcontroller
+[acelerómetro]: https://en.wikipedia.org/wiki/Accelerometer
+[magnetómetro]: https://en.wikipedia.org/wiki/Magnetometer
 
-Of these components, the most important is the microcontroller (sometimes
-shortened to "MCU" for "microcontroller unit"), which is the bigger of the two
-black squares sitting on the side of the board with the USB port. The MCU is
-what runs your code. You might sometimes read about "programming a board", when
-in reality what we are doing is programming the MCU that is installed on the board.
+De estos componentes, el más importante es el microcontrolador (a veces abreviado como "MCU" por "microcontroller unit"), que es el más grande de los dos cuadrados situados junto al puerto USB. El MCU es lo que ejecuta el código. A veces puedes leer sobre "programar una placa", cuando en realidad lo que estamos haciendo es programar el MCU que está instalado en la placa.
 
-If you happen to be interested in a more detailed description of the board you
-can checkout the [micro:bit website](https://tech.microbit.org/hardware/).
+Si quieres saber más sobre el micro:bit, puedes consultar la [página web del micro:bit](https://tech.microbit.org/hardware/).
 
-Since the MCU is so important, let's take a closer look at the one sitting on our board.
+Aunque el microcontrolador es el componente más importante de la placa, vamos a echar un vistazo al resto de los componentes de la placa.

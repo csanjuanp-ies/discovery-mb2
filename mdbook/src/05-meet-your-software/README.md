@@ -1,4 +1,4 @@
-# Meet your software
+# Conoce el software
 
 In this chapter we will learn how to build, run and debug some *very* simple programs. The goal here
 is not to get into the details of MB2 Rust programming (yet), but to just familiarize yourself with
