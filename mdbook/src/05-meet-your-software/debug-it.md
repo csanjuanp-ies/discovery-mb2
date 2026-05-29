@@ -1,46 +1,38 @@
-# Debug it
+# Depuración
+Vamos a descubrir cómo depurar nuestro pequeño programa. Aún no tiene ningún error interesante, pero ese es el mejor tipo de programa para aprender a depurar.
 
-Let's figure out how to debug our little program. It doesn't really have any interesting bugs yet,
-but that's the best kind of program to learn debugging on.
 
-## How does this even work?
+## ¿Cómo funciona esto?
 
-Before we debug our program let's take a moment to quickly understand what is actually happening
-here. In the previous chapter we already discussed the purpose of the second chip on the board, as
-well as how it talks to our computer, but how can we actually use it?
+Antes de poder depurarlo, vamos a entender lo que está pasando. En el capítulo anterior ya discutimos el propósito del segundo chip en la placa, además de cómo se comunica con nuestro ordenador, pero ¿cómo podemos usarlo realmente?
 
-The little option `default.gdb.enabled = true` in `Embed.toml` made `cargo embed` open a so-called
-"GDB stub" after flashing. This is a server that our GDB can connect to and send commands like "set
-a breakpoint at address X". The server can then decide on its own how to handle this command. In the
-case of the `cargo embed` GDB stub it will forward the command via USB to the "debugging probe" on
-the second chip. This chip does the job of talking to the MCU for us.
+La opción `default.gdb.enabled = true` en el fichero `Embed.toml` hace que `cargo embed` abra una sesión de depuración con "GDB" después de flashear el código. Esta sesión es un servidor al que nuestra orden GDB puede conectarse y enviar comandos tales como "establecer un punto de interrupción en la dirección X". El servidor una vez recibido el comando, puede decidir cómo manejarlop. En el caso de la sesión de depuración GDB de `cargo embed`, reenviará el comando a través de USB a la "sonda de depuración" en el segundo chip de la MB2. Este chip hace el trabajo de hablar con el MCU por nosotros.
 
-## Let's debug!
+## Depuremos
 
-`cargo-embed` is running in our current shell. We can open a new shell and go back into our project
-directory. Once we are there we first have to open the binary in gdb like this:
+`cargo-embed` está ejecutándose en una consola de comandos. Debemos dejar esa consola abierta, ya que es el servidor de depuración. Abriremos otra consola para ejecutar la instrucción GDB. En esa nueva consola, nos dirigiremos a nuestro directorio de proyecto. Una vez allí, primero tenemos que abrir el binario gdb de esta manera:
 
 ```shell
 $ gdb ../../../target/thumbv7em-none-eabihf/debug/examples/init
 ```
 
-> **NOTE** Depending on which GDB you installed you will have to use a different command to launch
-> it. Check out [chapter 3] if you forgot which one it was.
+O bajo windows:
+```shell
+> arm-none-eabi-gdb ../../../target/thumbv7em-none-eabihf/debug/examples/init
+```
 
-[chapter 3]: ../03-setup/index.md#tools
+> **NOTA** Dependiendo del GDB que tengamos instalado, habrá que usar un comando diferente para lanzarlo. Consulta el [capítulo 3] si olvidaste cuál era.
 
-The `../../..` in this command is needed, since each example project is in a "workspace" that
-contains the entire book. Workspaces have a single shared `target` directory. Check out [Workspaces
-chapter in Rust Book] for more.
+[capítulo 3]: ../03-setup/README.md#herramientas
 
-> **NOTE** If `cargo-embed` prints a lot of warnings here don't worry about it. As of now it does
-> not fully implement the GDB protocol, and thus might not recognize all the commands your GDB is
-> sending to it. As long as GDB does not crash, you are fine.
+La ruta `../../..` de este comando es obligatoria, como este ejemplo pertenece al workspace de todo el libro, en él todos los binarios se generan en el mismo directorio `target`. Si no usáramos esta ruta, GDB no podría encontrar el binario que queremos depurar. Lee [Capítulo sobre espacios de trabajo] para más información.
 
-[Workspaces chapter in Rust Book]: https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html#creating-a-workspace
+> **NOTA** Si `cargo-embed` imprime muchas advertencias, no hay que preocuparse. Por ahora no se implementa completamente el protocolo GDB, y por lo tanto podría no reconocer todos los comandos que le está enviando. Mientras GDB no se bloquee, todo está bien.
 
-Next we will have to connect to the GDB stub. It runs on `localhost:1337` by default so in order to
-connect to it run the following:
+
+[Capítulo sobre espacios de trabajo]: https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html#creating-a-workspace
+
+A continuación tenemos que conectar GDB con el servidor de depuración. Por defecto, este servidor se ejecuta en `localhost:1337`, así que para enlazarnos a él, ejecutamos lo siguiente:
 
 ```shell
 (gdb) target remote :1337
@@ -49,13 +41,8 @@ Remote debugging using :1337
 157     #[derive(Copy, Clone, Debug)]
 ```
 
-> **NOTE** The example in the repository for this chapter may change over time. Line numbers and
-> other source details may thus be different from what is shown here and below.
->
-> If the program fails to halt after starting, and you end up somewhere deeper in the program like
-> the following, then try running `monitor reset halt` to reset. This is due to [a bug](https://github.com/probe-rs/probe-rs/issues/3438)
-> in `probe-rs`, see [issue #27](https://github.com/rust-embedded/discovery-mb2/issues/27) for
-> more details.
+> **NOTA** El ejemplo de este capítulo puede cambiar con el tiempo. Los números de línea y otros detalles del código fuente podrían ser diferentes de lo que se muestra.
+> Si el programa no se detiene después de lanzarse, o se termina en algún momento posterior durante la depuración, se puede intentar ejecutar `monitor reset halt` para reiniciar la MB2. Esto se debe [a un bug](https://github.com/probe-rs/probe-rs/issues/3438). Para más detalles, consultar [issue #27](https://github.com/rust-embedded/discovery-mb2/issues/27)
 > ```shell
 > (gdb) target remote :1337
 > Remote debugging using :1337
@@ -66,8 +53,8 @@ Remote debugging using :1337
 > Target halted
 > ```
 
-Next what we want to do is get to the `main` function of our program.  We will do this by first
-setting a breakpoint there and then continuing program execution until we hit the breakpoint:
+Lo siguiente que queremos hacer es detener la ejecución en la función `main` de nuestro programa. Para ello, primero
+estableceremos un punto de interrupción en esa localización y, a continuación, continuaremos con la ejecución del programa hasta llegar al él:
 
 ```
 (gdb) break main
@@ -80,29 +67,22 @@ Breakpoint 1, init::__cortex_m_rt_main_trampoline () at src/05-meet-your-softwar
 9       #[entry]
 ```
 
-Breakpoints can be used to stop the normal flow of a program. The `continue` command will let the
-program run freely *until* it reaches a breakpoint. In this case, until it reaches the `main`
-function because there's a breakpoint there.
+Los puntos de ruptura se pueden usar para detener el flujo normal de un programa. El comando `continue` permitirá que el programa se ejecute libremente *hasta* que alcance un punto de interrupción. En este caso, hasta que alcance la función `main` porque hemos establecido uno allí.
 
-Note that GDB output says "Breakpoint 1". Remember that our processor can only use a limited amount
-of these breakpoints, so it's a good idea to pay attention to these messages. If you happen to run
-out of breakpoints, you can list all the current ones with `info break` and delete desired ones with
-`delete <breakpoint-num>`.
 
-For a nicer debugging experience, we'll be using GDB's Text User Interface (TUI). To enter into that
-mode, on the GDB shell enter the following command:
+Indicar que la salida de GDB dice "Breakpoint 1". Recuerda que nuestro procesador solo puede usar una cantidad limitada de estos puntos de interrupción, así que es buena idea prestar atención a estos mensajes. Si por casualidad nos quedamos sin ellos, podemos listarlos con `info break` y eliminar alguno mediante `delete <breakpoint-num>`.
+
+Para una experiencia más agradable, usaremos la Interfaz de Usuario de Texto (TUI) de GDB. Para entrar en ese modo, en la consola de GDB ingresamos el siguiente comando:
 
 ```
 (gdb) layout src
 ```
 
-> **NOTE** Apologies Windows users. The GDB shipped with the GNU Arm Embedded Toolchain doesn't
-> support this TUI mode `:-(`.
+> **NOTA** Disculpas a los usuarios Windows. El GDB distribuido con las herramientas de Arm no soporta este modo. `:-(`.
 
 ![GDB session](../assets/gdb-layout-src.png "GDB TUI")
 
-GDB's break command does works for more than just function names: it can also break at certain line
-numbers.  If we want to break in line 13 we can simply do:
+El comando break de GDB no solo funciona con nombres de funciones: también puede establecer puntos de interrupción en ciertos números de línea. Si queremos definir un punto de interrupción en la línea 13, simplemente podemos hacer:
 
 ```
 (gdb) break 13
@@ -114,14 +94,13 @@ Breakpoint 2, init::__cortex_m_rt_main () at src/05-meet-your-software/examples/
 (gdb)
 ```
 
-At any point you can leave the TUI mode using the following command:
+En cualquier momento, podemos salir del modo TUI usando el siguiente comando:
 
 ```
 (gdb) tui disable
 ```
 
-We are now "on" the `_y = x` statement; that statement hasn't been executed yet. This means that `x`
-is initialized but `_y` could contain anything. Let's inspect `x` using the `print` command:
+En este momento estamos situados en la línea 13, justo antes de ejecutar la asignación `_y = x`. Esto significa que `x` ya ha sido inicializada, pero `_y` aún no. Vamos a inspeccionar el valor de `x` usando el comando `print`:
 
 ```
 (gdb) print x
@@ -131,26 +110,22 @@ $2 = (*mut i32) 0x20003fe8
 (gdb)
 ```
 
-As expected, `x` contains the value `42`. The command `print &x` prints the address of the variable
-`x`.  The interesting bit here is that GDB output shows the type of the reference: `*mut i32`, a
-pointer to a mutable `i32` value.
+Como esperábamos, `x` contiene el valor `42`. El comando `print &x` imprime la dirección de la variable `x`. Lo interesante aquí es que la salida de GDB muestra el tipo de referencia: `*mut i32`, un puntero a un valor mutable de tipo `i32`.
 
-If we want to continue the program execution line by line, we can do that using the `next` command.
-Let's proceed to the `loop {}` statement:
+Si deseamos continuar con la ejecución del programa línea a línea, es posible utilizar el comando `next`. Continuaremos hasta el inicio del bucle `loop {}`:
 
 ```
 (gdb) next
 16          loop {}
 ```
 
-And `_y` should now be initialized.
+La variable `_y` ya debería estar inicializada.
 
 ```
 (gdb) print _y
 $5 = 42
 ```
-
-Instead of printing the local variables one by one you can also use the `info locals` command:
+En vez de imprimir las variables locales una por una, también es factible usar el comando `info locals`:
 
 ```
 (gdb) info locals
@@ -159,13 +134,11 @@ _y = 42
 (gdb)
 ```
 
-If we use `next` again on top of the `loop {}` statement, we'll get stuck because the program will
-never pass that statement. Instead, we'll switch to the disassemble view with the `layout asm`
-command and advance one instruction at a time using `stepi`. You can always switch back into Rust
-source code view later by issuing the `layout src` command again.
+Si volvemos a usar `next` para avanzar una línea más, nos quedaremos atascados porque el programa nunca pasará de esa declaración. 
+En su lugar, cambiaremos a la vista de desensamblado con el comando `layout asm` y avanzaremos una instrucción a la vez usando `stepi`. 
+Siempre restauraremos la vista de código fuente de Rust mediante el comando `layout src`.
 
-> **NOTE** If you used the `next` or `continue` command by mistake and GDB got stuck, you can get
-> unstuck by hitting `Ctrl+C`.
+> **NOTA** En caso de ejecutar el comando `next` o `continue` por error y que GDB se quedara atascado, podríamos salir de esa situación presionando `Ctrl+C`.
 
 ```
 (gdb) layout asm
@@ -173,8 +146,7 @@ source code view later by issuing the `layout src` command again.
 
 ![GDB session](../assets/gdb-layout-asm.png "GDB disassemble")
 
-If you are not using the TUI mode, you can use the `disassemble /m` command to disassemble the
-program around the line you are currently at.
+Si no estamos usando el modo TUI, el comando `disassemble /m` muestra el código desemsamblado alrededor de la línea en la que nos encontramos.
 
 ```
 (gdb) disassemble /m
@@ -198,11 +170,9 @@ Dump of assembler code for function _ZN12init18__cortex_m_rt_main17h3e25e3afbec4
 
 End of assembler dump.
 ```
+El puntero de ejecución `=>` muestra la siguiente instrucción que el procesador ejecutará.
 
-See the fat arrow `=>` on the left side? It shows the instruction the processor will execute next.
-
-If not inside the TUI mode on each `stepi` command GDB will print the statement and the line number
-of the instruction the processor will execute next.
+Dentro del modo TUI, cada vez que tecleamos `stepi`, GDB imprime la línea de código fuente que corresponde a la instrucción que se ejecutará a continuación y su número de línea.
 
 ```
 (gdb) stepi
@@ -211,7 +181,7 @@ of the instruction the processor will execute next.
 16          loop {}
 ```
 
-One last trick before we move to something more interesting. Enter the following commands into GDB:
+Una atajo antes de pasar a algo más interesante. Introducimos el siguiente comando en GDB:
 
 ```
 (gdb) monitor reset
@@ -223,22 +193,20 @@ Breakpoint 1, init::__cortex_m_rt_main_trampoline () at src/05-meet-your-softwar
 (gdb)
 ```
 
-We are now back at the beginning of `main`!
+Nos hace retornr al comienzo del programa en `main`.
 
-`monitor reset` will reset the microcontroller and stop it right at the program entry point.
-The following `continue` command will let the program run freely until it reaches the `main`
-function that has a breakpoint on it.
+El comando `monitor reset` resetea el microcontrolador y lo para en el punto de entrada.
+La orden `continue` hace que el programa se ejecute hasta que alcance el punto de interrupción que establecimos en `main`.
 
-This combo is handy when you, by mistake, skipped over a part of the program that you were
-interested in inspecting. You can easily roll back the state of your program back to its very
-beginning.
+Este conjunto de comandos es útil cuando, por error, saltamos una parte del programa que nos interesaba inspeccionar. De esta manera podemos restaurar fácilmente el estado del programa hasta su inicio.
 
-> **The fine print**: This `reset` command doesn't clear or touch RAM. That memory will retain its
-> values from the previous run. That shouldn't be a problem though, unless your program behavior
-> depends on the value of *uninitialized* variables — but that's the definition of Undefined
-> Behavior (UB).
 
-We are done with this debug session. You can end it with the `quit` command.
+> ** **
+> **Una anotación**: Este comando de `reset` no limpia ni modifica la RAM. Mantendrá los valores de la ejecución anterior. 
+> Eso no debería ser un problema, a menos que el comportamiento del programa dependa del valor de variables *no inicializadas* — pero esa es la definición de Comportamiento Indefinido (UB).
+
+
+Ya hemos terminado la sesión de depuración. Podemos salir con el comando `quit`.
 
 ```
 (gdb) quit
@@ -252,13 +220,11 @@ Ending remote debugging.
 [Inferior 1 (Remote target) detached]
 ```
 
-> **NOTE** If the default GDB CLI is not to your liking check out [gdb-dashboard]. It uses Python
-> to turn the default GDB CLI into a dashboard that shows registers, the source view, the assembly
-> view and other things.
+> **NOTA** Si el cliente por defecto GDB no se está conectando correctamente, revisa [gdb-dashboard]. Esta herramienta usa Python para convertir la interfaz de línea de comandos de GDB en un panel de control que muestra los registros, la vista del código fuente, la vista de ensamblado y otras cosas.
 
 [gdb-dashboard]: https://github.com/cyrus-and/gdb-dashboard#gdb-dashboard
 
-If you want to learn more about what GDB can do, check out the section [How to use
-GDB](../appendix/2-how-to-use-gdb/).
+Si quieres aprender más sobre lo que GDB, echa un vistazo a la sección [Cómo usar GDB](../appendix/2-how-to-use-gdb/README.md).
 
-What's next? The high level API I promised.
+
+¿Qué es lo siguiente? La API de alto nivel que prometimos.

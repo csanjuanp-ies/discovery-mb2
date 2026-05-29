@@ -1,51 +1,43 @@
-# Embedded Setup
+# Configuración embebida
 
-Let's take a look at our first program to compile. Check the `examples/init.rs` file:
+Vamos a echar un vistazo a nuestro primer programa. Comprueba el fichero `examples/init.rs`:
 
 ``` rust
 {{#include examples/init.rs}}
 ```
 
-Microcontroller programs are different from standard programs in two aspects: `#![no_std]` and
+Los programas para microcontroladores son diferentes de los programas estándar en dos aspectos: `#![no_std]` y
 `#![no_main]`.
 
-The `no_std` attribute says that this program won't use the `std` crate, which assumes an underlying
-OS; the program will instead use the `core` crate, a subset of `std` that can run on bare metal
-systems (that is, systems without OS abstractions like files and sockets).
+El atributo `no_std` indica que este programa no usará la biblioteca estándar de Rust, la cual asume un sistema operativo subyacente; el programa utilizará en su lugar el crate `core`, un subconjunto de `std` que puede ejecutarse en sistemas hardware directamente (es decir, sistemas sin abstracciones de sistema operativo como archivos y sockets).
 
-The `no_main` attribute says that this program won't use the standard `main` interface, which is
-tailored for command line applications that receive arguments. Instead of the standard `main` we'll
-use the `entry` attribute from the [`cortex-m-rt`] crate to define a custom entry point. In this
-program we have named the entry point `main`, but any other name could have been used. The entry
-point function must have signature `fn() -> !`; this type indicates that the function can't return.
-This means that the program never terminates by returning from `main`: if the compiler detects that
-this would be possible it will refuse to compile your program.
+El atributo `no_main` indica que este programa no usará la interfaz estándar 'main', que está diseñada para aplicaciones de línea de comandos que reciben argumentos. En lugar del 'main' estándar, usaremos el atributo 'entry' del crate [`cortex-m-rt`] para definir un punto de entrada personalizado. 
+En este programa hemos definido el punto de entrada como `main`, pero se podría haber usado cualquier otro nombre. 
+La función del punto de entrada debe tener la firma `fn() -> !`; este tipo indica que la función no termina. 
+Esto significa que el programa nunca finaliza: si el compilador detecta que esto sería posible, se negará a compilarlo.
+
 
 [`cortex-m-rt`]: https://crates.io/crates/cortex-m-rt
 
-If you are a careful observer, you'll also notice there is a possibly-hidden `.cargo` directory in
-the Cargo project as well. This directory contains a Cargo configuration file `.cargo/config.toml`.
+Si eres un observador cuidadoso, habrás notado que hay un directorio `.cargo` posiblemente oculto en el proyecto de Cargo. Este directorio contiene un archivo de configuración de Cargo `.cargo/config.toml`.
 
 ```toml
 {{#include .cargo/config.toml}}
 ```
 
-This file tweaks the linking process to tailor the memory layout of the program to the requirements
-of the target device.  This modified linking process is a requirement of the `cortex-m-rt`
-crate. The `.cargo/config.toml` file also tells Cargo how to build and run code on our MB2.
+Este fichero modifica el proceso de enlace para adaptar la disposición de memoria del programa a los requisitos del dispositivo de desarrollo. Este proceso de enlace es un requisito del crate `cortex-m-rt`. El archivo `.cargo/config.toml` también le dice a Cargo cómo construir y ejecutar el código en nuestro MB2.
 
-There is also an `Embed.toml` file here:
+Hay también un fichero `Embed.toml` aquí:
 
 ```toml
 {{#include Embed.toml}}
 ```
 
-This file tells `cargo-embed` that:
+Este fichero informa a `cargo-embed` que:
 
-- We are working with an NRF52833.
-- We want to halt the chip after flashing it, so our program stops before `main`.
-- We want to disable RTT. RTT is a protocol that allows the chip to send text to a debugger.
-  You have already seen RTT in action: it was the protocol that sent "Hello World" in chapter 3.
-- We want to enable GDB. This will be required for the debugging procedure.
+- Trabaja con un chip NRF52833.
+- Queremos detener la ejecución en el chip después de flashearlo, por lo que nuestro programa se detiene antes de `main`.
+- Queremos deshabilitar RTT. RTT es un protocolo que permite al chip enviar texto a un depurador. Ya has visto RTT en acción: fue el protocolo que envió "Hello World" en el capítulo 3.
+- Queremos habilitar GDB. Este paso es necesario para procesos de depuración.
 
-Now that we've seen what's going on, let's start by building this program.
+Vamos a ver que está pasando, empecemos por construir este programa.

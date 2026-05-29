@@ -1,46 +1,32 @@
-# Build it
+# Generando el binario
+El primer paso para construir el binario. Dado que el microcontrolador tiene una arquitectura diferente a la de nuestro ordenador, tendremos que realizar una compilación cruzada. 
+Hacerlo en Rust es tan simple como pasar un flag extra `--target` a `rustc` o Cargo. 
+La parte complicada es averiguar el argumento de ese flag: el *nombre* del destino.
 
-The first step is to build our "binary" crate. Because the microcontroller has a different
-architecture than your computer we'll have to cross compile. Cross compiling in Rust land is as
-simple as passing an extra `--target` flag to `rustc`or Cargo. The complicated part is figuring out
-the argument of that flag: the *name* of the target.
 
-As we already know the microcontroller on the micro:bit v2 has a Cortex-M4F processor in it.
-`rustc` knows how to cross-compile to the Cortex-M architecture and provides several different
-targets that cover the different processors families within that architecture:
+Como ya hemos visto, el microcontrolador del micro:bit v2 tiene un procesador Cortex-M4F. `rustc` sabe cómo compilar de forma cruzada para la arquitectura Cortex-M y proporciona varios destinos que cubren las diferentes familias de procesadores dentro de esa arquitectura:
 
-- `thumbv6m-none-eabi`, for the Cortex-M0 and Cortex-M1 processors
-- `thumbv7m-none-eabi`, for the Cortex-M3 processor
-- `thumbv7em-none-eabi`, for the Cortex-M4 and Cortex-M7 processors
-- `thumbv7em-none-eabihf`, for the Cortex-M4**F** and Cortex-M7**F** processors
-- `thumbv8m.main-none-eabi`, for the Cortex-M33 and Cortex-M35P processors
-- `thumbv8m.main-none-eabihf`, for the Cortex-M33**F** and Cortex-M35P**F** processors
+- `thumbv6m-none-eabi`, para los procesadores Cortex-M0 y Cortex-M1
+- `thumbv7m-none-eabi`, para el procesador Cortex-M3 
+- `thumbv7em-none-eabi`, para los procesadores Cortex-M4 y Cortex-M7 
+- `thumbv7em-none-eabihf`, para los procesadores Cortex-M4**F** y Cortex-M7**F** 
+- `thumbv8m.main-none-eabi`, para los procesadores Cortex-M33 y Cortex-M35P 
+- `thumbv8m.main-none-eabihf`, para los procesadores Cortex-M33**F** y Cortex-M35P**F** 
 
-"Thumb" here refers to a version of the Arm instruction set that has smaller instructions for
-reduced code size (it's a pun, see). The `hf`/`F` parts have hardware floating point
-acceleration. This will make numeric computations involving fractional ("floating decimal point")
-computations much faster.
+"Thumb" aquí se refiere a una versión del conjunto de instrucciones Arm que tiene instrucciones más pequeñas para reducir el tamaño del código. La denominación `hf`/`F` tienen aceleración de punto flotante por hardware. Esto hará que los cálculos numéricos fraccionales ("punto decimal flotante") sean mucho más rápidos.
 
-For the micro:bit v2, we'll want the `thumbv7em-none-eabihf` target.
+Para la MB2, micro:bit v2, queremos el destino `thumbv7em-none-eabihf`.
 
-Before cross-compiling you have to download a pre-compiled version of the standard library (a
-reduced version of it, actually) for your target. That's done using `rustup`:
+Antes de realizar la compilación cruzada, es necesario descargar una versión precompilada de la biblioteca estándar (en realidad, una versión reducida de ella) para tu destino. Esto se hace usando `rustup`:
 
 ``` console
 $ rustup target add thumbv7em-none-eabihf
 ```
+Esto solo hay que hacerlo una vez; `rustup` actualizará este destino (reinstalando un nuevo componente de la biblioteca estándar `rust-std` que contiene la biblioteca `core` que usamos) cada vez que actualices la cadena de compilación. Por lo tanto, se puede omitir este paso si ya se agregó el destino necesario anteriormente en [Verificación de la instalación].
 
-You only need to do the above step once; `rustup` will then update this target (re-installing a new
-standard library `rust-std` component that contains the `core` library we use) whenever you update
-your toolchain. Therefore you can skip this step if you have already added the necessary target
-while [verifying your setup].
+[Verificación de la instalación]: ../03-setup/verify.md#Verificación-de-la-instalación
 
-[verifying your setup]: ../03-setup/verify.html#verifying-cargo-embed
-
-
-With the `rust-std` component in place you can now cross compile the program using Cargo.  Make sure
-you are in the `mdbook/src/05-meet-your-software` directory in the Git repo, then build. This initial code
-is an example, so we compile it as such.
+Con el componente `rust-std` en su lugar, ya es posible compilar el programa de forma cruzada usando Cargo. Asegúrate de estar en el directorio `mdbook/src/05-meet-your-software` en el repositorio Git, luego construye. Este código inicial es un ejemplo, así que lo compilamos como tal.
 
 ``` console
 $ cargo build --example init
@@ -51,17 +37,13 @@ $ cargo build --example init
     Finished dev [unoptimized + debuginfo] target(s) in 33.67s
 ```
 
-> **NOTE** Be sure to compile this crate *without* optimizations. The provided `Cargo.toml` file and
-> build command above will ensure optimizations are off as long as you *don't* pass `cargo` the
-> `--release` flag.
+> **NOTA** Es importante que el programa se compile sin optimizaciones. El fichero `Cargo.toml` proporcionado y el comando de construcción anterior asegurarán que las optimizaciones estén desactivadas siempre que no pases a `cargo` el flag `--release`.
 
-OK, now we have produced an executable. This executable won't blink any LEDs: it's just a simplified
-version that we will build upon later in the chapter.  As a sanity check, let's verify that the
-produced executable is actually an Arm binary. (The command below is equivalent to
+Ok, ya tenemos un ejecutable. No hará mucho, no parpadeará ningún LED: es solo una versión simplificada que construiremos más adelante en el capítulo. Para asegurarnos, vamos a verificar que el ejecutable producido es realmente un binario Arm. (El comando a continuación 
 
     readelf -h ../../../target/thumbv7em-none-eabihf/debug/examples/init
 
-on systems that have `readelf`.)
+Es equivalente al siguiente en sistemas que no tengan `readelf` instalado:
 
 ``` console
 $ cargo readobj --example init -- --file-headers
@@ -87,8 +69,7 @@ ELF Header:
   Number of section headers:         21
   Section header string table index: 19
 ```
+Si los números no coinciden exactamente con estos, no te preocupes: gran parte de ello depende del entorno de compilación actual.
 
-If your numbers don't exactly match these, don't worry: a lot of this is quite dependent
-on the current build environment. 
+A continuación, pasaremos el programa a la MB2.
 
-Next, we'll flash the program into our microcontroller.

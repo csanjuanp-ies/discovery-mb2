@@ -1,36 +1,32 @@
 # Conoce el software
 
-In this chapter we will learn how to build, run and debug some *very* simple programs. The goal here
-is not to get into the details of MB2 Rust programming (yet), but to just familiarize yourself with
-the mechanics of the process.
+En este capítulo aprenderemos a construir, ejecutar y depurar algunos programas *muy* simples. El objetivo aquí no es entrar en los detalles de la programación MB2 Rust (todavía), sino simplemente familiarizarse con la mecánica del proceso.
 
-First, a quick note about the conventions used in the rest of this book. We expect you to get
-a copy of the whole book with
+Primero, una nota rápida sobre las convenciones utilizadas en el resto de este libro. Esperamos que obtengas una copia de todo el libro en
 
 ```
 git clone http://github.com/rust-embedded/discovery-mb2
 ```
 
-The book's "source code" is in `discovery-mb2/mdbook/src`. You should go there in your copy and look
-around a bit. Each chapter directory has both the source Markdown text *and* the complete source for
-all the programs in that chapter. When we refer to some path like `src/main.rs`, we mean that place
-starting from the chapter you are working in. For example, your `discovery-mb2` has a file called
-`mdbook/src/05-meet-your-software/examples/init.rs`. We will refer to that file as just
-`examples/init.rs` in this chapter.
+El código fuente del libro está en `discovery-mb2/mdbook/src`. Se debería examinar la carpeta en profundidad. 
+Cada capítulo está en un directorio diferente y tiene tanto el texto Markdown *como* el código fuente completo de todos los programas en ese capítulo. 
+Cuando nos referimos a alguna ruta como `src/main.rs`, nos referimos a ese lugar comenzando desde el capítulo en el que estás trabajando. 
+Por ejemplo, `discovery-mb2` tiene un archivo llamado `mdbook/src/05-meet-your-software/examples/init.rs`. 
+Indicaremos ese archivo como simplemente `examples/init.rs` en este capítulo.
 
-There are two basic kinds of Rust code: "binary" executable programs, and "library" code. The
-library code won't play a huge role in this book. Binary program source code can live in one of
-several places:
+Existen dos tipos básicos de código Rust: programas ejecutables "binarios" y "bibliotecas". 
+No desarrollaremos muchas bibliotecas a lo largo del libro. 
+El código fuente de los programas binarios reside en varios lugares:
 
-* A program in `src/main.rs` will be automatically compiled and run by `cargo embed` or `cargo
-  run`. No special flags are needed.
+* La aplicación `src/main.rs` se compilará y ejecutará directamente con `cargo embed` o `cargo
+  run`. No hace falta ninguna configuración especial.
 
-* A program in `examples/foo.rs` can be compiled and run by `cargo embed --example foo` or
+* Un fichero llamado `examples/foo.rs` tiene que ser ejecutado y compilado mediante `cargo embed --example foo` o
   `cargo run --example foo`.
   
-* A program in `src/bin/bar.rs` can be compiled and run by `cargo embed --bin bar` or
+* Un programa denominado `src/bin/bar.rs` puede ser ejecutado con `cargo embed --bin bar` o
   `cargo run --bin bar`.
 
-This is confusing, but it's a standard convention of Cargo.
+Es un poco confuso, pero es la forma estándar de Cargo.
 
-Now let's move on and work with all this.
+Vamos a avanzar en todo esto.

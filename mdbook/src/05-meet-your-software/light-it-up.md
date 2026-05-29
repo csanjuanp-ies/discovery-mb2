@@ -1,65 +1,59 @@
-# Light it up
+# ¡Enciéndelo!
+Vamos a terminar el capítulo haciendo que uno de los muchos LEDs del MB2 se encienda. Para conseguir esta tarea utilizaremos uno de los traits proporcionados por `embedded-hal`, específicamente el trait [`OutputPin`] que nos permite encender o apagar un pin.
 
-We will finish this chapter by making one of the many LEDs on the MB2 light up. In order to get this
-task done we will use one of the traits provided by `embedded-hal`, specifically the [`OutputPin`]
-trait which allows us to turn a pin on or off.
 
 [`OutputPin`]: https://docs.rs/embedded-hal/0.2.6/embedded_hal/digital/v2/trait.OutputPin.html
 
-## The micro:bit LEDs
+## Los Led de la micro:bit 
 
-On the back of the micro:bit you can see a 5x5 square of LEDs, usually called an LED matrix. This
-matrix alignment is used so that instead of having to use 25 separate pins to drive every single one
-of the LEDs, we can just use 10 (5+5) pins in order to control which column and which row of our
-matrix lights up.
+En la parte de atrás de la micro:bit encontramos un cuadrado de 5x5 LED, normalmente llamado matriz de LED. Esta estructura de matriz se utiliza para que en lugar de tener que usar 25 pines separados para controlar cada uno de los LED, podamos usar solo 10 (5+5) pines para controlar qué columna y qué fila se enciende.
 
-Right now we will use the `microbit-v2` crate to manipulate the LEDs. In the [next chapter] we will
-go in detail through all of the options available.
+Pasemos a usar el crate `microbit-v2` para manipular los LED. En el [siguiente capítulo] entraremos en detalle sobre todas las opciones disponibles.
 
-[next chapter]: ../06-hello-world/index.html
+[siguiente capítulo]: ../06-hello-world/README.md
 
-## Actually lighting it up!
+## Encenderlo de verdad
 
-The code required to light up an LED in the matrix is actually quite simple but it requires a bit of
-setup. First take a look at `src/main.rs`; then we can go through it step by step.
+El código necesario para encender un LED en la matriz es realmente bastante simple, pero requiere un poco de configuración. Primero echemos un vistazo a `src/main.rs`.
+
 
 ```rust
 {{#include src/main.rs}}
 ```
 
-The first few lines until the `main` function just do some basic imports and setup we mostly looked
-at before.  However, the `main` function looks pretty different to what we have seen up to now.
+Las primeras líneas hasta la función `main` solo hacen algunas importaciones básicas y configuraciones que ya hemos visto antes. Sin embargo, la función `main` parece bastante diferente a lo que hemos visto hasta ahora.
 
-The first line is related to how most HALs written in Rust work internally.
-As discussed before they are built on top of PAC crates which own (in the Rust sense)
-all the peripherals of a chip. When we say
+La primera línea hace referencia a cómo la mayoría de los HAL escritos en Rust funcionan internamente. Como se ha discutido antes, están construidos sobre los PAC crates que poseen (en el sentido de Rust) todos los periféricos de un chip. Cuando decimos
 
     let mut board = Board::take().unwrap();
-    
-We take all of these peripherals from the PAC and bind them to a variable. In this specific case we
-are not only working with a HAL but with an entire BSP, so this also takes ownership of the Rust
-representation of the other chips on the board.
 
-> **NOTE**: If you are wondering why we have to call `unwrap()` here, in theory it is possible for
-> `take()` to be called more than once. This would lead to the peripherals being represented by two
-> separate variables and thus lots of possible confusing behaviour because two variables modify the
-> same resource. In order to avoid this, PACs are implemented in a way that it would panic if you
-> tried to take the peripherals twice.
 
-(Again, if you are confused by all of this, the [next chapter] will go through it all again in
-greater detail.)
+Tomamos todos estos periféricos del PAC y los asignamos a una variable. En este caso concreto,
+no solo estamos trabajando con un HAL, sino con un BSP completo, por lo que también se hace cargo de la representación en Rust
+de los demás chips de la placa.
 
-Now we can light the LED connected to `row1`, `col1` up by setting the `row1` pin to high
-(i.e. switching it on).  The reason we can leave `col1` set to low is because of how the LED matrix
-circuit works. Furthermore, `embedded-hal` is designed in a way that every operation on hardware can
-possibly return an error, even just toggling a pin on or off. Since that is highly unlikely in our
-case, we can just `unwrap()` the result.
 
-## Testing it
+> **NOTA**: Si nos parece extraño el hecho de llamar a `unwrap()`, ya que en teoría es posible usar
+> `take()` más de una vez, es porque esto daría lugar a que los periféricos quedaran concectados a dos
+> variables distintas y, por lo tanto, muchos comportamientos resultarían confusos, porque dos variables podrían modificar el
+> mismo recurso. Para evitarlo, los PAC se han implementado de tal manera que se produciría un error si se 
+> adquiriere la posesión de los periféricos dos veces.
 
-Testing our little program is quite simple. We run `cargo embed`
-and let it flash just like before. Then open our GDB and
-connect to the GDB stub. 
+(Una vez más, si todo esto es un poco confuso, en el [siguiente capítulo] se volverá a explicar con
+mayor detalle.)
+
+Ahora podemos encender el LED conectado a `row1`, `col1` poniendo el pin `row1` en estado alto
+(es decir, activándolo).  La razón por la que podemos dejar `col1` en estado bajo se debe al funcionamiento del circuito de la matriz de LED. 
+
+Además, `embedded-hal` está diseñado de tal manera que cualquier operación en el hardware pueda devolver un error, incluso simplemente al activar o desactivar un pin. 
+En este caso es muy improbable, por lo que podemos usar simplemente `unwrap()` el resultado.
+
+## Probarlo
+
+Probar nuestro pequeño programa es muy sencillo. Ejecutamos `cargo embed`
+y dejamos que se compile como antes. A continuación, abrimos nuestro GDB y
+nos conectamos a la sesión de GDB.
+
 
 ```
 $ gdb ../../../target/thumbv7em-none-eabihf/debug/meet-your-software
@@ -70,6 +64,8 @@ cortex_m_rt::Reset () at /home/nix/.cargo/registry/src/github.com-1ecc6299db9ec8
 (gdb)
 ```
 
-We now let the program run via the GDB `continue` command:
-one of the LEDs on the front of the micro:bit should light
-up.
+
+Ahora dejamos que el programa se ejecute mediante el comando `continue` de GDB:
+uno de los LED de la parte frontal del micro:bit debería
+encenderse.
+

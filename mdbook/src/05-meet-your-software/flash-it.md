@@ -1,31 +1,20 @@
-# Flash it
+# Flashearlo
+Flashear es el proceso de mover nuestro programa a la memoria del microcontrolador. Una vez hecho, el microcontrolador ejecutará el programa cada vez que se encienda.
 
-Flashing is the process of moving our program into the microcontroller's persistent memory. Once
-flashed, the microcontroller will execute the flashed program every time it is powered on.
+Nuestro programa será el único existente en la memoria. Por esto me refiero a que no hay nada más ejecutándose en el microcontrolador: ni un sistema operativo, ni un "daemon", nada. Nuestro programa tiene control total sobre el dispositivo.
 
-Our program will be the *only* program in the microcontroller memory.  By this I mean that there's
-nothing else running on the microcontroller: no OS, no "daemon", nothing. Our program has full
-control over the device.
 
-Flashing the binary itself is quite simple, thanks to `cargo embed`.
+Pasarlo al microcontrolador es muy simple, gracias a `cargo embed`.
 
-Before executing that command though, let's look into what it actually does. If you look at the side
-of your micro:bit with the USB connector facing upwards, you will notice that there are actually
-three black squares on there. The biggest one is a speaker. Another is our MCU we already talked
-about… but what purpose does the remaining one serve? This chip is *another* MCU, an NRF52820 almost
-as powerful as the NRF52833 we will be programming! This chip has three main purposes:
+Antes de ejecutar nada, vamos a ver lo que realmente sucede con él. Si miras el lado de tu micro:bit con el conector USB hacia arriba, notarás que en realidad hay tres cuadrados. El más grande es un altavoz. Otro es nuestro MCU del que ya hablamos... pero ¿qué propósito tiene el tercero? Este chip es *otro* MCU, un NRF52820 casi tan potente como el NRF52833 que estamos programando. Este chip tiene tres propósitos principales:
 
-1. Enable power and reset control of our NRF52833 MCU from the USB connector.
-2. Provide a [serial to USB bridge] for our MCU.
-3. Provide an interface for programming and debugging our NRF52833 (this is the relevant purpose for
-   now).
+1. Permitir el control de energía y reset de nuestro MCU NRF52833 desde el conector USB.
+2. Proporcionar un [puente serial a USB] para nuestro MCU.
+3. Proporcionar una interfaz para programar y depurar nuestro NRF52833 (este es el propósito más importante para nosotros por ahora).
 
-This chip acts as sort of bridge between our computer (to which it is connected via USB) and the MCU
-(to which it is connected via traces and communicates with using the SWD protocol). This bridge
-enables us to flash new binaries on to the MCU, inspect a program's state via a debugger and do
-other useful things.
+Este chip actual como un pequeño puente entre nuestra computadora (a la que está conectado a través de USB) y el MCU (al que está conectado a mediante pistas y se comunica usando el protocolo SWD). Este puente nos permite flashear nuevos binarios en el MCU, inspeccionar el estado de un programa a través de un depurador y hacer otras cosas útiles.
 
-So lets flash it!
+Vamos a Flashearlo.
 
 ```console
 $ cargo embed --example init
@@ -35,11 +24,7 @@ $ cargo embed --example init
     Finished flashing in 0.608s
 ```
 
-You will notice that `cargo-embed` does not exit after outputting the last line. This is intended:
-you should not close `cargo-embed`, since we need it in this state for the next step — debugging it!
-Furthermore, you will have noticed that `cargo build` and `cargo embed` are actually passed the same
-flags. This is because `cargo embed` actually executes the build and then flashes the resulting
-binary on to the chip. This means you can leave out the `cargo build` step in the future if you want
-to flash your code right away.
+Te habrás fijado que `cargo embed` no termina después de mostrar la última línea. Esto es intencionado: no deberías cerrar `cargo embed`, ya que lo necesitamos en este estado para el siguiente paso: ¡depurarlo! Además, habrás notado que `cargo build` y `cargo embed` reciben los mismos flags. Esto se debe a que `cargo embed` realmente ejecuta la compilación y luego flashea el binario resultante en el chip. Esto significa que se puede omitir el paso de `cargo build` de aquí en adelante si queremos flashear el código de inmediato.
 
-[serial to USB bridge]: ../10-serial-port/index.html
+
+[puente serial a USB]: ../10-serial-port/README.md
