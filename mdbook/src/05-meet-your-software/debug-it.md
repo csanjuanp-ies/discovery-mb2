@@ -201,7 +201,6 @@ La orden `continue` hace que el programa se ejecute hasta que alcance el punto d
 Este conjunto de comandos es útil cuando, por error, saltamos una parte del programa que nos interesaba inspeccionar. De esta manera podemos restaurar fácilmente el estado del programa hasta su inicio.
 
 
-> ** **
 > **Una anotación**: Este comando de `reset` no limpia ni modifica la RAM. Mantendrá los valores de la ejecución anterior. 
 > Eso no debería ser un problema, a menos que el comportamiento del programa dependa del valor de variables *no inicializadas* — pero esa es la definición de Comportamiento Indefinido (UB).
 
@@ -226,5 +225,34 @@ Ending remote debugging.
 
 Si quieres aprender más sobre lo que GDB, echa un vistazo a la sección [Cómo usar GDB](../appendix/2-how-to-use-gdb/README.md).
 
+
+## Depuremos bajo WSL2 en Windows
+La depuración bajo Windows WSL es un poco más compleja debido a que se comparten recursos entre Windows y WSL. 
+Sin embargo, es posible usar `usbipd` para compartir un dispositivo USB con WSL2. Para más información, consultar la documentación oficial de Microsoft sobre cómo conectar dispositivos USB a WSL2 en https://learn.microsoft.com/es-es/windows/wsl/connect-usb
+
+En general los pasos a seguir serán:
+1º Instalar la última versión de usbipd https://github.com/dorssel/usbipd-win/releases/latest. Esta instalación solo se hará la primera vez, no es necesario repetirla cada vez que queramos depurar bajo WSL2.
+2º Bajo un Shell con la MB2 ya conectada, ejecutar: 
+```shell
+c:\usbipd list  --> Buscar busid (1-2 en mi caso)
+```
+3º Abrir Una terminal WSL.
+4º Abrir un consola PowerSell o Una consola de comandos en modo Administrador
+```shell
+usbipd bind --busid 1-2  --> El busid puede variar, revisar el paso 2
+usbipd attach --wsl --busid 1-2
+```
+5º Dentro de la consola WSL ya podemos depurar mediante gdb o su correspondiente gdb-multiarch:
+```shell
+lsusb
+probe-rs list
+```
+6º Cerrar todo menos la consola WSL
+
+Para finalizar la sesión de depuración, es necesario desconectar el dispositivo USB compartido con WSL2. Esto se puede hacer desde una consola de comandos en modo Administrador bajo Windows, ejecutando el siguiente comando:
+```shell
+usbipd detach --busid 1-2 --> El busid puede variar, revisar el paso 2
+```
+o quitar el usb del puerto directamente.
 
 ¿Qué es lo siguiente? La API de alto nivel que prometimos.
