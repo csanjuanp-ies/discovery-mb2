@@ -193,12 +193,12 @@ Breakpoint 1, init::__cortex_m_rt_main_trampoline () at src/05-meet-your-softwar
 (gdb)
 ```
 
-Nos hace retornr al comienzo del programa en `main`.
+Nos hace retornar al comienzo del programa en `main`.
 
 El comando `monitor reset` resetea el microcontrolador y lo para en el punto de entrada.
 La orden `continue` hace que el programa se ejecute hasta que alcance el punto de interrupción que establecimos en `main`.
 
-Este conjunto de comandos es útil cuando, por error, saltamos una parte del programa que nos interesaba inspeccionar. De esta manera podemos restaurar fácilmente el estado del programa hasta su inicio.
+Este conjunto de comandos es útil cuando, por error, saltamos una parte del programa que nos interesaba inspeccionar. De esta manera podemos restaurar fácilmente el estado del programa a su inicio.
 
 
 > **Una anotación**: Este comando de `reset` no limpia ni modifica la RAM. Mantendrá los valores de la ejecución anterior. 
@@ -223,7 +223,7 @@ Ending remote debugging.
 
 [gdb-dashboard]: https://github.com/cyrus-and/gdb-dashboard#gdb-dashboard
 
-Si quieres aprender más sobre lo que GDB, echa un vistazo a la sección [Cómo usar GDB](../appendix/2-how-to-use-gdb/README.md).
+Si quieres aprender más sobre GDB, echa un vistazo a la sección [Cómo usar GDB](../appendix/2-how-to-use-gdb/README.md).
 
 
 ## Depuremos bajo WSL2 en Windows
