@@ -1,24 +1,18 @@
-# Toggle it
+# Parpadeándo
 
-Let's turn the LED on and off repeatedly. That's how you make it blink, right?
+Vamos a encencer y apagar el LED repetidamente. Así es como se hace parpadear, ¿verdad?
 
-In `examples/fast-blink.rs` you'll find the next iteration of our blinky. I've decided to make it
-blink the next LED over, while leaving the original LED on. That is an easy change.
+
+En el fichero `examples/blink.rs` encontraremos el código para hacer parpadear el LED.
+Hemos decidido usar siguiente LED en lugar del original (dejando encendido el primero), pero eso es un cambio fácil de hacer.
 
 ```rust
 {{#include examples/fast-blink.rs}}
 ```
+Estamos usando el crate `embedded-hal` para proporcionar los traits de Rust necesarios para encender y apagar el LED. Esto significa que esta parte del código es portable a cualquier HAL de Rust que implemente los traits de `embedded-hal`, como el nuestro.
 
-The `embedded-hal` crate is being used here to provide the Rust traits needed to set and unset the
-LED. This means that this part of the code is portable to any Rust HAL that implements the
-`embedded-hal` traits as ours does.
 
-But wait: neither LED is blinking! The second one is slightly dimmer than the first one, but they
-are both solidly on… or are they? Out of the box, the MB2 executes 64 *million* instructions per
-second. Let's assume it takes a few dozen instructions under the hood to turn the LED on or
-off. (Maybe possibly that many compiled in debug mode, though way less in release mode. Though the
-pins take a while to change state. I don't know.) Anyhow, that second LED is actually turning on and
-off hundreds of thousands of times — perhaps millions of times — every second. Your eye just can't
-keep up.
+Pero, espera: ¡ninguno de los LED está parpadeando! El segundo LED es un poco más tenue que el primero, pero ambos están encendidos siempre... 
+o ¿lo están? De fábrica, el MB2 ejecuta 64 *millones* de instrucciones por segundo. Supongamos que se necesitan unas pocas docenas de instrucciones para encender o apagar el LED. (posiblemente en una compilación en modo debug, aunque muchas menos en modo release. Aunque los pines tardan un tiempo en cambiar de estado. No lo sé.) De todos modos, ese segundo LED en realidad se está encendiendo y apagando cientos de miles de veces — quizás millones de veces — cada segundo. Nuestro ojo simplemente no puede seguir el ritmo.
 
-We'll need to wait a while between toggles. Turns out waiting is the hardest part.
+Tendríamos que ralentizar el programa para poder ver el LED parpadear. De hecho, hacer esperar al programa entre cambios es la parte más difícil.

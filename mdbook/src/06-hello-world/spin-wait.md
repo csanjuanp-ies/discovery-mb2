@@ -1,27 +1,22 @@
-# Spin wait
+# Buble de espera activa
 
-To blink the LED, we need to wait about a half-second between each change. How do we do that?
+Para hacer parpadear el LED, necesitamos esperar aproximadamente medio segundo entre cada cambio. ¿Cómo hacemos eso?
 
-Well, here's the dumb way. It's not good, but it's a start. Take a look at `examples/spin-wait.rs`.
+La primera idea que se nos ocurre es usar un bucle de espera activa (forma tonta), o "spin wait". No es una muy buena aproximación, pero es un comienzo. Echemos un vistazo a `examples/spin-wait.rs`.
 
 ```rust
 {{#include examples/spin-wait.rs}}
 ```
 
-Run this with `cargo run --release --example spin-wait` — the `--release` is really important here — and
-you should see the LED on your MB2 flash on and off *about* once per second.
+Ahora ejecutamos `cargo run --release --example spin-wait`, en donde la opción `--release` es muy importante. Deberíamos ver el LED de nuestro MB2 parpadear aproximadamente una vez por segundo.
 
-Things you might be wondering:
+Cosas que quizá te nos podemos preguntar:
 
-* **What are those `_` characters in that number?** Rust allows these in numbers and ignores them.
-  It's really convenient to make big numbers more readable. Here we are using them as commas (or
-  whatever the separator is for groups of three digits in your country).
+* **¿Qué son los caracteres `_` en el número?** Rust permite estos caracteres en los números y los ignora. Es visualmente adecuado para hacer que los números grandes sean más legibles. Aquí los estamos usando como puntos (o lo que sea el separador para grupos de tres dígitos en el idioma correspondiente).
 
-* **If the nRF52833 is running at 64MHz, why is the wait loop iterating only 4M times? Shouldn't it
-  be 32M?** The wait loop executes several instructions each time through: the `nop` (see next
-  section), some bookkeeping, and a branch back to the start of the loop. The code generated is
-  roughly this for the first `wait()` call
-  
+* **Si el microcontrolador nRF52833 tiene una frecuencia de 64MHz, ¿por qué el bucle de espera itera solo 4 millones veces? ¿No deberían ser 32?** El bucle de espera ejecuta varias instrucciones cada vez: el `nop` (ver la siguiente sección), suma algo de tiempo, y tenemos que regresar al inicio del bucle. El código generado es aproximadamente este para la primera llamada a `wait()`
+
+
   ```asm
   .LBB1_4:
       adds r3, #1
@@ -30,7 +25,7 @@ Things you might be wondering:
       bne  .LBB1_4
   ```
 
-  and this for the second
+  y este para la segunda
 
   ```asm
   .LBB1_6:
@@ -39,34 +34,23 @@ Things you might be wondering:
       bne	.LBB1_6
   ```
 
-  This is only three or four instructions, but the backward branch may cost an extra bit.  Notice
-  that these *are not the same:* the compiler chooses to emit different instructions for the first
-  and second wait loops. See "it varies depending" below.
+  Esto son solo tres o cuatro instrucciones, pero el salto hacia atrás también necesita tiempo. Observemos que la salida creada *no es igual:* el compilador elige generar diferentes instrucciones para el primer bucle y segundo bucle. Ver "Depende" más adelante.
   
-  Still, we're executing about 4 instructions per loop iteration. This means that on our 64MHz CPU a
-  half-second spin should take 64M/2/4 = 8M iterations to complete. So something is slowing us down
-  by a factor of 2. What? I dunno. This whole thing is terrible.
+  Aun así, estamos ejecutando alrededor de 4 instrucciones por iteración del bucle. Esto significa que en nuestra CPU de 64MHz un cambio de medio segundo debería tomar 64M/2/4 = 8M iteraciones para completarse. Así que algo nos está ralentizando por un factor de 2. ¿Qué lo causa? No se sabe. **Esto es terrible**.
 
-* **Why is `--release` so all-important?** Try without it. Notice that the LED is still flashing on
-  and off, but with a period of *many* seconds. The wait loop is now unoptimized and is taking many
-  instructions each time through.
+* **Por qué `--release` es tan importante?** Prueba sin él. Notarás que el LED sigue parpadeando, pero con un período de *muchos* segundos. El bucle de espera ahora no está optimizado y necesita muchas más instrucciones cada vez que se ejecuta.
 
-* **What is that `nop()` call and why is it there?** We shall answer this in the next section.
+* **¿Qué significa la llamada `nop()` y por qué está ahí?** Responderemos a esta cuestión en la siguiente sección.
 
-* **Why do you refer to this as "the dumb way"?**
+* **¿Por qué nos referimos a esto como  la forma tonta?**
 
-  * **It isn't precise.** Trying to tune that loop to reliably hit exactly 0.5 seconds is… not
-    really a thing.
+  * **No es muy precisa.** Intentar ajustar el bucle para que dure exactamente los 0,5 segundos, no es posible.
 
-  * **It varies depending.** Different CPU? Different compilation flags? Different anything really?
-    Now the timing has changed.
+  * **Depende.**  ¿Qué pasa si se ejecuta en una CPU diferente? ¿Y si utilizamos otros flags de compilación? En realidad no habría ninguna diferencia en la lógica, pero el resultado sería otro.
 
-  * **It sucks power.** The CPU is running instructions as fast as it can, just to stay in place.
-    If there's nothing else for it to do, it should quietly sleep until it is needed again. This
-    doesn't matter much if you have USB power. But if you hook up your MB2 using the battery pack
-    you'll really feel this.
+  * **Malgasta energía.** La CPU está ejecutando instrucciones tan rápido como puede, solo para perder tiempo. Si no hay nada más que hacer, tendría que esperar tranquilamente hasta que se le necesite de nuevo. Esto no importa mucho si está alimentado vía USB. Pero si conectamos la MB2 a baterías externas realmente se notará y mucho.
 
-In the next section, we'll discuss `nop()`. After that, we'll talk more about the other things about
-our blinky that need improving.
 
-For such a simple program, this is a pretty complicated program. That's why we start with blinky.
+En la siguiente sección, hablaremos de `nop()`. Después de eso, trataremos más sobre el resto de elementos de nuestro programa blinky que son necesarios mejorar.
+
+Para ser un simple programa, es un programa bastante complicado. Por eso empezamos con blinky.

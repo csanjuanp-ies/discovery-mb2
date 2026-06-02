@@ -1,31 +1,26 @@
 # NOP
 
-You might wonder what that `nop()` call is doing in the `wait()` loop in `src/bin/spin-wait.rs`.
 
-The answer is that it literally does nothing. The `nop()` function causes the compiler to put a
-`NOP` Arm machine instruction at that point in the program. `NOP` is a special instruction that
-causes the CPU to skip it. To ignore it. To literally do No OPeration with it (hence the name).
 
-So get rid of that line and recompile the program. Don't forget `--release` mode. Then run it.
 
-We're back to a slightly darker solid LED again. With no loop body, the compiler's optimizer decided
-that `wait()` function wasn't doing anything. So it just removed it for you at compile time. Thanks
-optimizer. You have made my wait loop infinitely fast.
+Quizás nos preguntemos qué hace la llamada a `nop()` dentro del bucle en la función `wait()` en el fichero `src/bin/spin-wait.rs`.
 
-How does `nop()` do its job? Well, if you look at the implementation of `nop()` you will find
-(after a bunch of digging around) that it is implemented like this:
+La respuesta es que literalmente no hace nada. La función `nop()` hace que el compilador ponga una
+instrucción de máquina `NOP` Arm en ese punto del programa. `NOP` es una instrucción especial que hace que la CPU la ignore. Literalmente no hace Ninguna OPeración con ella (de ahí el nombre), simplemente consume un ciclo de reloj.
+
+Eliminemos la llamada a `nop()` dentro del bucle `wait()` y recompilemos el programa. No podemos olvidar el modo `--release`. Luego lo ejecutamos.
+
+Volvemos a conseguir un LED que no parpadea. Sin la llamada a `nop()`, el compilador optimizó el bucle de espera, detectó que no hace nada, y lo eliminó completamente del código final.  Hemos hecho que el bucle de espera sea infinitamente rápido.
+
+¿Cuál es la función de `nop()`? Bueno, si miramos la implementación de `nop()` encontraremos (después de un montón de búsquedas) que se implementa así:
 
 ```rust
 asm!("nop", options(nomem, nostack, preserves_flags));
 ```
 
-The `nop()` function is "inlined", so when you "call" it an actual Arm `NOP` assembly instruction is
-inserted into your program's code at that point. Because details, this `NOP` will not be removed or
-moved around by the compiler: it will stay right there where you put it.
+La función `nop()` es una función en línea, lo que significa que no es realmente una función en el sentido tradicional. En su lugar, cuando llamamos a `nop()`, el código de la función se inserta directamente en el programa en ese punto. En este caso, el código de la función es una sola instrucción de máquina `NOP` Arm.
+Por ese motivo, `NOP` no será eliminada o desplazada por el compilador: se quedará justo ahí donde haya colocad.
 
-The ability to insert assembly code into your program where needed is sometimes quite important in
-embedded programming. Sometime a CPU will have instructions the compiler doesn't know about, but
-that you still need in order to use the CPU effectively. Rust's `asm!()` directive gives you a way
-to do that.
+La capacidad de insertar código de ensamblador en el programa donde sea necesario es a veces bastante importante en la programación embebida. A veces la CPU tendrá instrucciones que el compilador no conoce, pero que aún necesitamos para usar la CPU de manera efectiva. La directiva `asm!()` de Rust crea un mecanismo de hacer eso.
 
-Our spin-wait is still terrible. Let's talk about doing better.
+El bucle de espera activa sigue siendo terrible, pero al menos ahora no es infinitamente rápido.

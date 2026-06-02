@@ -1,32 +1,22 @@
-# Portability
+# Portabilidad
 
-(This section is optional. Feel free to skip to the [next section], where we clean our code up a bit
-and call it a day.)
+(Esta sección es opcional. Eres libre de saltarla y pasar a la [siguiente sección], donde limpiamos un poco nuestro código y damos por terminado el día.)
 
-[next section]: board-support-crate.html
+[siguiente sección]: board-support-crate.md
 
-You may wonder whether all this fancy ecosystem is worth its weight. The setup for our blinky is
-pretty fancy, and uses a lot of Rust crates and features for such a simple job.
+Quizá nos preguntemos si todo este sofisticado ecosistema vale la pena. La configuración de nuestro "blinky" es
+bastante compleja y utiliza un montón de crates y funciones de Rust para una tarea tan sencilla.
 
-One cool advantage, though, is that our code becomes really portable. On a different board, the
-setup may be different, but the actual blinky loop is identical!
+Una gran ventaja, sin embargo, es que nuestro código se vuelve realmente portátil. En otro tipo de placa, la configuración puede ser diferente, pero el bucle de ejecución es idéntico.
 
-Let's take a look at a blinky for the Sipeed Longan Nano. This is a little $5 board that, like the
-MB2, is an embedded board with an MCU. Otherwise, it is completely different: different processor
-(the GD32VF103, with a RISC-V instruction set entirely unlike the Arm instruction set we're using),
-different peripherals, different board. But it has an LED attached to a GPIO pin, so we can blinky
-it.
+Echemos un vistazo al mismo programa para el Sipeed Longan Nano. Es una pequeña placa de $5 que, al igual que la MB2, trae embebida una MCU. En el resto, es completamente distinto: otro procesador (el GD32VF103, con un conjunto de instrucciones RISC-V completamente diferente al conjunto de instrucciones Arm que estamos usando), periféricos distintos, otra placa. Pero tiene un LED conectado a un pin GPIO, así que podemos hacerlo parpadear igualmente.
 
 ```rust
 {{#include nanoblinky.rs}}
 ```
 
-The differences in setup here are partly because different hardware, and partly because this code
-uses an older HAL crate that hasn't yet been updated for `embedded-hal` 1.0. Yet the main loop is
-identical as advertised, and the rest of the code is pretty recognizable. Because of the portability
-provided by Rust's easy cross-compilation and the embedded Rust ecosystem, blinky is just blinky.
+Las diferencias en la configuración son porque el hardware es diferente, y también porque este código usa una versión más antigua del crate HAL que aún no se ha actualizado para `embedded-hal` 1.0. Sin embargo, el bucle principal es idéntico, y el resto del código es bastante reconocible. Gracias a la portabilidad proporcionada por la compilación cruzada de Rust y el ecosistema de Rust embebido, blinky es simplemente blinky.
 
-You can find a complete working [nanoblinky] example on GitHub, if you want to see all the
-details or even get your own board and try it yourself.
+Podemos encontrar un ejemplo completo de trabajo de [nanoblinky] en GitHub, por si preferimos ver todos los detalles o incluso conseguir otra placa y probarlo.
 
 [nanoblinky]: https://github.com/pdx-cs-rust/nanoblinky

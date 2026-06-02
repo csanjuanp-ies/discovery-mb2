@@ -1,28 +1,17 @@
-# Board support crate
+# Crate de soporte de placa
 
-Working directly with the PAC and HAL is pretty neat. Most Arm MCUs and many other MCUs that Rust
-can compile for have a PAC crate. If you are working with one that does not, writing a PAC crate can
-be tedious but is pretty straightforward. Many MCUs that have a PAC crate also have a HAL crate —
-again, it's mostly just tedious work to build one if it is absent. Code written at the PAC and HAL
-level gives access to the fine details of the MCU.
+Trabajar directamente con el PAC y el HAL es bastante agradable. La mayoría de los MCUs de Arm y muchos otros MCUs para los que Rust puede compilar tienen una crate PAC. Si estamos trabajando con un microcontrolador en el que no existe, programar una crate PAC puede ser tedioso, pero es bastante sencillo. Muchos MCUs que tienen una crate PAC también tienen una crate HAL; nuevamente, es principalmente un trabajo farragoso construir uno si no está presente. El código escrito a nivel de PAC y HAL da acceso a los detalles más internos del MCU.
 
-As we have seen, though, it becomes pretty annoying to keep track of just what is going on at the
-interface between our nRF52833 and the rest of our MB2. We have had to read schematics and whatnot
-to see how to use our off-board hardware.
+Como hemos visto, sin embargo, se vuelve bastante molesto mantener un seguimiento de lo que está sucediendo en la interfaz entre nuestro nRF52833 y el resto de la MB2. Hemos tenido que leer esquemas y cosas por el estilo para ver cómo usar el hardware de la placa.
 
-A "board support crate" — known in the non-Rust embedded community as a Board Support Package (BSP)
-— is a crate built on top of the HAL and PAC for a board to abstract away the details and provide
-conveniences. The board support crate we have been working with is the `microbit-v2` crate.
+Un "crate de soporte de placa", conocido en la comunidad de sistemas embebidos no Rust como un Paquete de Soporte de Placa (BSP - Board Support Package), es un crate construido sobre el HAL y el PAC de una placa, para abstraer la mayoría de los detalles y proporcionar una interfaz amigable. El crate de soporte de placa con el que hemos estado trabajando es el crate `microbit-v2`.
 
-Let's use `microbit-v2` to get a final, cleaned up blinky (`src/main.rs`).
+Vamos a usar `microbit-v2` para obtener un blinky final y limpio (`src/main.rs`).
+
 
 ```rust
 {{#include src/main.rs}}
 ```
+En este caso, no hemos cambiado mucho. Nuestro crate BSP ha ocultado el PAC (por ahora). Más importante aún, lo ha hecho permitiéndonos usar nombres razonables para los pines GPIO de fila y columna para el LED.
 
-In this case, we haven't changed much. Our board support crate has hidden the PAC (for now). More
-importantly, it has done so by letting us just use reasonable names for the row and column GPIO pins
-for the LED.
-
-The `microbit-v2` crate provides even fancier support for those "display" LEDs. We will see this
-support used soon to do things more fun than blinky.
+El crate `microbit-v2` también proporciona un soporte elegante para esos LED de "pantalla". Pronto lo veremos, programando cosas más divertidas que parpadear.

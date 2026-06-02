@@ -1,57 +1,39 @@
 # Hello World
+En el capítulo anterior, escribimos un programa tipo "Hola Mundo". Pero para los programadores de sistemas embebidos, el "verdadero Hola Mundo" es hacer parpadear un LED, cualquier LED, encendiéndolo y apagándolo una vez por segundo. Un programa que hace esto se conoce comúnmente como "blinky (parpadear)".
 
-In the last section, you wrote a sort of "Hello World" program. But for embedded programmers, the
-"real Hello World" is to blink an LED — any LED — on and off once per second. A program that does
-this is commonly known as a "blinky".
 
-Why blinky? Because this shows that you have enough control of the board you're working with to
-perform this simple task. You can get a program loaded onto the machine and running, you can find
-and turn on the appropriate pin on the MCU, you can delay for a fixed amount of time. Once you have
-this much control, other tasks become much more straightforward.
+¿Por qué parpadear? Porque demuestra que tenemos suficiente control sobre la placa con la que estamos trabajando para realizar esta tarea simple. 
+Podemos cargar un programa en la máquina y ejecutarlo, somos capaces de encontrar y encender el pin apropiado en el MCU, sabemos retrasar una cantidad fija de tiempo el parpadeo. Una vez que tenemos este nivel de control, el resto de tareas se vuelven mucho más sencillas.
 
-In previous chapters, you found out several ways to load a program onto your MB2. Now it's just a
-question of which pin you turn on and off, and how you delay between these actions.
 
-Let's start by finding out how to work with the needed pins. There's a path you can follow for this
-if you know how to read electronic circuit "schematic" diagrams. You can find the [MB2 schematic],
-find an LED on that schematic that you want to turn on and off, and find what GPIO pins on the
-nRF52833 are attached to that LED. (The MB2 is a bit unusual in this regard: usually an LED is
-attached to just one pin that turns it on or off. The LED "display" on the MB2 is hooked up in a
-more complicated way to allow turning on and off combinations of LEDs at once: a feature that we
-will be using shortly.)
+En los capítulos anteriores, descubrimos varias formas de cargar un programa en la MB2. Ahora solo es cuestión de qué pin encendemos y apagamos, y cómo retrasar estas acciones.
 
-[MB2 schematic]: https://github.com/microbit-foundation/microbit-v2-hardware/blob/main/V2.21/MicroBit_V2.2.1_nRF52820%20schematic.PDF
+Empecemos por aprender cómo trabajar con los pines necesarios. Hay una guía de programación si sabemos cómo leer diagramas de circuitos electrónicos. 
+El esquema eléctrico se encuentra en [esquema de la MB2], aquí podemos buscar el LED que queramos encender y apagar, y determinar qué pines GPIO en el chip nRF52833 están conectados a ese LED. 
+(La MB2 es un poco inusual en este sentido: normalmente un LED está conectado a solo un pin que lo enciende o apaga, en este caso cada LED está conectado a dos, una fila y una columna. La "pantalla" LED de la MB2 está conectada de una manera más compleja para permitir encender y apagar combinaciones de LEDs a la vez: una característica que usaremos pronto.)
 
-We will work with the LED in the upper-left corner of the MB2 display. Tracing the `ROW1` and `COL1`
-wires this LED is connected to, we can see that they go to pins on the nRF52833 labeled
-`AC17`/`P0.21` and `B11`/`AIN4`/`P0.28`. Digging further through the documentation we find that
-`AC17` and `B11` are the row and column indices of the physical pins (solder balls, really) on the
-bottom of the chip — useless to us. `AIN4` just means that this pin can act as an "Analog Input",
-which is also currently useless to us. (It will come into play later.)
+[esquema de la MB2]: https://github.com/microbit-foundation/microbit-v2-hardware/blob/main/V2.21/MicroBit_V2.2.1_nRF52820%20schematic.PDF
 
-This leaves `P0.21` and `P0.28`. These labels correspond to bits in the memory of the nRF52833 that
-can be turned on and off to get the LED to light up. Because electronics reasons, if pin `P0.21` is
-turned on (thus outputting 3.3V) and pin `P0.28` is turned off (thus accepting voltage) the LED will
-light up.
 
-But what do we do in software to cause this to occur? We will work at the level of the
-`nrf52833-hal` crate. The Hardware Abstraction Layer (HAL) is a chunk of software designed to make a
-particular microcontroller easier to work with. As can be seen from the name, we have one for the
-microcontroller on the MB2. It happens to contain everything needed to turn our target LED on.
+Vamos a trabajar con el LED en la esquina superior izquierda de la matriz de LED en la MB2. Siguiendo las pistas `ROW1` y `COL1` a las que está conectado este LED, podemos ver que van a los pines del nRF52833 etiquetados como `AC17`/`P0.21` y `B11`/`AIN4`/`P0.28`. 
+Al profundizar más en la documentación encontramos que `AC17` y `B11` son los índices de fila y columna de los pines físicos en la parte inferior del chip, lo cual no nos sirve. `AIN4` solo significa que este pin puede actuar como una "Entrada Analógica", lo cual tampoco nos sirve por ahora (pero sí lo hará más adelante).
 
-Take a look at `examples/light-up.rs` in this chapter's directory, and then try running it.
-You could use something fancy like before, but we have it set up so that
+Esto solo nos deja con los valores `P0.21` y `P0.28`. Estas etiquetas corresponden a bits en la memoria del nRF52833 que pueden ser encendidos y apagados para hacer que el LED se ilumine. Por razones electrónicas, si el pin `P0.21` está encendido (salida a 3.3V) y el pin `P0.28` está apagado (aceptando voltaje), entonces el LED se iluminará.
+
+Pero ¿cómo podemos hacer esto por software? Trabajaremos a nivel del crate `nrf52833-hal`. La capa Hardware Abstraction Layer (HAL) es un software diseñado para facilitar el trabajo con el microcontrolador. Como se puede intuir por el nombre, este en concreto se utiliza con el microcontrolador de la MB2. En él se ha programado todo lo necesario para encender el LED seleccionado.
+
+Echemos un vistazo a `examples/light-up.rs` en el directorio de este capítulo, luego intentaremos ejecutarlo.
 
 ```
 cargo run --example light-up
 ```
 
-will load and run your program. That one LED should now be brightly lit!
+Cargamos y ejecutamos nuestro programa. ¡El LED debería estar encendido!
+
 
 ``` rust
 {{#include examples/light-up.rs}}
 ```
 
-Note that we access the Peripheral Access Crate (PAC) for this chip through our HAL crate. There's a
-complicated dance needed to get access to our pins. Finally, since we can just initialize the pins
-to the right levels, we don't need to set them. Wiggling the pins is a topic for the next section.
+
+Resaltar que accedemos al Peripheral Access Crate (PAC) para este chip a través del crate HAL. Hay que seguir una serie de pasos difíciles para acceder a nuestros pines y la capa HAL abstrae esa complicación. Por último, dado que basta con inicializar los pines con los niveles adecuados, no es necesario configurarlos. La activación de los pines es un tema que trataremos en la siguiente sección.
