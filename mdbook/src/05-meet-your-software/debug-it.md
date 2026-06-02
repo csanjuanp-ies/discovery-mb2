@@ -231,12 +231,15 @@ La depuración bajo Windows WSL es un poco más compleja debido a que se compart
 Sin embargo, es posible usar `usbipd` para compartir un dispositivo USB con WSL2. Para más información, consultar la documentación oficial de Microsoft sobre cómo conectar dispositivos USB a WSL2 en https://learn.microsoft.com/es-es/windows/wsl/connect-usb
 
 En general los pasos a seguir serán:
+
 1º Instalar la última versión de usbipd https://github.com/dorssel/usbipd-win/releases/latest. Esta instalación solo se hará la primera vez, no es necesario repetirla cada vez que queramos depurar bajo WSL2.
+
 2º Bajo un Shell con la MB2 ya conectada, ejecutar: 
 ```shell
 c:\usbipd list  --> Buscar busid (1-2 en mi caso)
 ```
 3º Abrir Una terminal WSL.
+
 4º Abrir un consola PowerSell o Una consola de comandos en modo Administrador
 ```shell
 usbipd bind --busid 1-2  --> El busid puede variar, revisar el paso 2
