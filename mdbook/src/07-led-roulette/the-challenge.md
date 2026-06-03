@@ -1,18 +1,17 @@
-# The challenge
+# El reto
 
-You are now well armed to face our challenge! Again, your application should look like this:
+Ya estamos preparados para enfrentarnos a nuestro desafío. La aplicación deberá verse así:
 
 <p align="center">
 <video src="../assets/roulette_fast.mp4" width="500" loop="true" autoplay="true"/>
 </p>
 
-If you can't exactly see what's happening here it is in a much slower version:
+Si no puedes ver exactamente lo que está pasando, esta es la misma animación pero en una versión mucho más lenta:
 
 <p align="center">
 <video src="../assets/roulette_slow.mp4" width="500" loop="true" autoplay="true"/>
 </p>
 
-If you need a hint, `templates/solution.rs` provides a mostly-filled-out chunk of code to finish. I
-would suggest you try it on your own first, though: it should be doable by now…
+Si necesitamos una pista, el fichero `templates/solution.rs` proporciona un fragmento de código casi completo para terminar. Sin embargo, sugeriría que lo intentes por tu cuenta primero: ¡debería ser posible a estas alturas!
 
-Got it?
+¿Entendido?

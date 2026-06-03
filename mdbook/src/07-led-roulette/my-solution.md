@@ -1,32 +1,26 @@
-# My solution
+# La solución
 
-What solution did you come up with?
+¿Qué solución se te ocurrió?
 
-Here's mine. It's probably one of the simplest (but of course not most beautiful) ways to generate
-the required matrix:
+Aquí tienes la mía. Probablemente sea una de las formas más simples (pero por supuesto no la más bonita) de generar la matriz requerida:
 
 ``` rust
 {{#include src/main.rs}}
 ```
-
-One more thing! Check that your solution also works when compiled in "release" mode:
+Una cosa más, ¡comprueba que tu solución también funciona cuando se compila en modo "release"!
 
 ``` console
 $ cargo embed --release
 ```
-
-If you want to debug your "release" mode binary you'll have to use a different GDB command:
+Si es necesesario depurar el programa en modo "release" el comando de GDB es un poco diferente:
 
 ``` console
 $ gdb ../../../target/thumbv7em-none-eabihf/release/led-roulette
 ```
 
-The Rust compiler modifies the machine instructions generated in a release build (sometimes by a
-lot) in order to try to make the code faster or smaller. Unfortunately, GDB has a hard time figuring
-out what is going on after this. As a result, debugging release builds with GDB can be difficult.
+El compilador de Rust modifica las instrucciones generadas para una compilación release (a veces mucho) tratando de hacer el código más rápido y/o más pequeño. Desafortunadamente, GDB tiene dificultades para entender lo que está pasando después de la optimización. Como resultado, depurar compilaciones release con GDB puede ser difícil.
 
-Binary size is something we should always keep an eye on! How big is your solution? You can check
-that using the `size` command on the release binary:
+El tamaño del binario generado es algo a tener en cuenta siempre, hay que recordar que tenemos recursos limitados. ¿Qué tamaño tiene tu solución? Puedes comprobarlo usando el comando `size` sobre el binario de release:
 
 ``` console
 $ cargo size --release -- -A
@@ -54,13 +48,7 @@ section              size        addr
 Total              283715
 ```
 
-Your numbers may differ somewhat depending on how your code is built: this is OK.
+Los valores pueden variar dependiendo de cómo se compile el código: esto es normal.
 
-Know how to read this output? The `text` section contains the program instructions. The `rodata`
-section contains read-only data stored with the program instructions. The `data` and `bss` sections
-contain variables statically allocated in RAM (`static` variables).  If you remember the
-specification of the microcontroller on your micro:bit, you should notice that its flash memory is
-less than double the size of this extremely simple binary: can this be right?  As we can see from
-the size statistics most of the binary is actually made up of debugging related sections. However,
-those are not flashed to the microcontroller at any time — after all they aren't relevant for the
-execution.
+¿Cómo se lee esta salida? La sección `text` contiene las instrucciones del programa. La de `rodata` los datos de solo lectura almacenados con las instrucciones del programa. Las partes `data` y `bss` almacenan variables asignadas estáticamente en RAM (variables `static`). 
+Si recordamos la especificación del microcontrolador de la MB2, veremos que su memoria flash es menos del doble del tamaño de este binario extremadamente simple: ¿puede ser esto correcto? Como vemos en las estadísticas, la mayor parte del binario está realmente compuesto por secciones relacionadas con la depuración. Sin embargo, esas no se pasan al microcontrolador, después de todo no son necesarias para la ejecución.

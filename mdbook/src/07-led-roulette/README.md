@@ -1,19 +1,19 @@
-# LED roulette
+# Ruleta LED
 
-Alright, let's build a "real" application. The goal is to get to this display of spinning lights:
+De acuerdo, vamos a crear una "aplicación real". El objetivo es llegar a esta pantalla de luces giratorias:
 
 <p align="center">
 <video src="../assets/roulette_fast.mp4" width="500" loop="true" autoplay="true"/>
 </p>
 
-Since working with the LED pins separately is quite annoying (especially if you have to use
-basically all of them like here) you can use the `microbit-v2` BSP crate, discussed previously, to
-work with the MB2's LED "display". It works like this (`examples/light-it-all.rs`):
+Como encender los LED por separado es bastante molesto (especialmente si tenemos que usar todos) podemos usar el crate BSP `microbit-v2`, discutido anteriormente, para trabajar con el "display" de LED del MB2. 
+Funciona así (`examples/light-it-all.rs`):
+
 
 ```rust
 {{#include examples/light-it-all.rs}}
 ```
 
-The Rust array `light_it_all` shown in the example contains 1 where the LED is on and 0 where it is
-off.  The call to `show()` takes a timer for the BSP display code to use for delaying, a *copy* of
-the array, and a length of time in milliseconds to show this display before returning.
+El Array `light_it_all` contiene un 1 en la posición del LED que se encenderá y 0 donde estará apagado. 
+La llamada a `show()` utiliza un temporizador para controlar el tiempo de encendido, una *copia* del array, y la duración en milisegundos que estarán iluminados.
+
