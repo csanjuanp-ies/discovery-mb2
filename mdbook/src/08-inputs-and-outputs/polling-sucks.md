@@ -1,6 +1,7 @@
-# Polling sucks, actually
+# El sondeo apesta, todavía
 
-Oh yeah, turn signals usually blink, right?  How could we extend our program to blink the turn signal LED when a button is pressed.  We know how to blink an LED from our Hello World program; we turn on the LED, wait for some time, and then turn it off.  But how can we do this in our main loop while also checking for button presses?  We could try something like this:
+Efectivamente, los intermitentes generalmente parpadean, ¿verdad? ¿Cómo podríamos extender nuestro programa para hacer parpadear el LED del intermitente cuando se presiona un botón? Sabemos cómo hacer parpadear un LED desde nuestro programa de Hola Mundo; encendemos el LED, esperamos un tiempo y luego lo apagamos. Pero, ¿cómo podemos hacer esto en nuestro bucle mientras también comprobamos las pulsaciones de los botones? Podríamos intentar algo como esto:
+
 
 ```rust
     loop {
@@ -23,62 +24,63 @@ Oh yeah, turn signals usually blink, right?  How could we extend our program to 
     }
 ```
 
-Can you see the problem?  We're trying to do two things at once here: 
+¿Puedes observar el problema? Estamos intentando hacer dos cosas al mismo tiempo:
 
-1. Check for button presses
-2. Blink the LED
+1. Comprobar los botones
+2. Parpadear el LED
 
-But the processor can only do one thing at a time.  If we press a button during the blink delay, the processor won't be able to respond until the delay is over and the loop starts again.  As a result, we get a barely-responsive program (try for yourself and see how slow the button is).
+Pero el microcontrolador solo es capaz de realizar una. Si presionamos un botón durante el retraso de parpadeo, el procesador no podrá responder hasta que el retraso haya terminado y el bucle comience de nuevo. Como resultado, obtenemos un programa apenas interactivo (pruébalo y verás lo lento que es el botón).
 
-A "smarter" program would know that the processor isn't actually doing anything while the blink delay is running. The program could very well do other things while waiting for the delay to finish — namely, checking for button presses.
+Un programa un poco más inteligente sabría que el procesador no está haciendo nada mientras se ejecuta el retraso del parpadeo. El programa podría hacer otras cosas mientras espera a que termine el retraso, como verificar las pulsaciones de los botones.
 
-## Superloops
+## Superbucles
 
-The term *superloop* in embedded systems is used to refer to a main control loop that does a bunch of things in sequence.  It's the natural extension of the simple control flow we've been using so far.  To handle logic that could be perceived as multiple things happening at once, we need to be a bit more clever in how we structure the program so that we can be reasonably responsive to events.
+El término de *superbucle* en sistemas embebidos se utiliza para referirse a un bucle de control principal que hace varias cosas en secuencia. Es la extensión natural del bucle de espera activa que hemos estado usando hasta ahora. 
+Para gestionar la lógica que simule la ejecución de múltiples tareas sucediendo al mismo tiempo, necesitamos ser un poco más inteligentes a la hora de estructurar el programa para que podamos gestionar razonablemente rápido los eventos.
 
-In the case of our turn signal program, where we want to blink the LEDs when a button is pressed, and be quick to stop blinking when the button is released, we can create a "state machine" to represent the various states of the program.  We have three states for the buttons:
+En el caso del programa de los intermitentes, donde queremos hacer parpadear los LED cuando se presiona un botón, y dejar de parpadear cuando se suelta el botón, podemos crear una "máquina de estados" para representar los diversos estados del programa. Tenemos tres estados para los botones:
 
-1. No button is pressed
-2. Button A is pressed
-3. Button B is pressed
+1. Ningún botón está presionado.
+2. El botón A está presionado.
+3. El botón B está presionado.
 
-We also have three states for the display:
+También tenemos tres estados para la pantalla:
 
-1. No LEDs are on
-2. We are in the active blink state for the display (the LEDs are on)
-3. We are in the inactive blink state for the display (the LEDs are off and waiting to be turned on once the blinking period is over)
+1. No se enciende nada.
+2. Estamos en el estado de parpadeo activo para la pantalla (los LED están encendidos).
+3. Estamos en el estado de parpadeo inactivo para la pantalla (los LED están apagados y esperando a ser encendidos una vez que termine el período de parpadeo).
 
-Since we need to ensure responsiveness, we have to combine these different states.  To fully represent all states of our program, we would have the following:
+Dado que queremos garantizar la respueta del sistema, tenemos que combinar estos diferentes estados. Para representar de forma completa la máquina de estado de nuestro programa, tendríamos lo siguiente:
 
-1. No button is pressed
-2. Button A is pressed, and we are in the active blink state (the left arrow is showing on the display)
-3. Button A is pressed, and we are in the inactive blink state (nothing is showing on the display)
-4. Button B is pressed, and we are in the active blink state (the right arrow is showing on the display)
-5. Button B is pressed, and we are in the inactive blink state (nothing is showing on the display)
+1. Ningún botón está presionado.
+2. El botón A está presionado y estamos en el estado de parpadeo activo (la flecha izquierda se muestra en la pantalla).
+3. El botón A está presionado y estamos en el estado de parpadeo inactivo (nada se muestra en la pantalla).
+4. El botón B está presionado y estamos en el estado de parpadeo activo (la flecha derecha se muestra en la pantalla).
+5. El botón B está presionado y estamos en el estado de parpadeo inactivo (nada se muestra en la pantalla).
 
-When either button is first pressed, and we transition from state (1) to either state (2) or (4), we will initialize a timer counter that counts up starting from the moment a button is pressed.  When the timer reaches some threshold amount (like half a second) and the buttons are still pressed, we will then transition to state (3) or (5), respectively, and reinitialize the timer counter.  When the timer again reaches some threshold amount, we will transition back to state (2) or (4), respectively.  If at any time during states (2), (3), (4), or (5) we see that the button is no longer pressed, we transition back to state (1).
+Cuando se pulse cualquiera de los botones por primera vez y pasemos del estado (1) al estado (2) o al (4), inicializaremos un temporizador que contará a partir del momento en que se pulse el botón. Cuando alcance un valor umbral (por ejemplo, medio segundo) y los botones sigan pulsados, pasaremos al estado (3) o al (5), respectivamente, y reinicializaremos el contador de tiempo.  Cuando el temporizador vuelva a alcanzar el valor umbral, volveremos al estado (2) o (4), de nuevo.  Si en cualquier momento durante los estados (2), (3), (4) o (5) vemos que el botón ya no está pulsado, volveremos al estado (1).
 
-Our main superloop control flow will repeatedly poll the buttons, compare our current timer counter (if we have one) to a threshold, and change states if any of the above conditions are met.
+El superbucle se encargará de gestionar el flujo y muestreará continuamente el estado de los botones, comparando el tiempo actual con el umbral, y cambiará al estado correspondiente si se cumplen las condiciones anteriores.
 
-We have implemented this superloop as a demonstration (`examples/blink-held.rs`), but with the state machine simplified only to blink an LED when button A is held.
+Hemos implementado este superbucle como una demostración (en  `examples/blink-held.rs`), pero con la máquina de estados simplificada solo para hacer parpadear un LED cuando se mantiene presionado el botón A.
 
 ```rust
 {{#include examples/blink-held.rs}}
 ```
 
-This is still a bit complex. The 10ms loop delay is more
-than adequate to catch button changes.
+Sigue siendo un poco complicado. El retardo de 10ms es más que adecuado para detectar los cambios en la pulsación de los botones por experiencia previa.
 
-Superloops work and are often used in embedded systems, but the programmer has to be careful to maintain a high degree of responsiveness to events.  Note how our superloop program is different from the previous simple polling example.  Any state transition step in the superloop as written above should take a fairly small amount of time (e.g. we no longer have delays that could block the processor for long periods of time and cause us to miss any events).  It's not always easy to transform a simple polling program into a superloop where all state transitions are quick and relatively non-blocking, and in these cases, we will have the rely on alternative techniques for handling the different events being executed at the same time.
-
-## Concurrency
-
-Doing multiple things at once is called *concurrent* programming. Concurrency shows up in many places in programming, but especially in embedded systems.  There's a whole host of techniques for implementing systems that interact with peripherals while maintaining a high degree of responsiveness (e.g. interrupt handling, cooperative multitasking, event queues, etc.).  We'll explore some of these in later chapters.
-
-There is a good introduction to concurrency in an embedded context [here] that
-you might read through before proceeding.
-
-[here]: https://docs.rust-embedded.org/book/concurrency/index.html
+Los Superbucles funcionan y son muy utilizados en los sistemas embebidos, pero el programador debe tener cuidado para mantener un alto grado de respuesta a los eventos. 
+Obserevamos cómo el programa de superbucle es diferente del ejemplo de sondeo simple anterior. Cualquier transición de estado en el superbucle, tal como se escribió anteriormente, debería tomar una cantidad de tiempo bastante pequeña (por ejemplo, ya no se producen retrasos que puedan bloquear el procesador durante largos periodos de tiempo y hacernos perder algún evento). 
+No siempre es fácil transformar un programa de sondeo simple en un superbucle donde todas las transiciones de estado sean rápidas y relativamente no bloqueantes. En estos casos, tendremos que confiar en técnicas alternativas para manejar los diferentes eventos que se ejecutan al mismo tiempo.
 
 
-For now, let's take a deeper look into what's happening when we call `button_a.is_low()` or `display_pins.row1.set_high()`.
+## Concurrencia
+
+Hacer varias cosas a la vez se llama programación *concurrente*. La concurrencia aparece en muchos lugares en la programación, pero especialmente en los sistemas embebidos. Hay toda una serie de técnicas para implementar sistemas que interactúan con periféricos mientras mantienen un alto grado de respuesta (por ejemplo, manejo de interrupciones, multitarea cooperativa, colas de eventos, etc.). Exploraremos algunas de estas técnicas en capítulos posteriores.
+
+Hay una buena introducción a la concurrencia [aquí] que podríamos leer antes de continuar.
+
+[aquí]: https://docs.rust-embedded.org/book/concurrency/index.html
+
+Por ahora, echemos un vistazo en profundidad a lo que sucede cuando llamamos a `button_a.is_low()` o `display_pins.row1.set_high()`.

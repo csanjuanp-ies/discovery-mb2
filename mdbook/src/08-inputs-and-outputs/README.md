@@ -1,19 +1,21 @@
-# Inputs and Polling
+# Entradas y sondeo
 
-In earlier chapters, we’ve explored GPIO pins primarily as outputs—driving LEDs on and off. However, GPIO pins can also be configured as inputs, allowing your program to read signals from the physical world, like button presses or switch toggles. In this chapter, we'll learn how to read these input signals and do something useful with them.
+En el capítulo anterior, exploramos los pines GPIO principalmente como salidas, encendiendo y apagando LED. Sin embargo, los pines GPIO también pueden configurarse como entradas, lo que permite al programa leer señales del mundo físico, como pulsaciones de botones o cambios de interruptores. En este capítulo, aprenderemos cómo leer estas señales y hacer algo útil con ellas.
 
-## Reading Button State
+## Leyendo el estado del botón
 
-The micro:bit v2 has two physical buttons, Button A and Button B, connected to GPIO pins configured as inputs. Specifically, Button A is connected to pin P0.14, and Button B to pin P0.23. (You can verify this from the official [pinmap table].)
+La MB2 tiene dos botones físicos, el botón A y el botón B, conectados a pines GPIO configurados como entradas. Específicamente, el Botón A está conectado al pin P0.14, y el Botón B al pin P0.23. (Puedes verificar esto en la tabla de asignación de pines oficial [tabla de asignación de pines].)
 
-[pinmap table]: https://tech.microbit.org/hardware/schematic/#v2-pinmap
 
-Reading the state of a GPIO input involves checking whether the voltage level at the pin is high (3.3V, logic level 1) or low (0V, logic level 0). Each button on the micro:bit is connected to a pin. When the button is *not* pressed, that pin is held high; when the button is pressed, the pin is held low.
+[tabla de asignación de pines]: https://tech.microbit.org/hardware/schematic/#v2-pinmap
 
-Let's now apply this knowledge to reading the state of Button A by checking if the button is "low" (pressed).
+Leer el estado de una entrada GPIO implica verificar si el nivel de voltaje en el pin es alto (3.3V, nivel lógico 1) o bajo (0V, nivel lógico 0). Cada botón en el micro:bit está conectado a un pin. Cuando el botón *no* está presionado, ese pin se mantiene alto; cuando el botón está presionado, el pin no transmite corriente.
+
+
+
+Vamos a configurar el pin del botón A como una entrada, y luego leer su estado.
 
 ```rust
 {{#include examples/button-a-bsp.rs}}
 ```
-
-We spin looking at the button state, and report anytime that state changes.
+Crearemos un bucle de espera activa para leer continuamente el estado, y avisaremos en cuanto cambie.

@@ -1,15 +1,15 @@
-# The challenge
+# El reto
 
-Now it’s your turn to put polling into practice. Your task is to implement a simple program that uses button polling to display directional arrows based on user input:
+Es el momento de poner en práctica todo lo que hemos aprendido sobre el sondeo. La tarea es implementar un programa que use el sondeo de botones para mostrar flechas direccionales basadas en la entrada del usuario:
 
-- If Button A is pressed, display a left arrow (←) on the LED matrix.
-- If Button B is pressed, display a right arrow (→) on the LED matrix.
-- If neither button is pressed, display a single lit LED at the center of the matrix.
+- Si se pulsa el Botón A, se mostrará una flecha hacia la izquierda (←) en la matriz de LED.
+- Si se pulsa el Botón B, se visualizará una flecha hacia la derecha (→) en la matriz de LED.
+- Si no se pulsa ningún botón, se establecerá un solo LED encendido en el centro de la matriz.
 
-You'll need to:
+Tendremos que hacer:
 
-- Initialize the variables for the LED and the buttons.
-- Continuously poll Button A and Button B.
-- Update the LED display according to the button state with a clear indication of each state (left, right, or neutral).
+- Inicializar las variables para el LED y los botones.
+- Sondear continuamente el Botón A y el Botón B.
+- Actualizar la pantalla de LED según el estado de los botones (izquierda, derecha o neutral).
 
-I hope you don't mess up! It's *so* hard to share the road with people who don't use their turn signals properly.
+¡Espero que no la fastidies! Es *tan* difícil compartir la carretera con gente que no usa bien los intermitentes.

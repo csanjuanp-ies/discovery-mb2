@@ -1,14 +1,16 @@
 # Polling
+Ya que sabemos leer entradas GPIO, consideremos cómo podríamos usar estas lecturas de manera práctica. Supongamos que queremos que nuestro programa encienda un LED cuando se presione el Botón A y lo apague cuando se presione el Botón B. 
+Podemos hacer esto sondeando el estado de ambos botones en un bucle y respondiendo en consecuencia cuando se detecte que un botón está presionado. Aquí está cómo podríamos escribir este programa:
 
-Now that we've learned how to read GPIO inputs, let's consider how we might use these reads practically. Suppose we want our program to turn on an LED when Button A is pressed and turn it off when Button B is pressed.  We can do this by polling the state of both buttons in a loop, and responding accordingly when a button is read to be pressed.  Here's how we might write this program:
 
 ```rust
 {{#include examples/polling-led-toggle.rs}}
 ```
 
-This method of repeatedly checking inputs in a loop is called polling.  When we check the state of some input, we say we are *polling* that input.  In this case, we are polling both Button A and Button B.
+Este método de comprobación indefinida de la entrada se denomina sondeo (polling). Cuando hacemos esto, decimos que estamos *sondeando* la entrada. En este caso, miramos ambos botones A y B.
 
-Polling is simple but allows us to do interesting things based on the external world.  For all of our device's inputs, we can "poll" them in a loop, and respond to the results in some way, one by one.  This kind of method is very conceptually simple and is a good starting point for many projects.  We'll soon find out why polling might not be the best method for all (or even most) cases, but let's try it out first.
+El sondeo es simple, pero nos permite hacer cosas interesantes con el mundo exterior. Es posible "sondear" en un bucle todas las entradas del dispositivo y responder a los resultados de alguna manera, una por una. 
+Este método es conceptualmente muy simple y es un buen punto de partida para muchos proyectos. Pero pronto descubriremos por qué este mecanismo podría no ser el mejor método para todos (o incluso la mayoría) de los casos, pero es el primero que se tiene que estudiar.
 
-**Note** "Polling" is often used on two levels of granularity.  At one level, "polling" is used to refer to asking (once) what the state of an input is.  At a higher level, "polling", or perhaps "polling in a loop", is used to refer to asking (repeatedly) what the state of an input is in a simple control flow like the one we used above.  This kind of use of the word to refer to a control flow is used only in the simplest of programs, and seldom used in production (it's not practical as we'll soon see), so generally when embedded engineers talk about polling, they mean the former, i.e. to ask (once) what the state of an input is.
-
+**Nota:: "Sondear" se utiliza a menudo con dos significados distintos. El primero, "sondeo" se usa para referirse a preguntar (una vez) cuál es el estado de una entrada. El segundo significado, "sondeo", o quizás "bucle de sondeo", es más para referirse a comprobar (indefinidamente) cuál es el estado de una entrada mediante repetición como el que usamos arriba. 
+Esta segunda acepción se utiliza solo en los programas más simples, y rara vez lo escucharemos en producción (no es práctico como veremos pronto), así que generalmente cuando los ingenieros hablan sobre sondeo, se refieren al primero, es decir, preguntar (una vez) cuál es el estado de una entrada.
