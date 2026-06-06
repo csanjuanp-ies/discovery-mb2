@@ -1,83 +1,65 @@
-# RTRM: Reading The Reference Manual
+# RTRM: Manual de Referencia
 
-We have previously seen the GPIO pins on the nRF52833. On this chip (and on many others) the GPIO
-pins are grouped into *ports*. There are two ports, Port 0 and Port 1, abbreviated to `P0` and `P1`
-respectively. The pins within each port are named with numbers starting from 0. Port 0 has 32 pins,
-named `P0.00` to `P0.31`, and Port 1 has 10 pins, named `P1.00` to `P1.09`.
+Ya hemos visto los pins de la GPIO en el nRF52833. En este chip (y en muchos otros) los pines GPIO están agrupados en *puertos*. Hay dos puertos, el Puerto 0 y el Puerto 1, abreviados como `P0` y `P1` respectivamente. Los pines dentro de cada puerto se nombran con números que comienzan desde 0. El Puerto 0 tiene 32 pines, nombrados `P0.00` a `P0.31`, y el Puerto 1 tiene 10 pines, nombrados `P1.00` a `P1.09`.
 
-The first thing we have to remember out is which pin is connected to which LED.  We previously did
-this by tracing the schematic. That turns out to be hard mode: the required information is in the
-MB2 [pinmap table].
+Lo primero que tenemos que recordar es qué pin está conectado a cada LED. Anteriormente, hicimos esto siguiendo el esquema. Resulta que eso es difícil: la información requerida está en la tabla de asignación de pines del MB2 [pinmap table].
 
 [pinmap table]: https://tech.microbit.org/hardware/schematic/#v2-pinmap
 
-The table says:
+La tabla dice que:
+- `ROW1`, la fila superior de LEDs, está conectada al pin `P0.21`. `P0.21` es la forma corta de: Pin 21 en el Puerto 0.
+- `ROW5`, la fila inferior de LEDs, está conectada al pin `P0.19`.
 
-- `ROW1`, the top LED row, is connected to the pin `P0.21`. `P0.21` is the short form of: Pin 21 on Port 0.
-- `ROW5`, the bottom LED row, is connected to the pin `P0.19`.
+Hasta este momento, sabemos que queremos cambiar el estado de los pines `P0.21` y `P0.19` para encender y apagar las filas superior e inferior respectivamente. Esos pines son parte del Puerto 0, así que usaremos el periférico `P0` para configurarlos.
 
-Up to this point, we know that we want to change the state of the pins `P0.21` and `P0.19` to turn
-the top and bottom rows on and off. These pins are part of Port 0 so we'll use the `P0` peripheral
-to set them up.
-
-Each peripheral has a register *block* associated with it. A register block is a collection of
-registers allocated in contiguous memory. The address at which the register block starts is known as
-its base address. We need to figure out what's the base address of the `P0` peripheral. That
-information is in the following section of the microcontroller [Product Specification]:
+Cada periférico tiene un bloque de registros asociado. Un bloque de registros es una colección de registros asignados en memoria contigua. La dirección en la que comienza el bloque de registros se conoce como su dirección base. Necesitamos averiguar cuál es la dirección base del periférico `P0`. Esa información está en la siguiente sección de la [Especificación del Producto] del microcontrolador o en la [Especificación del Producto (html)]:
 
 > Section 4.2.4 Instantiation - Page 22
 
-The table says that base address of the `P0` register block is `0x5000_0000`.
+La tabla especifica que la dirección base del bloque de registros `P0` es `0x5000_0000`. 
 
-Each peripheral also has its own section in the documentation. Each of these sections ends with a
-table of the registers that the peripheral's register block contains. For the `GPIO` family of
-peripheral, that table is in:
+Cada periférico tiene su propia sección en la documentación. Cada una de ellas termina con una tabla de los registros que contiene. Para la familia de periféricos `GPIO`, esa tabla está en:
 
 > Section 6.8.2 Registers - Page 144
 
-`OUT` is the register which we will be using to set/reset. Its offset value is `0x504` from the base
-address of the `P0`. We can look up `OUT` in the [Product Specification].
+`OUT` es el registro que debemos usar para establecer o borrar los pines. Su valor de desplazamiento es `0x504` desde la dirección base de `P0`. Podemos buscar `OUT` en la [Especificación del Producto].
 
-That register is specified right under the `GPIO` registers table:
+La información de ese registro está en la tabla de registros `GPIO`:
 
 > Subsection 6.8.2.1 OUT - Page 145
 
-Anyway, `0x5000_0000` + `0x504` = `0x50000504`. That looks familiar! Finally! 
+De todos modos, `0x5000_0000` + `0x504` = `0x50000504`, que es la dirección en la que estamos escribiendo en el código.
 
-This is the register we were writing to. The documentation says some interesting things. First, this
-register can both be written to and read from. Next, the register is a 32-bit piece of memory, and
-each bit represents the state of the corresponding pin. That means that bit 19 matches pin 19, for
-instance.  Setting the bit to 1 will enable the pin output, and setting it to 0 will reset
-it. Furthermore, we can see that all pin outputs are disabled by default, as the reset value of all
-bits is 0.
+Esa es la dirección del registro al que vamos a utilizar. La documentación dice cosas interesantes: Primero, este registro se puede escribir y leer. Segundo, el registro ocupa 32 bits de memoria, y cada bit representa el estado del pin correspondiente. 
+Eso significa que el bit 19 coincide con el pin 19, por ejemplo. Establecer el bit en 1 habilitará la salida del pin, y establecerlo en 0 lo restablecerá. Además, podemos ver que todas las salidas de los pines están deshabilitadas por defecto, ya que el valor de reinicio de todos los bits es 0.
 
-We'll use GDB's `examine` command: `x`. Depending on the configuration of your GDB server,
-GDB will refuse to read memory that isn't specified. You can disable this behaviour by running:
+Vamos a usar el comando `examine` de GDB (`x`). Dependiendo de la configuración del servidor, GDB se negará a leer de la memoria que no esté especificada. Se deshabilita este comportamiento ejecutando:
 
 ```
 set mem inaccessible-by-default off
 ```
 
-So here we go. First turn off the `inaccessible-by-default` flag, then set a couple of breakpoints, reset the device and halt.
+Vamos allá, Primero desactivamos  `inaccessible-by-default`, luego establecemos un par de puntos de interrupción, reiniciamos el dispositivo y lo detenemos.
+
+>Nota del t.: He tenido que añadir en los puntos de interrupción, el nombre del fichero para que bajo windows los reconociera bien:  break **main.rs:**.
 
 ```
 (gdb) set mem inaccessible-by-default off
-(gdb) break 16
+(gdb) break main.rs:16
 Breakpoint 1 at 0x172: file src/07-registers/src/main.rs, line 16.
 Note: automatically using hardware breakpoints for read-only addresses.
-(gdb) break 19
+(gdb) break main.rs:19
 Breakpoint 2 at 0x17c: file src/07-registers/src/main.rs, line 19.
-(gdb) break 22
+(gdb) break main.rs:22
 Breakpoint 3 at 0x184: file src/07-registers/src/main.rs, line 22.
-(gdb) break 25
+(gdb) break main.rs:25
 Breakpoint 4 at 0x18c: file src/07-registers/src/main.rs, line 25.
 (gdb) monitor reset halt
 Resetting and halting target
 Target halted
 ```
 
-All right. Let's continue until the first breakpoint, right before line 16, and print the contents
-of the register at address `0x50000504`.
+Perfecto, ejecutemos hasta el primer punto de ruptura, justo antes de la línea 16, y veamos el contenido del registro en la dirección `0x50000504`.
 
 ```
 (gdb) c
@@ -89,13 +71,10 @@ Breakpoint 1, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:1
 0x50000504:     0x00000000
 ```
 
-Ok, we see that the register's value is `0x00000000` or `0` at this point. This corresponds with the
-data in the [Product Specification], which says that `0` is the 'reset value' of this register. That
-means that once the MCU resets, the register will have `0` as its value.
+Ok, vemos que el valor del registro es `0x00000000` o `0` en este punto. Esto corresponde con los datos de la [Especificación del Producto], que dice que `0` es el 'valor de reinicio' de este registro. Eso significa cada vez que el MCU se reinicia, el registro tendrá `0` como su valor.
 
-Let's go on. This line consists of multiple instructions (reading, bitwise ORing and writing), so we
-need to instruct the debugger to continue execution more than once, until we hit the next
-breakpoint.
+Sigamos. Esta línea consta de varias instrucciones (lectura, OR bit a bit y escritura), así que necesitamos indicarle al depurador que continúe la ejecución más de una vez, hasta que lleguemos al siguiente punto de interrupción.
+
 
 ```
 (gdb) c
@@ -111,29 +90,28 @@ Breakpoint 2, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:1
 19              *(PORT_P0_OUT as *mut u32) |= 1 << 19;
 ```
 
-We've stopped right before line 19, meaning that line 16 is fully executed at this point. Let's have
-a look at the `OUT` register's contents again:
+Ahora hemos parado justo antes de la línea 19, lo que significa que la línea 16 se ha ejecutado completamente en este punto. Echemos un vistazo al contenido del registro `OUT` nuevamente:
+
 
 ```
 (gdb) x 0x50000504
 0x50000504:     0x00200000
 ```
 
-The value of the `OUT` register is `0x00200000` at this point, which is `2097152` in decimal, or
-`2^21`. That means that bit 21 is set to 1, and the rest of the bits are set to 0. That corresponds
-to the code on line 16, which writes `1 << 21`, or a 1 shifted left 21 positions, bitwise ORed with
-`OUT`s current value (which was 0), to the `OUT` register.
+El valor ha cambiado a `0x00200000` lo que es `2097152` en decimal, o `2^21`. Eso significa que el bit 21 está establecido en 1, y el resto de los bits están fijados en 0. Eso corresponde con el código de la línea 16, que escribe (`1 << 21`) un 1 desplazado a la izquierda 21 posiciones, bit a bit OR con el valor actual de `OUT` (que era 0), y lo graba al registro `OUT`.
 
-Writing `1 << 21` (`OUT[21]= 1`) to `OUT` sets `P0.21` *high*. That turns the top LED row
-*on*. Check that the top row is now indeed lit up.
+
+Escribir el valor  `1 << 21` (`OUT[21]= 1`) en `OUT` fija `P0.21` *alto*. Eso enciende la fila superior de LED. Comprueba que está encendida.
+
+Sí, eso iba a decir. Ahora, pulsa "c" otra vez para continuar la ejecución hasta el siguiente
+punto de ruptura e imprimamos su valor.
 
 ```
 (gdb) c
 Continuing.
 ```
 
-Yeah, I was gonna say that. Now, hit 'c' another time to continue execution up to the next
-breakpoint and print its value.
+Paramos antes de la línea 19.
 
 ```
 Program received signal SIGINT, Interrupt.
@@ -148,20 +126,14 @@ Breakpoint 3, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:2
 0x50000504:     0x00280000
 ```
 
-On line 19, we've set bit 19 of `OUT` to 1, keeping bit 21 as is. The result is `0x00280000`, which
-is `2621440` in decimal, or `2^19 + 2^21`, meaning that both bit 19 and bit 21 are set to 1.
+En la línea 19, hemos puesto el bit 19 de `OUT` a 1, manteniendo el bit 21 como está. El resultado es `0x00280000`, que es `2621440` en decimal, o `2^19 + 2^21`, lo que significa que tanto el bit 19 como el bit 21 tiene valor 1.
 
-Writing `1 << 19` (`OUT[19]= 1`) to `OUT` sets `P0.19` *high*. That turns the bottom LED row
-*on*. As such, the bottom row should now be lit up.
+Fijar el valor `1 << 19` (`OUT[19]= 1`) en `OUT` fija `P0.19` *alto*. Eso enciende la fila inferior de LED. Comprueba que está encendida.
 
-The following lines turn the rows off again. First the top row, then the bottom row. This time,
-we're doing a bitwise AND operation, combined with a bitwise NOT. We calculate `!(1 << 21)`, which
-is all bits set to 1, except for bit 21. Next, we bitwise AND that with the current value of `OUT`,
-ensuring that only bit 21 is set to 0, keeping the value of the other bits intact.
+Las líneas siguientes apagan las filas de nuevo. Primero la fila superior, luego la fila inferior. Esta vez, estamos haciendo una operación bit a bit AND, combinada con un bit a bit NOT. Calculamos `!(1 << 21)`, que es todos los bits escritos a 1, excepto el bit 21. Luego, hacemos un AND bit a bit de eso con el valor actual de `OUT`, asegurándonos de que solo el bit 21 se establezca en 0, manteniendo el valor de los otros bits intacto.
 
-Continue execution and check that the reported values of the `OUT` register matches what you
-expect. You can press `CTRL+C` to pause execution once the device enters the endless loop at the end
-of the `main` function.
+Continuemos la ejecución y comprobemos que los valores existentes en el registro `OUT` coinciden con lo que esperamos. Para apusar la ejecución se puede pulsar `CTRL+C` una vez que el dispositivo entre en el bucle infinito al final de la función `main`.
+
 
 ```
 (gdb) c
@@ -192,7 +164,8 @@ Program received signal SIGINT, Interrupt.
 (gdb) x 0x50000504
 0x50000504:     0x00000000
 ```
+En este punto todos los LED deberían estar apagados.
 
-And at this points all LEDs should be turned off again!
+[Especificación del Producto]: https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf
 
-[Product Specification]: https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf
+[Especificación del Producto (html)]:https://docs.nordicsemi.com/r/bundle/ps_nrf52833/page/keyfeatures_html5.html

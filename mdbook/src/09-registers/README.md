@@ -1,65 +1,49 @@
-# Registers
+# Registros
+Este capítulo contine un análisis técnico. Se puede [saltar este capítulo] por ahora y volver a él más tarde. Dicho esto, hay muchas cosas interesantes en él, así que recomendaría que se leyera.
 
-This chapter is a technical deep-dive. You can safely [skip it] for now and come back to it later if
-you like. That said, there's a lot of good stuff in here, so I'd recommend you dive in.
-
-[skip it]: ../10-serial-port/index.html
+[saltar este capítulo]: ../10-serial-port/readme.md
 
 -----
 
-It's time to explore what calling `display_pins.row1.set_high()` or `button_a_pin.is_high()` does under the hood.
+Es el momento de explorar qué es lo que ocurre cuando llamamos a `display_pins.row1.set_high()` o `button_a_pin.is_high()`.
 
-In a nutshell, calling `display_pins.row1.set_high()` just writes to some special memory regions. Go into the `09-registers` directory
-and let's run the starter code statement by statement (`src/main.rs`).
+En pocas palabas, la llamada a `display_pins.row1.set_high()` simplemente escribe en algunas regiones especiales de memoria. Vayamos al directorio `09-registers` y ejecutemos el código en el fichero (`src/main.rs`).
 
 ``` rust
 {{#include src/main.rs}}
 ```
 
-What's this magic?
+¿Qué está pasando?
 
-The address `0x50000504` points to a *register*. A register is a special region of memory that
-controls a *peripheral*. A peripheral is a piece of electronics that sits right next to the
-processor within the microcontroller package and provides the processor with extra functionality.
-After all, the processor, on its own, can only do math and logic.
+La dirección `0x50000504` apunta a un *registro*. Un registro es una región especial de memoria que controla un *periférico*. Un periférico es una pieza de electrónica que se encuentra justo al lado del procesador dentro del sock del microcontrolador y proporciona al procesador funcionalidad adicional. Después de todo, el procesador, por sí solo, solo puede hacer matemáticas y lógica.
 
-This particular register controls General Purpose Input/Output (GPIO) *pins* (GPIO *is* a
-peripheral) and can be used to *drive* each of those pins
-*low* or *high*. 
+Este registro en particular controla los pines de General Purpose Input/Output (GPIO) (GPIO es un periférico) y se puede usar para *alimentar* cada uno de esos pines a *bajo* o *alto*.
 
-(On the nRF52833 there are more than 32
-GPIOs, yet the CPU is 32-bit. Thus, the GPIO
-pins are organized in two groups "P0" and "P1", with a set of registers
-for reading, writing and configuring each group. The address
-above is the address of the output register for the P0 pins.)
+(En el nRF52833 hay más de 32 GPIOs, pero la CPU es de 32 bits. 
+Por lo tanto, los pines GPIO están organizados en dos grupos "P0" y "P1", 
+con un conjunto de registros para leer, escribir y configurar cada grupo. 
+La dirección anterior es la dirección del registro de salida para los pines P0.)
 
-## An aside: LEDs, digital outputs and voltage levels
+## Un apunte: LED, salidas digitales y niveles de tensión
 
-Drive? Pin? Low? High?
+¿Alimentar? ¿Pin? ¿Bajo? ¿Alto?
 
-A pin is a electrical contact. Our microcontroller has several of them and some of them are
-connected to Light Emitting Diodes (LEDs). An LED will emit light when voltage is applied to it.  As
-the name implies, an LED also acts as a "diode". A diode will only let electricity flow in one
-direction. Hook an LED up "forwards" and light comes out. Hook it up "backwards" and nothing
-happens.
+Un pin es un contacto eléctrico. Nuestro microcontrolador tiene varios de ellos y algunos están conectados a Diodos Emisores de Luz (LED). Un LED emitirá luz cuando se le aplique tensión. 
+Como su nombre indica, un LED también actúa como un "diodo". Un diodo solo dejará pasar la electricidad en una dirección. Conecta un LED "hacia adelante" y saldrá luz. Conéctalo "hacia atrás" y no pasará nada.
+
 
 <a href="https://commons.wikimedia.org/wiki/File:LED_circuit.svg">
 <p align="center">
-<img class="white_bg" height="180" title="LED circuit" src="../assets/LED_circuit.svg" />
+<img class="white_bg" height="180" title="LED circuit" src="../assets/LED_circuit.svg" alt="Led circuit"/>
 </p>
 </a>
 
-Luckily for us, the microcontroller's pins are connected such that we can drive the LEDs the right
-way round. All that we have to do is apply enough voltage across the pins to turn the LED on. The
-pins attached to the LEDs are normally configured as *digital outputs* and can output two different
-voltage levels: "low", 0 Volts, or "high", 3 Volts. A "high" (voltage) level will turn the LED on
-whereas a "low" (voltage) level will turn it off.
+Afortunadamente, los pines del microcontrolador están conectados de tal manera que podemos alimentar los LEDs en la dirección correcta. Todo lo que tenemos que hacer es aplicar suficiente tensión a través de los pines para encender el LED. 
+Los pines conectados a los LED normalmente están configurados como *salidas digitales* y pueden emitir dos niveles de tensión diferentes: "bajo", 0 Voltios, o "alto", 3 Voltios. Un nivel "alto" (tensión) encenderá el LED, mientras que un nivel "bajo" (tensión) lo apagará.
 
-These "low" and "high" states map directly to the concept of digital logic. "low" is `0` or `false`
-and "high" is `1` or `true`. This is why this pin configuration is known as digital output.
+Esos estados "bajo" y "alto" se mapean directamente al concepto de lógica digital. Un valor "bajo" es `0` o `false` y otro "alto" es `1` o `true`. Por eso esta configuración de pines se conoce como salida digital.
 
-The opposite of a digital output is a digital input.  In the same way that a digital output can be either `0` or `1`, a digital input can be either `0` or `1`.  The difference is that digital outputs can drive a voltages, but digital inputs *read* a voltage.  When the microcontroller reads a voltage level above a high threshold, it will interpret that as a `1` and when it reads a voltage level below a low threshold, it will interpret that as a `0`. 
+Lo contrario a la salida digital es la entrada digital. De la misma manera que una salida digital puede ser `0` o `1`, una entrada digital puede ser `0` o `1`. La diferencia es que las salidas digitales pueden emitir tensiones, pero las entradas digitales *leen* una tensión. Cuando el microcontrolador lee un nivel de tensión por encima de un umbral alto, lo interpretará como un `1` y cuando lee un nivel de tensión por debajo de un umbral bajo, lo interpretará como un `0`.
 
 -----
-
-OK. But how can one find out what this register does? Time to RTRM (Read the Reference Manual)!
+Ok, pero ¿cómo se puede saber qué hace este registro? ¡Es hora de RTRM (Leer el Manual de Referencia)!
