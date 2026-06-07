@@ -1,15 +1,13 @@
-# `0xBAAAAAAD` address
+# Dirección `0xBAAAAAAD`
+No todas las direcciones de memoria pueden ser accedidas como periféricos. Mira este programa (`examples/bad.rs`).
 
-Not all the peripheral memory can be accessed. Look at this program (`examples/bad.rs`).
 
 ```rust
 {{#include examples/bad.rs}}
 ```
+Esta dirección está muy cerca de la utilizada para `OUT` que usamos antes, pero es *inválida*, en el sentido de que no hay ningún registro en ella.
 
-This address is close to the `OUT` address we used before but this address is *invalid*, in the
-sense that there's no register at this address.
-
-Now, let's try it.
+Intentemos ejecutar el programa.
 
 ``` console
 $ cargo run
@@ -34,21 +32,15 @@ Breakpoint 3, cortex_m_rt::HardFault_ (ef=0x2001ffb8) at src/lib.rs:1046
 1046	    loop {}
 (gdb) 
 ```
+Hemos intentado hacer una operación inválida, leer de memoria que no existe, así que el procesador ha levantado una *excepción*: una excepción de *hardware*.
 
-We tried to do an invalid operation, reading memory that doesn't exist, so the processor raised an
-*exception*: a *hardware* exception.
+En la mayoría de los casos, las excepciones se elevan cuando el procesador intenta realizar una operación no posible. Las excepciones rompen el flujo normal de un programa y obligan al procesador a ejecutar un *manejador de excepciones*, que es simplemente una función o subrutina.
 
-In most cases, exceptions are raised when the processor attempts to perform an invalid operation.
-Exceptions break the normal flow of a program and force the processor to execute an *exception
-handler*, which is just a function/subroutine.
+Hay diferentes tipos de excepciones. Cada tipo de excepción se genera por diferentes condiciones y cada una es gestionada por un manejador de excepciones diferente.
 
-There are different kind of exceptions. Each kind of exception is raised by different conditions and
-each one is handled by a different exception handler.
+El crate `registers` que depende del `cortex-m-rt` define un manejador de excepciones *hard fault* por defecto, llamado `HardFault_`, que maneja la excepción de "dirección de memoria inválida". El fichero `embed.gdb` fijó un punto de interrupción en `HardFault` automáticamente; por eso el depurador detuvo el programa mientras se ejecutaba el manejador de excepciones. 
 
-The `registers` crate depends on the `cortex-m-rt` crate which defines a default *hard fault*
-handler, named `HardFault_`, that handles the "invalid memory address" exception. `embed.gdb` placed
-a breakpoint on `HardFault`; that's why the debugger halted your program while it was executing the
-exception handler.  We can get more information about the exception from the debugger. Let's see:
+Podemos obtener más información sobre la excepción desde el depurador. Veamos:
 
 ```
 (gdb) list
@@ -65,7 +57,7 @@ exception handler.  We can get more information about the exception from the deb
 1050	#[no_mangle]
 ```
 
-`ef` is a snapshot of the program state right before the exception occurred. Let's inspect it:
+El parámetro `ef` es una imagen del estado del programa justo antes de que se produjera la excepción. Inspeccionemos su contenido:
 
 ```
 (gdb) print/x *ef
@@ -81,9 +73,8 @@ $1 = cortex_m_rt::ExceptionFrame {
 }
 ```
 
-There are several fields here but the most important one is `pc`, the Program Counter register.  The
-address in this register points to the instruction that generated the exception. Let's disassemble
-the program around the bad instruction.
+Hay muchos datos aquí, pero el más importante es `pc`, el registro del contador de programa. La dirección en este registro apunta a la instrucción que generó la excepción. Desensamblamos el programa alrededor del fallo.
+
 
 ```
 (gdb) disassemble /m ef.pc
@@ -126,14 +117,11 @@ End of assembler dump.
 
 ```
 
-The exception was caused by the `ldr r0, [r0, #0]` instruction, a read instruction. The instruction
-tried to read the memory at the address indicated by the `r0` *CPU register*. By the way, a CPU
-(processor) register not a memory mapped register; it doesn't have an associated address like, say,
-`OUT`.
+La excepción se produjo por la instrucción `ldr r0, [r0, #0]` al leer. Esta sentencia intentó leer la memoria en la dirección indicada por el registro `r0`. Por cierto, un registro de CPU (procesador), no es un registro mapeado en memoria; no tiene una dirección asociada como, por ejemplo, `OUT`.
 
-Wouldn't it be nice if we could check what the value of the `r0` register was right at the instant
-when the exception was raised? Well, we already did! The `r0` field in the `ef` value we printed
-before is the value of `r0` register had when the exception was raised. Here it is again:
+¿No sería estupendo poder comprobar cuál era el valor del registro `r0` justo en el instante
+en que se produjo la excepción? ¡Pues ya lo hemos hecho! El campo `r0` del valor `ef` que mostramos
+antes es el valor que tenía el registro `r0` cuando se produjo la excepción. Aquí lo tenemos de nuevo:
 
 ```
 (gdb) print/x *ef
@@ -149,5 +137,4 @@ $1 = cortex_m_rt::ExceptionFrame {
 }
 ```
 
-`r0` contains the value `0x5000_A784` which is the invalid address we called the `read_volatile`
-function with.
+`r0` contiene el valor `0x5000_A784` que es la dirección inválida con la que llamamos a la función `read_volatile`.

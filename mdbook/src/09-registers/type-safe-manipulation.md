@@ -1,67 +1,52 @@
-# Type safe manipulation
+# Manipulación segura de tipos
 
-One of the registers of `P0`, the `IN` register, is documented as a read-only register.
+Uno de los registros de `P0`, el registro `IN`, es un registro de solo lectura.
 
 > 6.8.2.4 IN - Pages 145 and 146
 
-Note that in the 'Access' column of the table, only the 'R' is given for this register.  We are not
-supposed to write to this register or Bad Stuff May Happen.
+Fijémonos en la columna 'Access' de la tabla, solo la letra 'R' está presente. Esto significa que se supone que no podemos escribir en este registro.
 
-Registers have different read/write permissions. Some of them are write only, others can be read and
-written to and there must be others that are read only.
+Cada registro tiene permisos diferentes de lectura/escritura. Algunos de ellos son solo de escritura, otros pueden ser leídos y escritos, y otros que son solo de lectura.
 
-Directly working with hexadecimal addresses is also error-prone. You already saw that trying to
-access an invalid memory address caused an exception which disrupted the execution of our program.
+Trabajar directamente con las direcciones de memoria es propenso a errores. Ya vimos que intentar acceder a una dirección de memoria no válida generó una excepción que interrumpió la ejecución del programa.
 
-Wouldn't it be nice if we had an API to manipulate registers in a "safe" manner? Ideally, the API
-should encode these three points I've mentioned: No messing around with the actual addresses, should
-respect read/write permissions and should prevent modification of the reserved parts of a register.
 
-Well, we do! `registers::init()` actually returns a value that provides a type safe API to
-manipulate the registers of the `P0` and `P1` ports.
 
-As you may remember: a group of registers associated to a peripheral is called register block, and
-it's located in a contiguous region of memory. In this type safe API each register block is modeled
-as a `struct` where each of its fields represents a register. Each register field is a different
-newtype over e.g. `u32` that exposes a combination of the following methods: `read`, `write` or
-`modify` according to its read/write permissions. Finally, these methods don't take primitive values
-like `u32`, instead they take yet another newtype that can be constructed using the builder pattern
-and that prevent the modification of the reserved parts of the register.
+¿No sería estupendo disponer de una API que permitiera manipular los registros de forma "segura"? Lo ideal sería que la API
+tuviera en cuenta estos tres puntos que he mencionado: no manipular las direcciones reales,
+respetar los permisos de lectura y escritura, y evitar la modificación de las partes reservadas de un registro.
 
-The best way to get familiar with this API is to port our running example to it
-(`examples/type-safe.rs`).
+Muy bien, la tenemos. `registers::init()` devuelve un valor que proporciona una API de tipo seguro para manipular los registros de los puertos `P0` y `P1`.
+
+Como recordarás: un grupo de registros asociados a un periférico se llama bloque de registros, y se encuentra en una región contigua de memoria. En esta API de tipo seguro, cada bloque de registros se modela como una `struct` donde cada uno de sus campos representa un registro. 
+Cada campo es nuevo tipo diferente sobre e.g. `u32` que expone una combinación de los siguientes métodos: `read`, `write` o `modify` según sus permisos de lectura/escritura. Finalmente, estos métodos no toman valores primitivos como `u32`, sino que aceptan otro nuevo tipo que se puede construir usando el patrón *builder* y que evita la modificación de las partes reservadas del registro.
+
+La mejor manera de familiarizarse con esta API es migrar nuestro ejemplo en ejecución a ella (`examples/type-safe.rs`).
+
 
 ```rust
 {{#include examples/type-safe.rs}}
 ```
 
-First thing you notice: There are no magic addresses involved. Instead we use a more human friendly
-way, `p0.out`, to refer to the `OUT` register in the `P0` port register block.
 
-The register block has a [`modify`] method that takes a closure. Before this closure is called, the
-`OUT` register's value is read and passed to the closure as the `r` parameter. Given the value of
-`r`, you can manipulate `w` to the desired new value of the register using its methods. The result
-is written to the register once the closure returns. In our case, the current value of the register
-is also passed in the `w` parameter, allowing us to just manipulate `w` when we want to keep the
-rest of the register bits as is.
+Lo primero que llama la atención es que no hay direcciones mágicas de por medio. En su lugar, utilizamos una forma más intuitiva, `p0.out`, para referirnos al registro `OUT` del bloque de registros del puerto `P0`.
 
-The `modify` method is defined for registers that allow both write and read access. If you'd like to
-just read a register's value, but not update it, you can use the [`read`] method. Or, if you simply
-want to write a register value without reading, there's the [`write`] method.
+El bloque de registros tiene un método [`modify`] que toma una closure. Antes de que se llame a esta, el valor del registro `OUT` se lee y se pasa como el parámetro `r`. Dado el valor de `r`, es posible manipular `w` para obtener el nuevo valor del registro utilizando sus métodos. El resultado se escribe en el registro una vez que la closure termina. En nuestro caso, el valor actual del registro también se pasa en el parámetro `w`, lo que nos permite simplemente manipular `w` cuando queramos mantener el resto de los bits del registro tal como están.
 
-Read-only registers only expose `read`, and write-only registers only expose `write`. This prevents
-users from accessing a register in a way that's not allowed, and therefore you don't need to wrap
-the calls in an `unsafe` block. And you don't need to figure out the exact register address and bit
-positions yourself!
+
+El método `modify` se define para los registros que permiten tanto el acceso de escritura como de lectura. Si solo deseamos leer el valor de un registro, pero no actualizarlo, se puede usar el método [`read`]. O, si simplemente quieres escribir un valor de registro sin leerlo, existe el método [`write`].
+
+Los registros de solo lectura implementan solo el método `read`, y los registros de solo escritura implementan el método `write`. Esto evita que los usuarios accedan a un registro de una manera incorrecta, y por lo tanto no es necesario envolver las llamadas en un bloque `unsafe`. ¡Y lo más importante, no necesitamos averiguar la dirección exacta del registro y las posiciones de los bits!
+
 
 [`write`]: https://docs.rs/svd2rust/latest/svd2rust/#write
 [`read`]: https://docs.rs/svd2rust/latest/svd2rust/#read
 [`modify`]: https://docs.rs/svd2rust/latest/svd2rust/#modify
 
-Let's run this program! There's some interesting stuff we can do *while* debugging the program.
+Si ejecutamos el programa, veremos algo interesante que podemos hacer *mientras* depuramos.
 
-`p0` is a reference to the `P0` port's register block. `print p0` will return the base address of
-the register block, and `print *p0` will print its value.
+`p0` es una referencia al puerto `P0` del bloque de registros, `print p0` devolverá la dirección base del bloque de registros, y `print *p0` imprimirá su valor.
+
 
 ```
 $ cargo run
@@ -328,19 +313,18 @@ $1 = nrf52833_pac::p0::RegisterBlock {
 
 
 ```
+Todos estos tipos nuevos y closures para nada generarán programas más grandes. Si compilamos el programa con la optimización [LTO] habilitada, veremos exactamente las mismas instrucciones que la versión "insegura" que usaba `write_volatile` y las mismas direcciones hexadecimales que tenía!
 
-All these newtypes and closures sound like they'd generate large, bloated programs. If you actually
-compile the program in release mode with [LTO] enabled, though, you'll see exactly the same
-instructions that the "unsafe" version that used `write_volatile` and hexadecimal addresses had!
 
 [LTO]: https://en.wikipedia.org/wiki/Interprocedural_optimization
 
-Use `cargo objdump` to grab the assembler code to `release.type-safe.dump`:
+Utilizamos `cargo objdump` para crear el desemsamblado del código `release.type-safe.dump`:
+
 ``` console
 cargo objdump -q --release --example type-safe -- --disassemble --no-show-raw-insn  > release.type-safe.dump
 ```
 
-Then search for `main` in `release.type-safe.dump`
+Buscamos la función `main` en el fichero `release.type-safe.dump`
 ```
 00000158 <main>:
      158:      	push	{r7, lr}
@@ -367,15 +351,9 @@ Then search for `main` in `release.type-safe.dump`
      18e:      	str	r1, [r0]
      190:      	b	0x190 <registers::__cortex_m_rt_main::h0e9b57c6799332fd+0x30> @ imm = #-0x4
 ```
+comprobamos que el programa generado es exactamente el mismo que la versión que llamaba a `ptr::read_volatile` y `ptr::write_volatile`.
 
-You can validate that this yields the exact same binary as the one with the calls to
-`ptr::read_volatile` and `ptr::write_volatile`.
-
-The best part of all this is that nobody had to write a single line of code to implement the GPIO
-API. All the code was automatically generated from a System View Description (SVD) file using the
-[svd2rust] tool. This SVD file is actually an XML file that microcontroller vendors provide and that
-contains the register maps of their microcontrollers. The file contains the layout of register
-blocks, the base addresses, the read/write permissions of each register, the layout of the
-registers, whether a register has reserved bits and lots of other useful information.
+La mejor parte de esto es que nadie ha tenido que escribir una sola línea de código para implementar la API de GPIO. Todo el código se generó automáticamente a partir de un archivo de descripción de vista del sistema (SVD) utilizando la herramienta [svd2rust]. 
+Este archivo SVD es en realidad un archivo XML que los fabricantes de microcontroladores proporcionan y que contiene los mapas de registros de sus microcontroladores. El archivo contiene el diseño de los bloques de registros, las direcciones base, los permisos de lectura/escritura de cada registro, el diseño de los registros, si un registro tiene bits reservados y mucha otra información útil.
 
 [svd2rust]: https://crates.io/crates/svd2rust

@@ -1,21 +1,20 @@
-# Spooky action at a distance
+# Acción fantasmagórica a distancia
 
-`OUT` is not the only register that can control the pins of port `P0`. The `OUTSET` register also lets
-you change the value of the pins, as can `OUTCLR`. However, `OUTSET` and `OUTCLR` don't let you
-retrieve the current output status of port `P0`.
+`OUT` no es el único registro que puede controlar los pines del puerto `P0`. El registro `OUTSET` también te permite cambiar el valor de los pines, al igual que `OUTCLR`. Sin embargo, `OUTSET` y `OUTCLR` no  permiten recuperar el estado de salida del puerto `P0`.
 
-`OUTSET` is documented in the [Product Specification]:
+
+`OUTSET` está documentado en [Especificación del producto]:
 
 > Subsection 6.8.2.2. OUTSET - Page 145
 
-Let's look at below program. The key to this program is `fn print_out`. This function prints the
-current value in `OUT` to the `RTT` console (`examples/spooky.rs`):
+Miremos el programa de abajo. La clave de este programa es `fn print_out`. Esta función imprime el valor actual en `OUT` a la consola `RTT` (`examples/spooky.rs`):
+
 
 ``` rust
 {{#include examples/spooky.rs}}
 ```
 
-You'll see this if you run this program:
+Si ejecutas el programa, verás algo como esto en la consola `RTT`:
 
 ``` console
 $ cargo embed
@@ -28,7 +27,7 @@ $ cargo embed
 15:13:24.055: P0.OUT = 0x000000
 ```
 
-Side effects! Although we are reading the same address multiple times without actually modifying it,
-we still see its value change every time `OUTSET` or `OUTCLR` is written to.
+Hay efectos secundarios, aunque estamos leyendo la misma dirección varias veces sin modificarla realmente, vemos su valor cambiar cada vez que se escribe en `OUTSET` o `OUTCLR`.
 
-[Product Specification]: https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf
+
+[Especificación del producto]: https://docs-be.nordicsemi.com/bundle/ps_nrf52833/attach/nRF52833_PS_v1.7.pdf

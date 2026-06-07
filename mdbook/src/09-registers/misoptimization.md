@@ -1,15 +1,11 @@
-# (mis)Optimization
+# (des)Optimización
 
-Reads/writes to registers are quite special. I may even dare to say that they are embodiment of side
-effects. In the previous example we wrote four different values to the same register. If you didn't
-know that address was a register, you may have simplified the logic to just write the final value
-`0x00000000` into the register.
+Leer y escribir en registros es algo bastante especial. Incluso me atrevería a decir que es la encarnación de los efectos secundarios. En el ejemplo anterior escribimos cuatro valores diferentes en el mismo registro. Si no hubieras sabido que esa dirección era un registro, podrías haber simplificado la lógica para escribir solo el valor final `0x00000000` en el registro.
 
-Actually, LLVM, the compiler's backend / optimizer, does not know we are dealing with a register and
-will merge the writes thus changing the behavior of our program. Let's check that really quick.
+Por defecto, LLVM, el optimizador del compilador, no sabe que estamos tratando con un registro y fusionará las escrituras, cambiando así el comportamiento de nuestro programa. Comprobémoslo.
 
-First, we'll use cargo objdump to get us the assembly of the build artifacts from both the optimized
-and the non-optimized build.
+Primero, utilizaremos cargo objdump para obtener el ensamblado de los artefactos de construcción tanto de la versión optimizada como de la no optimizada.
+
 
 ```
 # Non-optimized
@@ -18,12 +14,14 @@ cargo objdump -- --disassemble --no-show-raw-insn --source > debug.dump
 cargo objdump --release -- --disassemble --no-show-raw-insn --source > release.dump
 ```
 
-Let's see what's in there. Specifically, let's try to find the assembly that manipulates the `OUT`
-register.
+Vamos a ver qué hay aquí. En concreto, hay que tratar de encontrar el ensamblado que manipula el registro `OUT`.
 
-First, let's have a look at the contents of `debug.dump`, the assembly from the non-optimized build.
-I skipped a bunch and added my comments behind the `; <--`, indicating the line number in the source
-code that corresponds to the instruction.
+Primero, echaremos un vistazo al contenido de `debug.dump`, el ensamblado de la construcción no optimizada.
+Hemos saltado un montón de instrucciones, pero las que nos interesan están en la función `registers::__cortex_m_rt_main::h0b7888ca966441cf`, que es la función `main` de nuestro programa.
+
+Además de saltar las instrucciones, se han añadido comentarios detrás de `; <--`, indicando el número de línea del fichero fuente que corresponde a la instrucción.
+
+> Nota de tr.: Será dificil que coincida la numeración de líneas con la nuestra, pero buscando cerca de la dirección `0x160` deberíamos encontrar el mismo código ensamblador que el que se muestra a continuación, con las instrucciones que nos interesan.
 
 ```
 $ cat debug.dump
@@ -57,10 +55,8 @@ $ cat debug.dump
      196:      	b	0x196 <registers::__cortex_m_rt_main::h0b7888ca966441cf+0x36> @ imm = #-0x4
 [...]
 ```
+Como podemos ver, el ensamblado no optimizado contiene 4 instrucciones de carga, 4 de almacenamiento y 4 de manipulación de bits. Se corresponden perfectamente con el código que escribimos. Ahora, echemos un vistazo al ensamblado optimizado.
 
-As you can see, the non-optimized assembly contains 4 loads, 4 stores, and 4 bit manipulation
-instructions.  Those correspond nicely with the code we wrote. Now, let's have a look at the
-optimized assembly.
 
 ```
 $ cat release.dump
@@ -83,25 +79,22 @@ $ cat release.dump
 [...]
 ```
 
-Huh? Just a single load - bit manipulate - store?  The state of the LEDs didn't change this time!
-The `str` instruction is the one that writes a value to the register. Our *debug* (unoptimized)
-program had four of them, one for each write to the register, but the *release* (optimized) program
-only has one.
+¿Ups? Solo una carga, una manipulación de bits y una escritura. El estado de los LED no va a cambiar ya que solo escribe el resultado final, todo apagado. 
+La instrucción `str` es la que almacena un valor en el registro. Nuestro programa *debug* (no optimizado) tenía cuatro de ellas, una para cada escritura en el registro, pero el programa *release* (optimizado) solo tiene una.
 
-How do we prevent LLVM from misoptimizing our program? We use *volatile* operations instead of plain
-reads/writes (`examples/volatile.rs`):
+¿Cómo podemos evitar que el LLVM optimice nuestro programa? Usamos operaciones *volatile* en lugar de lecturas/escrituras normales (`examples/volatile.rs`):
+
 
 ``` rust
 {{#include examples/volatile.rs}}
 ```
-
-Let's run cargo objdump once again, with optimizations enabled.
+Veamos qué pasa ahora si volvemos a generar el ensamblado de la versión optimizada, pero esta vez con operaciones *volatile*.
 
 ```
 cargo objdump -q --release --example volatile -- --disassemble --no-show-raw-insn  > release.volatile.dump
 ```
 
-All right, now have a look at what's inside:
+Echemos un vistazo al resultado:
 
 ```
 $ cat release.volatile.dump
@@ -133,5 +126,5 @@ $ cat release.volatile.dump
 [...]
 ```
 
-Hey, look at that! Now we've got our four load - manipulate - store cycles back.
-Step through the code once again using GDB to see the volatile operations in action!
+Perfecto, hemos conseguido las cuatro instrucciones de carga de nuevo. Revisa el código de nuevo con el GDB para verlo en acción.
+
