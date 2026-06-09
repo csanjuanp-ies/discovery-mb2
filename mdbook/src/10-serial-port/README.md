@@ -1,49 +1,50 @@
-# Serial Port
+# Puerto Serie
 
-The closest thing to a universal I/O standard for modern day embedded boards is the "serial port". Pretty much every microcontroller has a way to make a few of its pins act as a serial port, and pretty much every microcontroller board makes these pins easy to get to. The MB2 is no exception.
+Lo más cercano a un estándar universal de E/S para las placas embebidas modernas es el "puerto serie". Prácticamente, todos los microcontroladores tienen una forma de hacer que algunos de sus pines actúen como un puerto serie, y prácticamente todas las placas de microcontroladores hacen que estos pines sean fáciles de acceder. El MB2 no es una excepción.
 
-In this chapter, we will describe what a serial port even is. We will then show you how to set up your computer with a "virtual serial port" using USB and use that virtual port with "terminal software" to talk to a serial port on the MB2.
+En este capítulo, describiremos qué es un puerto serie. Luego mostraremos cómo configurar el ordenador con un "puerto serie virtual" usando USB y utilizar ese puerto virtual con "software de terminal" para hablar con el puerto serie en el MB2.
 
-So what's this [serial port]? It's a place where two devices exchange data one bit at a time (*serially*) using one data line in each direction (*full-duplex*) plus a common ground. The serial port originated as "RS-232": see the history later in this chapter for details. However, the protocol spoken on the transmit and receive lines doesn't have an official name I'm aware of — it's just "serial" or maybe "async serial" or "UART serial".
+¿Qué es un [puerto serie]? De forma fácil, es un "mecanismo" por el que dos dispositivos intercambian datos bit a bit, uno en cada paso (*en serie*), usando una línea de datos en cada dirección (*full-duplex*) más una línea de tierra común. El puerto serie se denominó como "RS-232": más adelante tenemos la historia de su desarrollo. Sin embargo, el protocolo "hablado" en las líneas de transmisión y recepción no tiene un nombre oficial que sepamos, es simplemente "serie" o tal vez "serie asíncrono" o "UART serie".
 
-To be clear: most communication channels in modern computers are serial. USB (the "Universal Serial Bus") is a serial channel; I2C (which we will talk about later) is a serial channel. This chapter and the next are *not* about the general concept of serial communication: these chapters are about a specific thing called a "serial port" that has its own implementation and history.
+Para ser claros: la mayoría de los canales de comunicación en las computadoras modernas son serie. USB (el "Universal Serial Bus") es un canal serie; I2C (del que hablaremos más adelante) es un canal serie. Este capítulo y el siguiente *no* tratan sobre el concepto general de comunicación en serie: estos capítulos tratan sobre algo específico llamado "puerto serie" que tiene su propia implementación e historia.
 
-Serial port communication is *asynchronous* in the sense that none of the shared lines carries a clock signal. Instead, both parties must agree on roughly how fast data will be sent along the wire *before* the communication occurs. A peripheral called a Universal Asynchronous Receiver/Transmitter (UART) sends bits at the specified rate on its output wire, and watches for the start of bits on its input wire.
-
-<p align="center">
-<img class="white_bg" height="100" title="Serial Protocol" src="../assets/serial-proto.svg" />
-</p>
-
-The serial-port communications protocol works with frames, each carrying a byte of data. Each frame has one *start* bit, 5 to 9 bits of payload data (sent lsb-to-msb; modern applications rarely send a 9-bit byte; 7 or fewer bits in a frame will be left-padded to an 8-bit byte with zeros) and 1 to 2 *stop bits*.  In the diagram above, an ASCII 'E' character is sent using 8 data bits and 1 stop bit.
-
-The speed of the protocol is known as *baud rate* and it's quoted in bits per second (bps). (If you're thinking that this sounds wrong — it is. "Baud" is supposed to be *symbols* per second; a symbol should correspond to a frame; even if a data bit is regarded as the "symbol" they aren't sent at this rate because of the rest of the protocol. It's a convention, and doesn't have to make sense.) Historically common baud rates for UART serial are 9600bps, 19200bps, and 115200bps, but it is not uncommon in our modern world to send data at 921,600bps.
-
-With the "normal" configuration of 1 start bit, 8 bits of data, 1 stop bit and a bit rate of 921.6K bps we can send and receive 92.16K bytes per second — fast enough to transmit single-channel uncompressed CD audio. At the bit rate of 115,200 bps that we'll be using, we can send and receive 11.52K bytes per second. This is fine for most purposes.
-
-We'll be using a serial port (indirectly) to exchange data between the MB2 and your computer. Now you might be asking yourself: why exactly aren't we using RTT for this like we did before? RTT is a protocol that is meant to be used solely for debugging. You will not find devices that use RTT to communicate with other devices. However, serial communication is used quite often. For example, some GPS receivers send the position information they receive via serial. In addition RTT, like many debugging protocols, is slow compared to serial transfer rates.
+El puerto de comunicaciones serie es *asíncrono* en el sentido de que ninguna de las líneas compartidas lleva una señal de reloj. En cambio, ambas partes deben acordar cómo de rápido se enviarán los datos a través del cable *antes* de que ocurra la comunicación. Un periférico llamado Universal Asynchronous Receiver/Transmitter (UART) envía bits a la velocidad especificada en su línea de salida y espera la llegada de los bits en su línea de entrada.
 
 <p align="center">
-<img class="white_bg" height="500" title="Serial" src="../assets/serial.svg" />
+<img class="white_bg" height="100" title="Serial Protocol" src="../assets/serial-proto.svg" alt="Serial Protocol"/>
 </p>
 
-Today's computers don't usually have a serial port, and even if they do the voltage they use (+5V on a modern serial port, ±12V on an ancient RS-232 port) is outside the range that the MB2 hardware will accept and may result in damaging it. *You can't directly connect your computer to the microcontroller.* 
+El protocolo de comunicación serie funciona con tramas, cada una transporta un byte de datos. Cada trama tiene un *bit de inicio*, de 5 a 9 bits de datos de carga útil (enviados en formato lsb a msb; las aplicaciones actuales rara vez utilizan el tamaño de 9 bits; los bytes de 7 o menos bits en una trama se rellenarán a la izquierda hasta un byte de 8 bits con ceros) y 1 o 2 *bits de parada*. En el diagrama anterior, se envía un carácter ASCII 'E' utilizando 8 bits de datos y 1 bit de parada.
+
+La velocidad de protocolo es conocida como *velocidad de transmisión (baud rate)* y se mide en bits por segundo (bps). (Si te parece que esto suena mal, lo es. "Baud" se supone que es *símbolos* por segundo; un símbolo debería corresponder a una trama; incluso si un bit de datos se considera el "símbolo", no se envían a esta velocidad debido al resto del protocolo. Es una convención, y no tiene que tener sentido.) Las velocidades de baudios históricamente comunes para la UART son 9.600bps, 19.200bps y 115.200bps, pero no es raro hoy en día enviar datos a 921.600bps.
+
+Con una configuración "normal" de 1 bit de inicio, 8 bits de datos, 1 bit de parada y una velocidad de transmisión de 921,6 Kbps, podemos enviar y recibir 92.16K bytes por segundo, lo suficientemente rápido para transmitir audio CD sin comprimir en un solo canal. A la velocidad de 115.200 bps que usaremos, podemos enviar y recibir 11,52 Kbytes por segundo. Esto es suficiente para la mayoría de las aplicaciones.
+
+Vamos a usar un puerto serie (indirectamente) para intercambiar datos entre el MB2 y el ordenador. Podríamos preguntarnos: ¿por qué no estamos usando RTT para comunicarnos como hicimos antes? RTT es un protocolo que está destinado a ser utilizado únicamente para depuración. No encontraremos dispositivos que usen RTT para intercambiar datos con otros dispositivos. Sin embargo, la transmisión serie se utiliza con bastante frecuencia. Por ejemplo, algunos receptores GPS envían la información de posición que reciben a través de líneas serie. Además, RTT, como muchos protocolos de depuración, es lento en comparación con las velocidades de transferencia serie.
+
+<p align="center">
+<img class="white_bg" height="500" title="Serial" src="../assets/serial.svg" alt="Serial"/>
+</p>
+
+Los ordenadores actuales no suelen tener un puerto serie, e incluso si lo tienen, el voltaje que utilizan (+5V en uno moderno, ±12V en un  RS-232 antiguo) está fuera del rango que el hardware del MB2 acepta y puede dañarlo. *No podemos conectar directamente el ordenador al microcontrolador*.
 
 <a href="https://en.wikipedia.org/wiki/File:UART_to_USB_adapter.jpg">
 <p align="center">
-<img height="240" title="UART To USB Adapter" src="../assets/UART_to_USB_adapter.jpg" />
+<img height="240" title="UART To USB Adapter" src="../assets/UART_to_USB_adapter.jpg" alt="UART to USB"/>
 </p>
 </a>
 
-You *can* buy inexpensive (typically under US$5) USB←→serial converters that will support the +3.3V inputs of most modern microcontroller boards. The board shown above is a common one that I use regularly. We will be talking to the MB2 serial port through the MB2's built-in USB port. However, if you want to connect directly to a hardware serial port, on the MB2 or some other board, a serial converter is the way to go.
+Podemos comprar un conversor USB←→serie (por no más de 5€) que utiliza tensiones de +3.3V para la mayoría de las placas de microcontroladores actuales. El dispositivo que vemosa arriba es muy normal. Nosotros nos comunicaremos con el puerto serie del MB2 a través del puerto USB incorporado en la placa microcontroladora. Sin embargo, si queremos conectarnos directamente a un puerto serie hardware, en el MB2 o en alguna otra placa, la única vía posible es el conversor serie.
 
-A separate USB channel on the MB2's USB port can be used to talk to the MB2's built-in USB←→serial converter. (This is the right-hand path in the figure above.) This USB←→serial conversion is implemented using the "[communications microcontroller]" of the MB2: the communications microcontroller exposes a serial interface to the microcontroller and a virtual USB serial interface to your computer. The computer presents a virtual serial interface via the USB CDC-ACM ("Communications Device Class - Abstract Control Model", ugh) device class. The MB2 microcontroller will see your computer as a device connected to its hardware serial port; your computer will see the MB2 serial port as a virtual serial device.
+Es posible configurar un canal del puerto USB del MB2 para comunicarse con el convertidor USB←→serial incorporado del Microcontrolador (Esta es la parte derecha en la figura de anterior.) Esta conversión USB←→serial se implementa utilizando el "[microcontrolador de comunicaciones]" del MB2: se genera una interfaz serie al microcontrolador y una interfaz serie USB virtual al ordenador. 
+El ordenador reconoce una interfaz serie virtual a través de la clase de dispositivo USB CDC-ACM ("Communications Device Class - Abstract Control Model", ugh). 
+El microcontrolador del MB2 accede al ordenador como un dispositivo conectado a su puerto serie; el ordenador verá el puerto serie del MB2 como un dispositivo serie virtual.
 
-Now, let's get familiar with the USB serial port interface that your OS offers. Pick a route:
+Ahora vamos a familiarizarnos con la interfaz de puerto serie USB que ofrece cada sistema operativo. Elige un SSOO:
 
 - [Linux/UNIX](nix-tooling.md)
 - [Windows](windows-tooling.md)
+Para MacOS, no tenemos instrucciones específicas, pero se puede probar con las instrucciones de Linux. Sin embargo, ten en cuenta que tu experiencia puede diferir un poco.
 
-For MacOS check out the Linux documentation, although your experience may differ somewhat.
-
-[serial port]: https://en.wikipedia.org/wiki/Serial_port
-[communications microcontroller]: ../05-meet-your-software/flash-it.md
+[puerto serie]: https://en.wikipedia.org/wiki/Serial_port
+[microcontrolador de comunicaciones]: ../05-meet-your-software/flash-it.md

@@ -1,33 +1,26 @@
-# Windows tooling
+# Windows USB←→serial
 
-Start by unplugging your MB2.
+Lo primero es desconectar el MB2.
 
-Before plugging the MB2 back in, run the following command on the terminal:
+Antes de volver a conectar el MB2, ejecuta el siguiente comando en la terminal:
 
 ``` console
-$ mode
+> mode
 ```
 
-It will print a list of devices that are connected to your computer. The ones that start with `COM`
-in their names are serial devices. This is the kind of device we'll be working with. Take note of
-all the `COM` ports' `mode` outputs *before* plugging the serial module.
+Se imprimirá una lista de dispositivos que están conectados al ordenador. Los que empiezan con `COM` en sus nombres son dispositivo serie. Este es el tipo de dispositivo con el que trabajaremos. Anotaremos las salidas de la orden `mode` de todos los puertos `COM` *antes* de conectar el módulo serie.
 
-Now, plug in the MB2 and run the `mode` command again. If you see a new
-`COM` port appear on the list, then that's the COM port assigned to the
-serial functionality on the MB2.
+Conecta la placa MB2 y ejecuta de nuevo el comando `mode`. Deberías ver un nuevo puerto `COM` en la lista, ese es el puerto COM asignado al puerto serie del MB2.
 
-Now launch `putty`. A GUI will pop out.
+Ya podemos lanzar `putty`. Aparecerá una ventana.
 
 <p align="center">
-<img title="PuTTY settings" src="../assets/putty-settings.png" width="500" />
+<img title="PuTTY settings" src="../assets/putty-settings.png" width="500" alt="PuTTY"/>
 </p>
 
-On the starter screen, which should have the "Session" category open, pick "Serial" as the
-"Connection type". On the "Serial line" field enter the `COM` device you got on the previous step,
-for example `COM3`.
+En la ventana de inicio, debería estar la categoría "Session" abierta. En el campo "Connection type", seleccionamos "Serial". En el campo "Serial line", introducimos el dispositivo `COM` que obtuvimos en el paso anterior, por ejemplo `COM3`.
 
-Next, pick the "Connection/Serial" category from the menu on the left. On this new view, make sure
-that the serial port is configured as follows:
+A continuación, pulsamos en la categoría "Connection/Serial" del menú de la izquierda. En esta nueva vista, hau que asegúrase que el puerto serie esté configurado de la siguiente manera:
 
 - "Speed (baud)": 115200
 - "Data bits": 8
@@ -35,12 +28,11 @@ that the serial port is configured as follows:
 - "Parity": None
 - "Flow control": None
 
-Finally, click the Open button. A console will show up now:
+Para terminar, hacemos clic en el botón de "Open". La consola mostrará algo como:
 
 <p align="center">
-<img title="PuTTY console" src="../assets/putty-console.png" width="500" />
+<img title="PuTTY console" src="../assets/putty-console.png" width="500" alt="PuTTY console"/>
 </p>
 
-If you type on this console, the yellow LED on top of the MB2 will blink. Each keystroke
-should make the LED blink once. Note that the console won't echo back what you type so the screen
-will remain blank.
+Si escribimos en esta consola, el LED amarillo en la parte superior del MB2 parpadeará. Cada pulsación de tecla debería hacer que el LED parpadee una vez. Ten en cuenta que la consola no mostrará lo que escribes, por lo que la pantalla estará en blanco.
+
