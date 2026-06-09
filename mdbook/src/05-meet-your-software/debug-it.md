@@ -255,6 +255,8 @@ probe-rs list
 Para finalizar la sesión de depuración, es necesario desconectar el dispositivo USB compartido con WSL2. Esto se puede hacer desde una consola de comandos en modo Administrador bajo Windows, ejecutando el siguiente comando:
 ```shell
 usbipd detach --busid 1-2 --> El busid puede variar, revisar el paso 2
+usbipd unbind --busid 1-2 --> El busid puede variar, revisar el paso 2
+
 ```
 o quitar el usb del puerto directamente.
 
