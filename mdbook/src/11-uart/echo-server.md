@@ -1,7 +1,6 @@
-# Echo server
+# Servidor Echo
 
-Let's merge transmission and reception into a single program and write an echo server. An echo
-server sends back to the client the same text it receives. For this application, the microcontroller
-will be the server and you and your computer will be the client.
+Vamos a unir la transmisión y la recepción en un solo programa y escribir un servidor echo. Este tipo de servidor envía de vuelta al cliente el mismo texto que recibe. Para esta aplicación, el microcontrolador será el servidor y el ordenador será el cliente.
 
-This should be straightforward to implement. (hint: do it byte by byte)
+
+Esto debería ser fácil de implementar. (pista: hazlo byte a byte)

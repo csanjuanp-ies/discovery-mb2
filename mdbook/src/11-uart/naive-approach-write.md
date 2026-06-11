@@ -1,27 +1,21 @@
-# Naive approach and `write!`
+# Programación novata y `write!`
 
-## Naive approach
+## Programación novata
 
-You probably came up with a program similar to the following (`examples/naive-send-string.rs`):
+Probablemente, habrás escrito algo similar a (`examples/naive-send-single-byte.rs`):
 
 ```rs
 {{#include examples/naive-send-string.rs}}
 ```
+Aunque este programa es perfectamente válido, podríamos necesitar todas las ventajas de `print!` como el formateo de argumentos y demás. Si nos preguntamos cómo hacer eso, sigue leyendo.
 
-While this is a perfectly valid implementation, at some point you might want to have all the nice
-perks of `print!` such as argument formatting and so on. If you are wondering how to do that, read
-on.
+## `write!` y `core::fmt::Write`
 
-## `write!` and `core::fmt::Write`
+El crate `core::fmt::Write` de Rust, que es la parte de Rust que se puede usar sin un sistema operativo, tiene un módulo llamado `fmt` que contiene el código necesario para implementar el formateo de texto. Dentro de este módulo, hay un rasgo llamado `Write` que define una interfaz para escribir texto formateado. Cualquier tipo que implemente este rasgo puede ser utilizado con la macro `write!` para escribir texto formateado.
 
-The `core::fmt::Write` trait allows us to use any struct that implements it in basically the same
-way as we use `print!` in the `std` world.  In this case, the `Uart` struct from the `nrf` HAL does
-implement `core::fmt::Write` so we can refactor our previous program into this
-(`examples/send-string.rs`):
+El trait `core::fmt::Write` nos permite usar cualquier struct que lo implemente de la misma manera que usamos `print!` en el mundo `std`. En este caso, el struct `Uart` del HAL de `nrf` implementa `core::fmt::Write`, por lo que podemos refactorizar el programa anterior quedando (`examples/send-string.rs`):
 
 ```rs
 {{#include examples/send-string.rs}}
 ```
-
-If you flash this program onto your micro:bit, you'll see that it is functionally equivalent to the
-iterator-based program you came up with.
+Si flasheamos el programa en la MB2, comprobaremos que es equivalente al basado en iteradores que se hicimos en el punto anterior.

@@ -1,6 +1,6 @@
-# My solution
+# Mi solución
 
-You will find my solution in `src/main.rs`:
+La solución se encuentra en `src/main.rs`:
 
 ```rust
 {{#include src/main.rs}}

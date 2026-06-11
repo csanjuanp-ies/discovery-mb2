@@ -1,8 +1,7 @@
-# Send a string
+# Enviar una cadena
 
-The next task will be to send a whole string from the microcontroller to your computer.
+La siguiente tarea será enviar una cadena completa desde el microcontrolador al ordenador.
 
-I want you to send the string `"The quick brown fox jumps over the lazy dog."` from the microcontroller to
-your computer.
+Quremos mandar la cadena `"The quick brown fox jumps over the lazy dog."` a través de la conexión serie.
 
-It's your turn to write the program.
+Es el momento de escribir el programa.

@@ -1,9 +1,5 @@
 # UART
 
-Our microcontroller (like most) has UART ("Universal Asynchronous Receiver/Transmitter)
-peripherals. There are two kinds of UART peripheral on the MB2: the older `UART` and the newer
-`UARTE` ("UART with Easy DMA").  We will use a `UARTE` peripheral to talk to our hardware serial
-port.
+El microcontroaldor (como la mayoría) tiene periféricos UART ("Transmisor/Receptor Asíncrono Universal"). Hay dos tipos de periféricos UART en el MB2: el más antiguo `UART` y el más nuevo `UARTE` ("UART con Easy DMA"). Usaremos un periférico `UARTE` para comunicarnos con nuestro puerto serie de hardware.
 
-Throughout this chapter, we'll use serial communication to exchange information between the
-microcontroller and your computer.
+A través de este capítulo, usaremos la comunicación serie para intercambiar información entre el microcontrolador y el ordenador.

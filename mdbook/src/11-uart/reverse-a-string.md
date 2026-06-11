@@ -1,10 +1,8 @@
-# Reverse a string
+# Invertir una cadena
 
-Alright, next let's make the server more interesting by having it respond to the client with the
-reverse of the text that they sent. The server will respond to the client every time they press the
-ENTER key. Each server response will be in a new line.
+Está bien, vamos a hacer el servidor más interesante haciendo que responda al cliente con la cadena inversa que se envió. El servidor responderá al cliente presionando la tecla ENTER. Cada respuesta del servidor estará en una nueva línea.
 
-This time you'll need a buffer; you can use [`heapless::Vec`]. Here's the starter code:
+Es el momento ideal para usar un buffer; podemos utilizar [`heapless::Vec`]. El esqueleto del programa se muestra a continuación:
 
 [`heapless::Vec`]: https://docs.rs/heapless/latest/heapless/struct.Vec.html
 
