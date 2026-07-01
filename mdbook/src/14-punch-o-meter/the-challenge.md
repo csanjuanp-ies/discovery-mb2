@@ -1,27 +1,22 @@
-# The challenge
+# El reto
 
-To keep the software simple, we will assume that you punch with the board parallel to the ground. To
-measure the magnitude of your punch, you'd need to take into account both X and Y acceleration
-(while ignoring Z since it just reflects gravity). To make things even easier, we will assume that
-you hold the board with the B button close to you and the A button farther away, then punch away
-from yourself. This means that you are punching in the positive X direction.
+Para mantener el software simple, asumiremos que se golpea con una tabla paralela al suelo. Para medir la magnitud del golpe, necesitaremos tener en cuenta tanto la aceleración X como Y (ignorando Z, ya que solo refleja la gravedad). Para hacerlo aún más fácil, asumiremos que se sostiene la tabla con el botón B cerca de nosotros y el botón A más lejos, Después lo movemos alejándolo de nosotros. Esto significa que estamos golpeando en la dirección positiva X.
+
 
 <p align="center">
-<img class="white_bg" title="Punch Direction" src="../assets/mb2-punch-axis.svg" width="500" />
+<img class="white_bg" title="Punch Direction" src="../assets/mb2-punch-axis.svg" width="500" alt="Puch direction" />
 </p>
 
-Here's what the punch-o-meter must do:
+A continuación, se muestra un ejemplo de cómo podría ser el algoritmo de la aplicación:
 
-- By default, the app is not "observing" the acceleration of the board.
-- When a significant X acceleration is detected (i.e. the acceleration goes above some threshold),
-  the app should start a new measurement.
-- During that measurement interval, the app should keep track of the maximum acceleration observed
-- After the measurement interval ends, the app must report the maximum acceleration observed. You
-  can report the value using the `rprintln!` macro.
+- Por defecto, la aplicación no está "observando" la aceleración de la tabla.
+- Cuando se detecta una aceleración X significativa (es decir, la aceleración supera algún umbral), la aplicación debe iniciar una nueva medición.
+- Durante ese intervalo de medición, la aplicación debe realizar un seguimiento de la aceleración máxima observada.
+- Después de que finalice el intervalo de medición, la aplicación debe informar la aceleración máxima observada. Se puede imprimir el valor utilizando la macro `rprintln!`.
 
-Give it a try and let me know how hard you can punch `;-)`.
 
-> **NOTE** There is an additional API that should be useful for this task that we haven't
-> discussed yet: the [`set_accel_scale`] one which you need to measure high g values.
-> 
+Pruébalo y cuéntame con qué fuerza eres capaz de dar un puñetazo `;-)`.
+
+> **NOTA** Hay un API adicional que debería ser útil para esta tarea que aún no hemos discutido: la de [`set_accel_scale`] que se necesita para medir valores altos de g.
+>
 > [`set_accel_scale`]: https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.set_accel_scale

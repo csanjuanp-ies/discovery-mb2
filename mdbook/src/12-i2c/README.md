@@ -1,48 +1,24 @@
 # I2C
+Ya hemos visto el formato de comunicación con la UART. La comunicación en serie es ampliamente utilizada porque es simple y ha existido casi desde siempre. (¿Recuerdas por qué se llama al dispositivo host "tty"? Por "TeleTYpe" sí, eso.) Esta ubicuidad y simplicidad lo convierte en una opción muy popular para comunicaciones simples.
 
-We just saw the UART serial communication format. UART serial is widely used because it is simple
-and has been around almost forever. (Remember how the host device is called a "tty" for "TeleTYpe"?
-Yeah, that.) This ubiquity and simplicity makes it a popular choice for simple communications.
+Por las limitaciones de longitud para que la calidad de la señal sea buena y por la dificultad de una decodificación precisa, el protocolo serie se limita generalmente a unos 115200 baudios en condiciones ideales. Un puerto serie UART tiene tanto un ancho de banda bajo (11.5KB/s) como una alta latencia (87µs/byte).
 
-Because of hardware limitations on line length *vs* signal quality and because of difficulty of
-accurate decoding, UART serial typically caps out at about 115200 baud under ideal conditions. A
-UART serial port has both low bandwidth (11.5KB/s) and high latency (87µs/byte).
+El puerto serie es punto a punto: no hay forma de conectar tres o más dispositivos al mismo cable y cada cable requiere un dispositivo de hardware dedicado en cada extremo.
 
-UART serial is point-to-point: there is no way to connect three or more devices to the same wire,
-and each wire requires a dedicated hardware device on each end.
+Lo bueno (y lo malo) es que hay *muchos* otros protocolos de comunicación en serie asistidos por hardware entre los dispositivos embebidos que superan estas limitaciones. Algunos de ellos se utilizan ampliamente en sensores digitales.
 
-The good news (and the bad news) is that there are *plenty* of other hardware-assisted serial
-communication protocols in the embedded space that overcome these limitations. Some of them are
-widely used in digital sensors.
+La placa micro:bit que estamos usando tiene dos sensores de movimiento: un acelerómetro y un magnetómetro. Ambos sensores están empaquetados en un solo componente y se pueden acceder a través de un bus I2C.
 
-The micro:bit board we are using has two motion sensors in it: an accelerometer and a magnetometer.
-Both of these sensors are packaged into a single component and can be accessed via an I2C bus.
-
-I2C is pronounced "EYE-SQUARED-CEE" and stands for Inter-Integrated Circuit. I2C is a *synchronous*
-serial *bus* communication protocol: it uses two lines to exchange data: a data line (SDA) and a
-clock line (SCL). The clock line is used to synchronize the communication. Synchronous serial can
-run faster and more reliably than async serial. I2C devices have *bus addresses*: the hardware
-implementation allows sending bytes to a particular device, with other devices connected to the same
-wires ignoring this communication.
+El protocolo I2C es un acrónimo de Inter-Integrated Circuit o Circuito Inter-Integrado. Es un protocolo de comunicación en serie *síncrono* que utiliza dos líneas para intercambiar datos: una línea de datos (SDA) y una línea de reloj (SCL). La línea de reloj se utiliza para sincronizar la comunicación. La comunicación en serie síncrona puede funcionar más rápido y de manera más fiable que la comunicación en serie asincrónica. Los dispositivos I2C tienen *direcciones de bus*: la implementación de hardware permite enviar bytes a un elemento en particular, mientras que otros conectados a los mismos cables ignoran esta comunicación.
 
 <a href="https://commons.wikimedia.org/wiki/File:I2C_controller-target.svg">
 <p align="center">
-<img height="360" title="I2C Controller and Targets" src="../assets/I2C_controller-target.svg" />
+<img height="360" title="I2C Controller and Targets" src="../assets/I2C_controller-target.svg" alt="I2C"/>
 </p>
 </a>
 
-I2C uses a *controller*/*target* model: the controller is the device that *starts* and drives the
-communication with a target device. Several devices can be connected to the same bus at the same
-time, and can choose to act either as a controller or as a target. A controller device can
-communicate with a specific target device by first broadcasting the target address to the bus. This
-address can be 7 bits or 10 bits long.  Once a controller has started a communication with a target,
-no device is other than the controller and target is allowed to transmit on the bus until the
-controller ends the communication.
+I2C usa un modelo de *controlador*/*dispositivo*: el controlador es el elemento que *inicia* y dirige la comunicación con un dispositivo objetivo. Varios componentes pueden estar conectados al mismo bus a la vez y pueden elegir actuar como controlador o como destino. Un controlador puede comunicarse con un dispositivo específico transmitiendo primero la dirección hardware deseada al bus. Esta dirección puede tener 7 bits o 10 bits de longitud. Una vez que un controlador ha iniciado una comunicación con un objetivo, ningún otro dispositivo que no sea el controlador y el destino tiene permitido transmitir en el bus hasta que el controlador finalice la comunicación.
 
-> **NOTE** "Controller/target" was formerly referred to as "master/slave". You may still see that in
-> literature or as labeling on boards. This terminology is now deprecated both in official standards
-> and newer documents, but is used in the Nordic manual for our nRF52833 part and in some embedded
-> Rust documentation.
+> **NOTA** "Controlador/dispositivo" se denominaba anteriormente como "maestro/esclavo". Aún se puede encontrar en la literatura o etiquetado en las placas. Esta terminología ahora está obsoleta tanto en los estándares oficiales como en documentos más recientes, pero se utiliza en el manual de Nordic de nuestro chip nRF52833 y en algunos documentos de Rust embebido.
 
-The clock line determines how fast data can be exchanged. The MB2 I2C interface can operate at
-speeds of 100, 250 or 400 Kbps. With other devices even faster modes are possible.
+La línea de reloj determina la velocidad con la que se pueden intercambiar los datos. La interfaz I2C del MB2 puede operar a velocidades de 100, 250 o 400 Kbps. Con otros dispositivos, incluso son posibles modos más rápidos.

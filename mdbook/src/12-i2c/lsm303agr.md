@@ -1,26 +1,18 @@
 # LSM303AGR
+Ambos sensores de movimiento en el micro:bit, el magnetómetro y el acelerómetro, están empaquetados en un solo componente: el circuito integrado LSM303AGR. Estos dos sensores se pueden acceder a través de un bus I2C. Cada sensor se comporta como un dispositivo I2C y tiene una *dirección* diferente.
 
-Both of the motion sensors on the micro:bit, the magnetometer and the accelerometer, are packaged in
-a single component: the LSM303AGR integrated circuit. These two sensors can be accessed via an I2C
-bus. Each sensor behaves like an I2C target and has a *different* address.
+Cada sensor tiene su propia memoria donde almacena los resultados de la detección de su entorno. Nuestra interacción con estos sensores consistirá principalmente en leer su memoria.
 
-Each sensor has its own memory where it stores the results of sensing its environment. Our
-interaction with these sensors will mainly involve reading their memory.
 
-The memory of these sensors is modeled as byte addressable registers. These sensors can be
-configured too; that's done by writing to their registers. So, in a sense, these sensors are very
-similar to the peripherals *inside* the microcontroller. The difference is that their registers are
-not mapped into the microcontrollers' memory. Instead, their registers have to be accessed via the
-I2C bus.
+La memoria de estos sensores se modela como registros direccionables por bytes. Estos sensores también se pueden configurar; eso se hace escribiendo en sus registros. Entonces, en cierto sentido, estos sensores son muy similares a los periféricos de *dentro* del microcontrolador. La diferencia es que sus registros no están mapeados en la memoria del microcontrolador. En su lugar, sus registros deben accederse a través del bus I2C.
 
-The main source of information about the LSM303AGR is its [Data Sheet]. Read through it to see how
-one can read the sensors' registers. That part is in:
+La fuente principal de documentación sobre el LSM303AGR es su [Hoja de Datos]. Léela para ver cómo se pueden acceder los registros de los sensores. Esa parte está en:
 
-[Data Sheet]: https://www.st.com/resource/en/datasheet/lsm303agr.pdf
+
+[Hoja de Datos]: https://www.st.com/resource/en/datasheet/lsm303agr.pdf
 
 > Section 6.1.1 I2C Operation - Page 38 - LSM303AGR Data Sheet
 
-The other part of the documentation relevant to this book is the description of the registers. That
-part is in:
+La otra parte de la documentación importante para este libro es la descripción de los registros. La encontramos en:
 
 > Section 8 Register description - Page 46 - LSM303AGR Data Sheet
