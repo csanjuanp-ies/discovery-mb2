@@ -1,31 +1,23 @@
-# Gravity is up?
+# ¿Ha subido la gravedad?
 
-What's the first thing we'll do?
+¿Qué es lo primero que haremos?
 
-Perform a sanity check!
+¡Hacer una comprobación de coherencia!
 
-You should already be able to write a program that continuously prints the accelerometer data on the
-RTT console from the [I2C chapter](../12-i2c/index.md). Mine is in `examples/show-accel.rs` in that
-chapter. Do you observe something interesting even when holding the board parallel to the floor with
-the back side facing up?  (Remember that the accelerometer is mounted on the back of the board, so
-holding it upside-down like this makes the Z axis point up.)
+A estas alturas ya deberíamos ser capaces de escribir un programa que muestre continuamente los datos del acelerómetro en la
+consola RTT, tal y como se explica en el [capítulo sobre I2C](../12-i2c/README.md). El mío se encuentra en `examples/show-accel.rs`, dentro de ese
+capítulo. ¿Observas algo interesante incluso cuando se sostiene la placa en paralelo al suelo con
+la parte trasera hacia arriba? (Recuerda que el acelerómetro está montado en la parte trasera de la MB2, por lo que, al sostenerla boca abajo de esta forma, el eje Z apunta hacia arriba).
 
-What you should see when holding the board like this is that both the X and Y values are rather
-close to 0, while the Z value is at around 1000. Which is weird: the board is not moving, yet its
-acceleration is non-zero. What's going on? This must be related to the gravity, right? Because the
-acceleration of gravity is `1 g` (aha, `1 g` = -1000 from the accelerometer). But the gravity pulls
-objects downwards so the acceleration along the Z axis should be positive, not negative.
+Lo que se debería ver al sujetarla de esta forma es que tanto los valores de X como los de Y están bastante cerca de 0, mientras que el valor de Z ronda los 1000. Lo cual es extraño: la placa no se está moviendo, pero su aceleración es distinta de cero. ¿Qué está pasando? Esto debe de tener que ver con la gravedad, ¿no? Porque la aceleración de la gravedad es de `1 g` (ajá, `1 g` = -1000 según el acelerómetro). Pero la gravedad atrae los objetos hacia abajo, por lo que la aceleración a lo largo del eje Z debería ser positiva, no negativa.
 
-Did the program get the Z axis backwards? Nope, you can test rotating the board to align the gravity
-to the X or Y axis but the acceleration measured by the accelerometer is always pointing up.
+¿El programa ha invertido el eje Z? No, puedes probar a girar la placa para alinear la gravedad
+con el eje X o Y, pero la aceleración medida por el acelerómetro siempre apunta hacia arriba.
 
-What happens here is that the accelerometer is measuring the *proper acceleration* of the board, not
-the acceleration *you* are observing. This proper acceleration is the acceleration of the board as
-seen from an observer that's in free fall. An observer that's in free fall is moving toward the
-center of the Earth with an acceleration of `1g`; from its point of view the board is actually
-moving upwards (away from the center of the Earth) with an acceleration of `1g`. And that's why the
-proper acceleration is pointing up. This also means that if the board was in free fall, the
-accelerometer would report a proper acceleration of zero. Please, don't try that at home. Or do, if
-you're willing to risk your MB2 by dropping it.
+Lo que ocurre es que el acelerómetro mide la *aceleración propia*, no
+la aceleración que *se* observa. Esta aceleración propia es la aceleración de la placa tal y como
+la ve un observador que se encuentra en caída libre. Un observador en caída libre se desplaza hacia el centro de la Tierra con una aceleración de `1 g`; desde su punto de vista, la MB2 se está
+moviendo en realidad hacia arriba (alejándose del centro de la Tierra) con una aceleración de `1 g`. Y por eso la aceleración propia apunta hacia arriba. Esto también significa que, si el chip estuviera en caída libre, el acelerómetro indicaría una aceleración propia de cero. Por favor, no intentes esto en casa. O hazlo, si estás dispuesto a arriesgar tu MB2 dejándola caer.
 
-Yes, physics is hard. Let's move on.
+Si, la física es difícil. Vamos a ello.
+
