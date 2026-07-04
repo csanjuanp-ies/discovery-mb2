@@ -1,10 +1,7 @@
-# Magnitude
+# Magnitud
 
-How strong is the Earth's magnetic field?  According to the documentation about the
-[`magnetic_field()`] method the `x` `y` `z` values we are getting are in nanoteslas. That means the
-only thing we have to compute in order to get the magnitude of the magnetic field in nanoteslas is
-the magnitude of the 3D vector that our `x` `y` `z` values describe. As you might remember from
-school this is simply:
+¿Cómo es de fuerte el campo magnético del planeta? De acuerdo a la documentación que tenemos, el método [`magnetic_field()`] nos devuelve los valores `x` `y` `z` en nanoteslas. Eso significa que lo único que tenemos que calcular para obtener la magnitud del campo magnético es la magnitud del vector 3D que describen dichos valores. Como recordamos de la escuela, esto es simplemente:
+
 
 ``` rust
 use libm::sqrtf;
@@ -13,30 +10,23 @@ let magnitude = sqrtf(x * x + y * y + z * z);
 
 [`magnetic_field()`]: https://docs.rs/lsm303agr/1.1.0/lsm303agr/struct.Lsm303agr.html#method.magnetic_field
 
-Rust does not have floating-point math functions such as `sqrtf()` in `core`, so our `no_std`
-program has to get an implementation from somewhere. We use the [libm] crate for this.
+Rust no tiene funciones en coma flotante como `sqrtf()` en el crate `core`, por lo que nuestro programa `no_std` tiene que usar una implementación de algún lugar. Importamos el crate [libm] para esto. 
 
 [libm]: https://crates.io/crates/libm
 
-Putting all this together in a program (`examples/magnitude.rs`):
+Juntándolo todo en un programa (`examples/magnitude.rs`):
 
 ``` rust
 {{#include examples/magnitude.rs}}
 ```
 
-Run this with `cargo run --example magnitude`.
+Lo ejecutamos con `cargo run --example magnitude`.
 
-This program will report the magnitude (strength) of the magnetic field in nanotesla (`nT`) and
-milligauss (`mG`, where 1 `mG` = 100 `nT`). The magnitude of the Earth's magnetic field is in the
-range of `250 mG` to `650 mG` (the magnitude varies depending on your geographical location) so you
-ideally would see a value vaguely in that range. Your value will likely be off quite a bit because
-the sensor has not been calibrated: see [appendix 3] for calibration. With calibration, I see a
-magnitude of around `340 mG`.
 
-[appendix 3]: ../appendix/3-mag-calibration/index.html
+Este programa debería mostrar la magnitud (fuerza) del campo magnético del planeta en nanoteslas (`nT`) y milligauss (`mG`, donde 1 `mG` = 100 `nT`). La magnitud del campo magnético de la Tierra está en el rango de `250 mG` a `650 mG` (la magnitud varía dependiendo de tu ubicación geográfica), así que idealmente deberíamos ver un valor en ese rango. El valor probablemente estará bastante alejado porque el sensor no ha sido calibrado: ver [apéndice 3] para calibración. Con calibración, veo una magnitud de alrededor de `340 mG`.
 
-Some questions:
+[apéndice 3]: ../appendix/3-mag-calibration/README.md
 
-- Without moving the board, what value do you see? Do you always see the same value?
-
-- If you rotate the board, does the magnitude change? Should it change?
+Algunas cuestiones:
+- Sin mover el sensor, ¿qué valor se ve? ¿Aparece siempre el mismo valor?
+- Si rotamos la placa, ¿Cómo cambia el valor? ¿Debería cambiar?

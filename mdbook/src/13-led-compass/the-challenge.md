@@ -1,31 +1,27 @@
-# The Challenge
+# El reto
 
-We'll use some fancy math to get the precise angle that the magnetic field forms with the X and Y
-axes of the magnetometer. This will allow us to figure out which LED is pointing north.
+Vamos a usar algo de matemáticas para conseguir el ángulo exacto del campo magnético a partir de los ejes X e Y del magnetómetro. Esto nos permitirá averiguar qué LED apunta al norte.
 
-We'll use the `atan2` function. This function returns an angle in the `-PI` to `PI` range. The
-graphic below shows how this angle is measured:
+Usaremos la función `atan2` de Rust. Esta función devuelve el ángulo en el rango de `-PI` a `PI`. El gráfico a continuación muestra cómo se mide este ángulo:
 
 <a href="https://commons.wikimedia.org/wiki/File:Atan2_60.svg">
 <p align="center">
-<img class="white_bg" title="atan2" src="../assets/Atan2_60.svg" />
+<img class="white_bg" title="atan2" src="../assets/Atan2_60.svg" alt="atan2"/>
 </p>
 </a>
 
-Although not explicitly shown, in this graph the X axis points to the right and the Y axis points
-up. Note that our coordinate system is rotated 180° from this.
+Aunque no se muestra explícitamente, en este gráfico el eje X apunta hacia la derecha y el eje Y apunta hacia arriba. Hay que tener en cuenta que nuestro sistema de coordenadas está girado 180° con respecto a este.
 
-Here's the starter code (in `templates/compass.rs`). `theta`, in radians, has already been
-computed. You need to pick which LED to turn on based on the value of `theta`.
+Aquí podemos encontrar la plantilla inicial (en `templates/compass.rs`). `theta`, en radianes, ya ha sido calculado. Necesitamos elegir qué LED encender en función del valor de `theta`.
 
 ```rs
 {{#include templates/compass.rs}}
 ```
 
-Suggestions/tips:
+Sugerencias:
 
-- A whole circle rotation equals 360 degrees.
-- `PI` radians is equivalent to 180 degrees.
-- If `theta` is zero, which direction are you pointing at?
-- If `theta` is instead very close to zero, which direction are you pointing at?
-- If `theta` keeps increasing, at what value should you change the direction
+- Un círculo completo son 360 grados.
+- `PI` radianes equivalen a 180 grados.
+- Si `theta` es cero, ¿hacia qué dirección se está apuntando?
+- Si `theta` está muy cerca de cero, ¿hacia qué dirección está apuntando?
+- Si `theta` sigue creciendo, ¿en qué valor debería cambiar la dirección?

@@ -1,58 +1,38 @@
-# LED compass
+# Brújula LED
 
-In this section, we'll implement a compass using the LEDs on the MB2. Like proper compasses,
-our LED compass must point north somehow. It will do that by turning on one of its outer LEDs; the
-LED turned on should point towards north.
+En esta sección, vamos a implementar una brújula usando los LEDs del MB2. Como las brújulas
+normales, la nuestra debe apuntar hacia el norte. Esto lo haremos al encender uno de sus LEDs; el LED encendido debe apuntar hacia el norte.
 
-Magnetic fields have both a *magnitude*, measured in Gauss or Teslas, and a *direction*. The
-magnetometer on the MB2 measures both the magnitude and the direction of an external magnetic
-field, but it reports back the *decomposition* of said field along *its axes*.
+Los campos magnéticos tienen tanto una *magnitud*, medida en Gauss o Teslas, como una *dirección*. El
+magnetómetro del MB2 mide tanto la magnitud como la dirección de un campo magnético externo, pero informa de la *descomposición* de dicho campo a lo largo de *sus ejes*.
 
-The magnetometer has three axes associated with it. When the board is held flat with the LEDs facing
-upward and the logo facing forward, the X and Y axes span the plane that is the floor. The X axis
-points to the left edge of the board. The Y axis points to the bottom (card connector) edge of the
-board.  The Z axis points "into the floor", so downwards: "upside down" since the chip is mounted on
-the back. This is a "right-handed" coordinate system. It's all a bit confusing, since the reported
-field strengths are components of the magnetic field vector.
+El magetonómetro tiene tres ejes asociados. Cuando la placa se sostiene en posición horizontal, con los LEDs mirando hacia arriba y el logotipo hacia delante, los ejes X e Y abarcan el plano que constituye el suelo. El eje X apunta hacia el borde izquierdo de la placa. El eje Y apunta al borde inferior (conector de la tarjeta) de la placa.  El eje Z apunta "hacia el suelo", es decir, hacia abajo: "al revés", ya que el chip está montado en la parte trasera. Se trata de un sistema de coordenadas "diestro". Todo esto resulta un poco confuso, porque las intensidades de campo indicadas son componentes del vector del campo magnético.
 
 <p align="center">
-<img class="white_bg" title="MB2 Axes" src="../assets/mb2-axes.svg" width="500" />
+<img class="white_bg" title="MB2 Axes" src="../assets/mb2-axes.svg" width="500" alt ="MB2 Axes"/>
 </p>
 
-You should already be able to write a program that continuously prints the magnetometer data on the
-RTT console from the [I2C chapter](../12-i2c/index.md). After you write that program
-(`examples/show-mag.rs`), locate where north is at your current location. Then line up your
-MB2 with that direction and observe how the sensor's X and Y measurements look.
+Con esta información podríamos escribir un programa que imprimiese continuamente los datos del magnetómetro en la consola RTT como en el [capítlo I2C](../12-i2c/README.md). Después de crear ese programa (`examples/show-mag.rs`), localiza dónde está el norte en tu ubicación actual. Luego alinea la MB2 con esa dirección y observa que aparece en las mediciones X e Y del sensor.
 
-Now rotate the board 90 degrees while keeping it parallel to the ground. What X, Y and Z values do
-you see this time? Then rotate it 90 degrees again. What values do you see?
+Después, giraremos la placa 90 grados mientras se mantiene paralela al suelo. ¿Qué valores de X, Y y Z se ven esta vez? Luego gírala 90 grados más. ¿Qué valores hay?
 
-> **NOTE** Of the two MB2s I have handy at the time of this writing, one of them seems to have a
-> somewhat broken magnetometer: the Z-axis is unusably offset. The manufacturer has a self-test
-> process for detecting this and a calibration process for mitigating this kind of "hard iron"
-> fault, which is usually the result of exposing the MB2 to a strong magnetic field at some
-> point. However, the `lsm303agr` crate currently doesn't support either of these, and it seems like
-> a lot for an introductory guide to embedded systems. If you have only one MB2 and it doesn't seem
-> to be working, you may just want to skip to the [next chapter]. Cheap hardware: whatcha gonna do?
+>**NOTA** De las dos MB2s que tengo a mano al momento de escribir este libro, una de ellas tiene el sensor que no funciona bien: el eje Z está desfasado, de manera que no se puede usar. El fabricante tiene un proceso de auto-prueba para detectar este tipo de fallos y un proceso de calibración para mitigarlos, que suele ser el resultado de exponer el MB2 a un campo magnético fuerte en algún momento. Sin embargo, el crate `lsm303agr` actualmente no soporta ninguno de estos, y parece mucho para una guía introductoria a los sistemas embebidos. Si solo tenemos un MB2 y no parece funcionar, es posible que queramos saltar hasta el [siguiente capítulo]. Hardware barato: ¿qué vamos a hacer?
 
-[next chapter]: ../14-punch-o-meter/index.html
+[siguiente capítulo]: ../14-punch-o-meter/README.md
 
-The Earth's magnetic north is a fickle thing: it differs from true north in most places on Earth,
-sometimes substantially. It can point down into the ground quite a bit. It changes over time.
-Without allowing for all this, you won't get a very accurate compass even if your MB2 magnetometer
-is perfect (it's not). This US NOAA calculator
-<https://www.ngdc.noaa.gov/geomag/calculators/mobileDeclination.shtml> can be visited on your mobile
-device to get a good estimate of true north as well as magnetic north; you can give this UK BGS
-[calculator] your latitude, longitude and altitude to get both declination and inclination.  At my
-location the "declination" (difference between true and magnetic north) is about 15°; the
-"inclination" is an astonishing 67° down into the ground.
+El polo norte magnético de la Tierra es algo caprichoso: difiere del norte verdadero en la mayoría de los lugares de la Tierra, a veces de forma considerable. Cambia con el tiempo.
+Si no se tiene en cuenta todo esto, no se obtendrá una brújula muy precisa, aunque el magnetómetro del MB2 sea perfecto (que no lo es). Esta calculadora de la NOAA de EE.UU.
+<https://www.ngdc.noaa.gov/geomag/calculators/mobileDeclination.shtml> nos da una estimación del polo norte real así como del magnético; Se puede introducir en esta [calculadora] del BGS del Reino Unido
+tu latitud, longitud y altitud para obtener tanto la declinación como la inclinación magnética. En mi
+ubicación, la "declinación" (diferencia entre el norte verdadero y el norte magnético) es de unos 15°; la "inclinación" es de unos sorprendentes 67° hacia el interior de la tierra.
 
-[calculator]: http://www.geomag.bgs.ac.uk/data_service/models_compass/wmm_calc.html
+> Nt. del t. en mi posición los datos son declinación de 0,73º y una inclinación de 55,4º.
 
-> **NOTE** The LSM303AGR magnetometer is not a particularly accurate device out-of-the box. The
-> manufacturer recommends a fancy calibration procedure for finding adjustments to the magnetometer
-> readings. You can find further information, a sample calibration implementation and some fancier
-> compass graphics in [appendix 3]: since we're doing something fairly basic with the magnetometer
-> we won't worry about it in this chapter.
+[calculadora]: http://www.geomag.bgs.ac.uk/data_service/models_compass/wmm_calc.html
 
-[appendix 3]: ../appendix/3-mag-calibration/index.html
+> **NOTA** El magnetómetro LSM303AGR no es un dispositivo particularmente preciso en el momento de la compra. El fabricante recomienda un procedimiento de calibración para encontrar ajustes 
+> a las lecturas. Se Puede encontrar más información, una implementación de calibración de ejemplo y 
+> algunos gráficos en [apéndice 3]: dado que estamos haciendo algo 
+> bastante básico con el magnetómetro, no nos preocuparemos por ello en este capítulo.
+
+[apéndice 3]: ../appendix/3-mag-calibration/README.md

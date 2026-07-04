@@ -1,6 +1,6 @@
-# My Solution
+# La solución
 
-Here's my solution (in `src/main.rs`):
+Aquí está mi solución (en `src/main.rs`):
 
 ``` rust
 {{#include src/main.rs}}
