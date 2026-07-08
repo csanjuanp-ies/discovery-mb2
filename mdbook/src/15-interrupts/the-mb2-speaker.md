@@ -1,30 +1,19 @@
-# The MB2 Speaker
+# El altavoz del MB2
 
-Your MB2 has a built-in speaker — the large black square device labeled "SPEAKER" in the middle of
-the back of the board.
+La MB2 tiene un altavoz integrado: el dispositivo cuadrado grande de color negro con la etiqueta "SPEAKER" situado en el centro de la parte trasera de la placa.
 
-The speaker works by moving air in response to a GPIO pin: when the speaker pin is high (3.3V) a
-diaphragm inside — the "speaker cone" — is pushed all the way out; when the speaker pin is low (GND)
-it is pulled all the way back in. As air is pushed out and sucked back in, it flows in and out of
-the tiny rectangular hole — the "speaker port" — on the side of the device.  Do this fast enough,
-and the pressure changes will make a sound.
+El altavoz funciona moviendo el aire en respuesta a un pin GPIO: cuando el pin del altavoz está alto (3,3 V), un diafragma en su interior —el "cono del altavoz"— se empuja hasta el final hacia fuera; cuando el pin del altavoz está bajo (GND), se retrae completamente. A medida que el aire sale y vuelve a entrar, fluye hacia dentro y hacia fuera por el pequeño orificio rectangular —el "puerto del altavoz"— situado en el lateral del dispositivo.  Si esto se hace con la suficiente rapidez, los cambios de presión producirán un sonido.
 
-<img class="white_bg" height="350" title="Speaker" src="../assets/speaker.svg" />
+<img class="white_bg" height="350" title="Speaker" src="../assets/speaker.svg" alt="Speaker"/>
 
-With the right hardware driving it, this speaker cone could actually be moved to any position in its
-range with an appropriate current. This would allow fairly good reproduction of any sound, like a
-"normal" speaker. Unfortunately, limitations in the MB2 hardware controlling the speaker mean that
-only the full-in and full-out positions are readily available.
+Con el hardware adecuado que lo accione, este cono de altavoz podría, de hecho, desplazarse a cualquier posición dentro de su rango con una corriente adecuada. Esto permitiría una reproducción bastante buena de cualquier sonido, como un altavoz "normal". Por desgracia, las limitaciones del hardware del MB2 que controla el altavoz hacen que solo estén fácilmente disponibles las posiciones de máxima entrada y máxima salida.
 
-Let's push the speaker cone out and then in 220 times per second. This will produce a "square"
-220-cycles-per-second pressure wave. The unit "cycles-per-second" is Hertz; we will be producing a
-220Hz tone (a musical "A3"), which is not unpleasant on this shrill speaker.
+Empujemos el cono del altavoz hacia fuera y luego hacia dentro 220 veces por segundo. Esto producirá una onda de presión "cuadrada" de 220 ciclos por segundo. La unidad "ciclos por segundo" es el hercio; produciremos un
+tono de 220 Hz (un "La" musical), que no resulta desagradable en este altavoz de sonido agudo.
 
-We'll make our tone play for five seconds and then stop. It is important to remember that our
-program lives in flash on the MB2 — the tone will start up again each time we reset or even power on
-the MB2. If we let the tone run forever, this behavior can rapidly become quite annoying.
+Haremos que nuestro tono suene durante cinco segundos y luego se detenga. Es importante recordar que el programa está almacenado en la memoria flash del MB2: el tono volverá a sonar cada vez que reiniciemos o incluso encendamos el MB2. Si dejamos que el tono suene indefinidamente, este comportamiento puede resultar bastante molesto.
 
-Here's the code (`examples/square-wave.rs`).
+Aquí está el código (`examples/square-wave.rs`).
 
 ```rust
 {{#include examples/square-wave.rs}}

@@ -1,20 +1,20 @@
-# The Challenge
+# El reto
 
-Let's make the MB2 into a siren! But not just any siren — an
-interrupt-driven siren. That way we can turn the siren on
-and the rest of our program can run on, ignoring it.
+¡Convirtamos el MB2 en una sirena! Pero no en una sirena cualquiera, sino en una
+sirena controlada por interrupciones. De esa forma, podremos activar la sirena
+y el resto de nuestro programa seguirá ejecutándose, sin tenerla en cuenta.
 
-Make your siren sweep the pitch from 440Hz to 660Hz and back
-over a one-second period. The main program should start the
-siren, then print a ten-second countdown from 10 to 1, then
-stop the siren and print "launch!". The main program should
-not mess with the siren during countdown — it should just be
-interrupt-driven.
+Haz que tu sirena varíe el tono desde 440 Hz hasta 660 Hz y viceversa
+durante un segundo. El programa principal debe poner en marcha la
+sirena, a continuación mostrar una cuenta atrás de diez segundos del 10 al 1, y luego
+detener la sirena y mostrar "¡lanzamiento!". El programa principal no debe
+interferir con la sirena durante la cuenta atrás; simplemente debe
+funcionar por interrupciones.
 
-*Hint:* I found it easiest to use a global locked `Siren`
-struct that owned the state of the siren and the peripherals
-it needed to operate.
+*Pista:* A mí me resultó más fácil utilizar una estructura global bloqueada `Siren`
+que gestionara el estado de la sirena y los periféricos
+necesarios para su funcionamiento.
 
-This is a fancy program that introduces a lot of new
-ideas. Don't be surprised if it takes you a bit to figure it
-out.
+Este es un programa sofisticado que introduce muchas
+ideas nuevas. No te sorprendas si te lleva un rato entenderlo
+del todo.

@@ -1,75 +1,45 @@
-## NVIC and Interrupt Priority
+## NVIC y Prioridad de Interrupción
 
-We've seen that interrupts make our processor immediately jump to another function in the code, but
-what's going on behind the scenes to allow this to happen? In this section we'll cover some
-technical details that won't be necessary for the rest of the book, so feel free to skip ahead if
-you're not interested.
+Hemos visto que las interrupciones hacen que el procesador salte inmediatamente a otra función en el código, pero ¿qué está pasando por debajo para permitir que esto suceda? En esta sección cubriremos algunos detalles técnicos que no serán necesarios para el resto del libro, así que, si no estás interesado, se puede saltar esta sección.
 
-### The Interrupt Controller
+### El controlador de interrupciones
 
-Interrupts allow the processor to respond to peripheral events such as a GPIO input pin changing
-state, a timer completing its cycle, or a UART receiving a new byte. The peripheral contains
-circuitry that notices the event and informs a dedicated interrupt-handling peripheral. On Arm
-processors, the interrupt-handling peripheral is called the NVIC — the Nested Vector Interrupt
-Controller.
+Las interrupciones permiten que el procesador responda a eventos producidos en los periféricos, como un pin de entrada GPIO cambiando de estado, un temporizador completando su ciclo o una UART recibiendo un nuevo byte. El periférico contiene circuitos que detectan el evento e informan a un controlador dedicado al manejo de interrupciones. En los procesadores Arm, el encargado de esta gestión de interrupciones se llama NVIC: Controlador de Interrupciones Anidadas y Vectorizadas (Nested Vector Interrupt Controller).
 
-> **NOTE** On other microcontroller architectures such as RISC-V the names and details discussed
-> here will differ, but the underlying principles are generally very similar.
 
-The NVIC can receive requests to trigger an interrupt from many peripherals. It's even common for a
-peripheral to have multiple possible interrupts, for example a GPIO port having an interrupt for
-each pin, or a UART having both a "data received" and "data finished transmission" interrupt. The
-job of the NVIC is to prioritize these interrupts, remember which ones still need to be processed,
-and then cause the processor to run the relevant interrupt handler code.
+> **NOTA** En otras arquitecturas de microcontroladores como RISC-V, los nombres y detalles explicados aquí serán diferentes, pero los principios subyacentes son muy similares.
 
-### Interrupt Priorities
+El NVIC puede recibir peticiones para elevar una interrupción desde muchos periféricos. Incluso es común que un periférico tenga múltiples posibles interrupciones por ejemplo, un puerto GPIO posee una interrupción para cada pin, o una UART usando tanto una interrupción de "datos recibidos" como una de "transmisión de datos finalizada". La tarea del NVIC es priorizar estas interrupciones, recordar cuáles aún necesitan ser procesadas y luego hacer que el procesador ejecute el código del manejador de interrupciones asociado.
 
-The NVIC has a settable "priority" for each interrupt. Depending on its configuration, the NVIC can ensure the current interrupt is fully processed before a new one is executed, or it can "preempt" the processor in the middle of one interrupt in order to handle another that's higher priority.
+### Prioridad en las interrupciones
 
-Preemption allows processors to respond very quickly to critical events.  For example, a robot controller might use low-priority interrupts to manage sending status information to the operator, but also take a high-priority interrupt when a sensor detects an imminent collision so that it can immediately stop moving the motors. You wouldn't want the robot to wait until it had finished sending a data packet to get around to stopping!
+El controlador de interrupciones NVIC tiene un "nivel de prioridad" configurable para cada interrupción. Dependiendo de su configuración, el NVIC puede asegurarse de que la interrupción actual se procese completamente antes de ejecutar una nueva, o puede "interrumpir" (preemptive) el procesador en medio de una interrupción para manejar otra que tenga mayor prioridad.
 
-If an equal-priority or lower-priority interrupt occurs during an ISR, it will be "pended": the NVIC will remember the new interrupt and run its ISR sometime after the current ISR completes.  When an ISR function returns the NVIC looks to see if, while the ISR was running, other interrupts have happened that need to be handled. If so, the NVIC checks the interrupt table and calls the highest-priority ISR vectored there. Otherwise, the CPU returns to the running program.
+Esta apropiación del procesador permite que los procesadores respondan muy rápidamente a eventos críticos. Por ejemplo, un controlador de robot podría usar interrupciones de baja prioridad para gestionar el envío de información de estado al operador, pero también utilizar una interrupción de alta prioridad cuando un sensor detecta una colisión inminente para que pueda detener inmediatamente el movimiento de los motores. ¡No querríamos que el robot espere hasta haber terminado de enviar datos para detenerse!
 
-Note that if interrupts are disabled entirely, all incoming interrupts will be pended. Pending interrupts will be handled once interrupts are enabled again.
+Si aparece una interrupción de menor prioridad o similar mientras se está ejecutando una ISR, el NVIC estableced como "pendiente" la nueva interrupción y ejecutará su ISR en algún momento después de que la actual haya terminado. Cuando una función ISR regresa, el NVIC verifica si, mientras la ejecución, ocurrieron otras interrupciones que necesitan ser manejadas. Si es así, el NVIC revisa la tabla de interrupciones y llama a la ISR de mayor prioridad allí vectorizada. De lo contrario, la CPU regresa al programa en ejecución.
 
-In embedded Rust, we can program the NVIC using the [`cortex-m`] crate, which provides methods to
-enable and disable (called `unmask` and `mask`) interrupts, set interrupt priorities, and trigger
-interrupts from software. Frameworks such as [RTIC] can handle NVIC configuration for you, taking
-advantage of the NVIC's flexibility to provide convenient resource sharing and task management.
+Hay que tener en cuenta que, si se desactivan por completo las interrupciones, todas las que se generen quedarán en espera. Las interrupciones se gestionarán una vez que se vuelvan a activar las interrupciones.
 
-You can read more information about the NVIC in [Arm's documentation].
+En Rust, podemos programar el NVIC usando el crate [`cortex-m`], que proporciona métodos para habilitar y deshabilitar (llamados `unmask` y `mask`) interrupciones, establecer prioridades de interrupción y activar interrupciones desde software. Frameworks como [RTIC] pueden manejar la configuración del NVIC, aprovechando la flexibilidad del NVIC para proporcionar manejo de recursos y tareas adecuado.
+
+
+Podemos obtener más información sobre el NVIC en la [documentación de Arm].
 
 [`cortex-m`]: https://docs.rs/cortex-m/latest/cortex_m/peripheral/struct.NVIC.html
 [RTIC]: https://rtic.rs/
-[Arm's documentation]: https://developer.arm.com/documentation/ddi0337/e/Nested-Vectored-Interrupt-Controller/About-the-NVIC
+[documentación de Arm]: https://developer.arm.com/documentation/ddi0337/e/Nested-Vectored-Interrupt-Controller/About-the-NVIC
 
-### The vector table
+### La tabla de vectores de interrupción
 
-When describing the NVIC, I said it could "cause the processor to run the relevant interrupt handler
-code". But how does that actually work?
+Cuando describimos el NVIC, se dijo que podía "hacer que el procesador ejecute el código del manejador de interrupciones relevante". Pero, ¿cómo funciona eso realmente?
 
-First, we need some way for the processor to know which code to run for each interrupt. On Cortex-M
-processors, this involves a part of memory called the vector table. It is typically located at the
-very start of the flash memory that contains our code, which is reprogrammed every time we upload
-new code to our processor, and contains a list of addresses -- the locations in memory of every
-interrupt function. The specific layout of the start of memory is defined by Arm in the
-[Architecture Reference Manual]; for our purposes the important part is that bytes 64 through to 256
-contain the addresses of all 48 interrupt handlers for the nRF processor we use, four bytes per
-address. Each interrupt has a number, from 0 to 47. For example, `TIMER0` is interrupt number 8, and
-so bytes 96 to 100 contain the four-byte address of its interrupt handler. When the NVIC tells the
-processor to handle interrupt number 8, the CPU reads the address stored in those bytes and jumps
-execution to it.
+Primero, necesitamos algún mecanismo para que el procesador conozca qué código ejecutar para cada interrupción. En los micros Cortex-M, esto implica una parte de la memoria llamada tabla de vectores. Normalmente, se encuentra al principio de la memoria flash que contiene el código, la cual se reprograma cada vez que subimos un nuevo programa, y contiene una lista de direcciones: las ubicaciones en memoria de cada función de interrupción. La disposición específica del inicio de la memoria está definida por Arm en el [Manual de Referencia de Arquitectura]; para nuestros propósitos, la parte importante es que los bytes 64 hasta 256 contienen las direcciones de todos los 48 manejadores de interrupciones para el procesador nRF que usamos, cuatro bytes por dirección. Cada interrupción tiene un número, del 0 al 47. Por ejemplo, `TIMER0` es la interrupción número 8, y por lo tanto los bytes 96 a 100 contienen la dirección de cuatro bytes de su manejador de interrupciones. Cuando el NVIC le dice al procesador que maneje la interrupción número 8, la CPU lee la dirección almacenada en esos bytes y salta a ella.
 
-How is this vector table generated in our code? We use the [`cortex-m-rt`] crate which handles this
-for us. It provides a default interrupt for every unused position (since every position must be
-filled) and allows our code to override this default whenever we want to specify our own interrupt
-handler. We do this using the `#[interrupt]` macro, which requires that our function be given a
-specific name related to the interrupt it handles. Then the `cortex-m-rt` crate uses its linker
-script to arrange for the address of that function to be placed in the right part of memory.
+¿Cómo se genera esta tabla de vectores en el programa? Usamos el crate [`cortex-m-rt`] que se encarga de esto por nosotros. Proporciona una interrupción predeterminada para cada posición no utilizada (ya que cada posición debe estar llena) y permite que el código anule este valor predeterminado siempre que queramos especificar nuestro propio manejador de interrupciones. Hacemos esto usando la macro `#[interrupt]`, que requiere que la función tenga un nombre específico relacionado con la interrupción que maneja. Luego, el crate `cortex-m-rt` utiliza su script de enlace para organizar que la dirección de esa función se coloque en la parte correcta de la memoria.
 
-For more details on how these interrupt handlers are managed in Rust, see the Exceptions and
-Interrupts chapters in the [Embedded Rust Book].
+Para obtener más detalles sobre cómo se gestionan estos manejadores de interrupciones en Rust, consulte los capítulos de Excepciones e Interrupciones en el [Libro de Rust Embebido].
 
-[Architecture Reference Manual]: https://developer.arm.com/documentation/ddi0403/latest
+[Manual de Referencia de Arquitectura]: https://developer.arm.com/documentation/ddi0403/latest
 [`cortex-m-rt`]: https://docs.rs/cortex-m-rt
-[Embedded Rust Book]: https://docs.rust-embedded.org/book/
+[Libro de Rust Embebido]: https://docs.rust-embedded.org/book/

@@ -1,13 +1,13 @@
 # My Solution
 
-I found it a bit tricky to figure out how the interrupt
-handler should calculate the next interrupt time to keep
-the siren going. I ended up with a couple of state variables
-to keep track of whether the speaker pin was on or off
-(could have checked the hardware) and to keep track of what
-time the siren was at in its up-down cycle.
+Me costó un poco averiguar cómo debía calcular el controlador de interrupciones
+el momento de la siguiente interrupción para mantener
+la sirena en marcha. Al final utilicé un par de variables de estado
+para controlar si el pin del altavoz estaba activado o desactivado
+(podría haberlo comprobado directamente en el hardware) y para llevar un registro de en qué
+momento del ciclo de encendido y apagado se encontraba la sirena.
 
-My code contains all the details (`src/main.rs`).
+Aquí está una posible solución (`src/main.rs`).
 
 
 ```rust

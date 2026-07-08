@@ -1,33 +1,33 @@
-# Addendum: PWM
+# Adenda: PWM
 
-One last note before we move on.
+Una última observación antes de continuar.
 
-Interrupts are kind of expensive. The processor must finish
-or abort the currently-running instruction, then save enough
-state to restart execution, then call an interrupt
-handler. All this takes a few CPU cycles of precious
-runtime.
+Las interrupciones son bastante costosas. El procesador debe finalizar
+o abortar la instrucción que se está ejecutando en ese momento, guardar después el estado necesario
+para reanudar la ejecución y, a continuación, llamar a un
+controlador de interrupciones. Todo esto requiere unos cuantos ciclos de CPU de un valioso
+tiempo de ejecución.
 
-The way the solution of the previous section is written, it
-will take two interrupts per cycle of speaker output. That's
-something like 1000 interrupts per second. On a processor
-like our nRF52833, that works fine.
+Tal y como está escrita la solución de la sección anterior,
+se necesitarán dos interrupciones por ciclo de salida del altavoz. Eso supone
+alrededor de 1000 interrupciones por segundo. En un procesador
+como nuestro nRF52833, eso funciona bien.
 
-The nRF52833 does have an on-board peripheral that could cut
-our siren's interrupt rate way down. The Pulse-Width
-Modulation (PWM) unit can, among other things, generate
-cycles on the speaker pin at a rate controlled by a PWM
-register. This could be used to generate the basic square
-wave used for our siren. We would still need an interrupt
-every time we wanted to change the frequency, but this might
-be more like 10 interrupts per second than 1000.
+El nRF52833 cuenta con un periférico integrado que podría reducir
+considerablemente la frecuencia de interrupciones de nuestra sirena. La unidad de modulación por ancho de pulso
+(PWM) puede, entre otras cosas, generar
+ciclos en el pin del altavoz a una frecuencia controlada por un registro
+PWM. Esto podría utilizarse para generar la onda cuadrada básica
+que se utiliza para nuestra sirena. Seguiríamos necesitando una interrupción
+cada vez que quisiéramos cambiar la frecuencia, pero esto podría
+suponer unas 10 interrupciones por segundo en lugar de 1000.
 
-I did not use the PWM unit in my solution. This was partly
-because I wanted to focus on interrupts. Another big reason,
-though, was that the nRF52833 PWM unit is pretty complicated
-and hard to understand. Getting something working a simple
-way in the tight bare-metal environment is always
-attractive.
+No utilicé la unidad PWM en mi solución. Esto se debió en parte
+a que quería centrarme en las interrupciones. Sin embargo, otra razón importante
+fue que la unidad PWM del nRF52833 es bastante complicada
+y difícil de entender. Conseguir que algo funcione de forma sencilla
+en el entorno limitado del "bare-metal" siempre resulta
+atractivo.
 
-If you are up for a challenge, I would encourage you to try
-using the PWM unit for your siren.
+Si te apetece un reto, te animo a que intentes
+utilizar la unidad PWM para tu sirena.
