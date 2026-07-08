@@ -73,7 +73,7 @@
   - [El reto](15-interrupts/the-challenge.md)
   - [La solución](15-interrupts/my-solution.md)
   - [Adenda: PWM](15-interrupts/addendum-pwm.md)
-- [Juego de la serpiente](16-snake-game/README.md)
+- [Juego de la serpiente ](16-snake-game/README.md)
   - [Game logic](16-snake-game/game-logic.md)
   - [Controls](16-snake-game/controls.md)
   - [Non-blocking display](16-snake-game/nonblocking-display.md)
