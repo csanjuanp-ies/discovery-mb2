@@ -81,11 +81,11 @@
 - [¿Qué queda por descubrir?](explore.md)
 
 ---
-- [Download epub version of the book](DOWNLOAD.md)
-- [General troubleshooting](appendix/1-general-troubleshooting/README.md)
-- [How to use GDB](appendix/2-how-to-use-gdb/README.md)
-- [Magnetometer calibration](appendix/3-mag-calibration/README.md)
-- [Licenses and attribution](appendix/4-licenses-and-attribution/README.md)
+- [Descarga de la versión ePUB del libro](DOWNLOAD.md)
+- [Solución de problemas generales](appendix/1-general-troubleshooting/README.md)
+- [Cómo usar GDB](appendix/2-how-to-use-gdb/README.md)
+- [Calibración del Magenotómetro](appendix/3-mag-calibration/README.md)
+- [Licencias y atribución](appendix/4-licenses-and-attribution/README.md)
 
 <!-- - [Async IO: The future](17-async-io-the-future/README.md) -->
 <!--     - [Timer](17-async-io-the-future/timer.md) -->

@@ -1,13 +1,13 @@
-# Licenses and Attribution
+# Licencias y atribución
 
-## Licenses
+## Licencias
 
-The documentation is licensed under
+La documentación de este libro está licenciada bajo la licencia:
 
 - Creative Commons Attribution 4.0 License ([LICENSE-CC-BY](LICENSE-CC-BY)
   or https://creativecommons.org/licenses/by/4.0/legalcode)
 
-And the source code is licensed under either of
+Y el código fuente está licenciado bajo cualquiera de las siguientes licencias:
 
 - Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or
   http://www.apache.org/licenses/LICENSE-2.0)
@@ -15,12 +15,11 @@ And the source code is licensed under either of
 - MIT License ([LICENSE-MIT](LICENSE-MIT) or
   https://opensource.org/licenses/MIT)
 
-at your option.
+Como prefieras.
 
 ## Wikimedia Commons Images
 
-The following images from Wikimedia Commons are included
-in this book:
+En este libro se incluyen las siguientes imágenes de Wikimedia Commons:
 
 | Image | Author | License | Source |
 |---|---|---|---|

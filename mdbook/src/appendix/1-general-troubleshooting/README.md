@@ -1,22 +1,22 @@
-# General troubleshooting
+# Solución de problemas generales
 
-## `cargo-embed` problems
+## Problemas con `cargo-embed`
 
-Most `cargo-embed` problems are related to not having installed the `udev` rules properly on
-Linux, so make sure you got that right.
+La mayoría de los problemas con `cargo-embed` se deben a que las reglas de `udev` no se han instalado correctamente en
+Linux, así que asegúrate de haberlo hecho bien.
 
-If you are stuck, you can open an issue in the [`discovery` issue tracker] or visit the [Rust
-Embedded matrix channel] or the [probe-rs matrix channel] and ask for help there.
+Si te quedas atascado, puedes abrir una incidencia en el [sistema de seguimiento de incidencias de `discovery`] o visitar el [canal de Matrix de Rust Embedded] o el [canal de Matrix de probe-rs] y pedir ayuda allí.
 
-[`discovery` issue tracker]: https://github.com/rust-embedded/discovery-mb2/issues
-[Rust Embedded matrix channel]: https://matrix.to/#/#rust-embedded:matrix.org
-[probe-rs matrix channel]: https://matrix.to/#/#probe-rs:matrix.org
 
-## Cargo problems
+[[sistema de seguimiento de incidencias de `discovery`]: https://github.com/rust-embedded/discovery-mb2/issues
+[canal de Matrix de Rust Embedded]: https://matrix.to/#/#rust-embedded:matrix.org
+[canal de Matrix de probe-rs]: https://matrix.to/#/#probe-rs:matrix.org
+
+## Probles con Cargo
 
 ### "can't find crate for `core`"
 
-*Symptoms:*
+*Síntomas:*
 
 ```
    Compiling volatile-register v0.1.2
@@ -41,13 +41,13 @@ error: Could not compile `r0`.
 To learn more, run the command again with --verbose.
 ```
 
-*Cause:*
+*Causa:*
 
-You forgot to install the proper target for your microcontroller `thumbv7em-none-eabihf`.
+Te has olvidado de instalar el target adecuado para el microcontrolador: `thumbv7em-none-eabihf`.
 
-*Fix:*
+*Solución:*
 
-Install the proper target.
+Instalar el target adecuado.
 
 ``` console
 $ rustup target add thumbv7em-none-eabihf
@@ -55,7 +55,7 @@ $ rustup target add thumbv7em-none-eabihf
 
 ### Unable to flash the device: `No loadable segments were found in the ELF file`
 
-*Symptoms:*
+*Síntomas:*
 ```console
 > cargo embed
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
@@ -65,16 +65,16 @@ $ rustup target add thumbv7em-none-eabihf
        Error No loadable segments were found in the ELF file.
 ```
 
-*Cause:*
+*Causa:*
 
-Cargo needs to know how to build and link the program to the requirements of the target device.
-You therefore need to set the correct parameters in the `.cargo/config.toml` file.
+Cargo necesita saber cómo compilar y vincular el programa a los requisitos del dispositivo de destino.
+Por lo tanto, se debe configurar los parámetros correctos en el archivo `.cargo/config.toml`.
 
-*Fix:*
+*Solución:*
 
-Add a `.cargo/config.toml` file with the correct parameters:
+Añadir al fichero `.cargo/config.toml` con los parámetros correctos:
 ```toml
 {{#include ../../05-meet-your-software/.cargo/config.toml}}
 ```
 
-See [Embedded Setup](../../05-meet-your-software/embedded-setup.md) for further details.
+Leer [Configuración embebida](../../05-meet-your-software/embedded-setup.md) para más detalles.
