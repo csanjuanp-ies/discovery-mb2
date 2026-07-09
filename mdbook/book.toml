@@ -20,3 +20,14 @@ author = "Rust Embedded Resources Team"
 # base-url = "/discovery-mb2/"
 # git-repository-url = "
 
+[output.pdf]
+title = "Rust Embedded MB2 Discovery Book"
+author = "Rust Embedded Resources Team"
+landscape = false
+scale = 0.7
+paper-width = 8.27
+paper-height = 11.7
+margin-top = 0.5
+margin-bottom = 0.5
+margin-left = 0.5
+margin-right = 0.5
