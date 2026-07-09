@@ -1,18 +1,9 @@
-# Snake game
+# Juego de la serpiente
 
-We're now going to implement a basic [snake](https://en.wikipedia.org/wiki/Snake_(video_game_genre))
-game that you can play on an MB2 using its 5×5 LED matrix as a display and its two buttons as
-controls. In doing so, we will build on some of the concepts covered in the earlier chapters of this
-book, and also learn about some new peripherals and concepts.
+Ahora vamos a implementar un juego básico de [serpiente](https://en.wikipedia.org/wiki/Snake_(video_game_genre)) al que podrás jugar en un MB2 utilizando su matriz de LED de 5×5 como pantalla y sus dos botones como mandos. Para ello, nos basaremos en algunos de los conceptos tratados en los capítulos anteriores de este libro y también aprenderemos sobre algunos periféricos y conceptos nuevos.
 
-## Modularity
+## Modularidad
 
-The source code here is more modular than it probably should be. This fine-grained modularity allows
-us to look at the source code a little at a time. We will build the code bottom-up: we will first
-build three modules — `game`, `controls` and `display`, and then compose these to build the final
-program. Each module will have a top-level source file and one or more included source files: for
-example, the `game` module will consist of `src/game.rs`, `src/game/coords.rs`,
-`src/game/movement.rs`, etc. The Rust `mod` statement is used to combine the various components of
-the module. *The Rust Programming Language* has a good [description] of Rust's module system.
+El código fuente que vemos aquí es más modular de lo que probablemente debería ser. Esta modularidad tan detallada nos permite analizar el código fuente poco a poco. Construiremos el código de abajo hacia arriba: primero crearemos tres módulos —`game`, `controls` y `display`— y, a continuación, los combinaremos para crear el programa final. Cada módulo tendrá un archivo fuente de nivel superior y uno o más archivos fuente incluidos: por ejemplo, el módulo `game` estará formado por `src/game.rs`, `src/game/coords.rs`, `src/game/movement.rs`, etc. La instrucción `mod` de Rust se utiliza para combinar los distintos componentes del módulo. *El lenguaje de programación Rust* ofrece una buena [descripción] del sistema de módulos de Rust.
 
-[description]: https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html
+[descripción]: https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html

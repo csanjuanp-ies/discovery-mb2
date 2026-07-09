@@ -1,30 +1,19 @@
-# Snake game: final assembly
+# Juego de la serpiente: Paso final
 
-The code in our `src/main.rs` file brings all the previously-discussed machinery together to make
-our final game.
+El código del archivo `src/main.rs` reúne todos los mecanismos que hemos visto anteriormente para crear el juego definitivo.
 
 ```rust
 {{#include src/main.rs}}
 ```
 
-After initializing the board and its timer and RNG peripherals, we initialize a `Game` struct and a
-`Display` from the `microbit::display::blocking` module.
+Tras inicializar la placa y los periféricos de temporizador y generador aleatorio (RNG), inicializamos una estructura `Game` y un `Display` del módulo `microbit::display::blocking`.
 
-In our "game loop" (which runs inside of the "main loop" we place in our `main` function), we
-repeatedly perform the following steps:
+En el "bucle de juego" (que se ejecuta dentro del "bucle principal" que colocamos en nuestra función `main`), realizamos repetidamente los siguientes pasos:
 
-1. Get a 5×5 array of bytes representing the grid. The `Game::get_matrix` method takes three integer
-   arguments (which should be between 0 and 9, inclusive) which will, eventually, represent how
-   brightly the head, tail and food should be displayed.
+1. Obtenemos una matriz de 5×5 bytes que represente la cuadrícula. El método `Game::get_matrix` toma tres argumentos enteros (que deben estar comprendidos entre 0 y 9, ambos inclusive) que, en última instancia, representarán el nivel de brillo con el que deben mostrarse la cabeza, la cola y la comida.
 
-2. Display the matrix, for an amount of time determined by the `Game::step_len_ms` method. As
-   currently implemented, this method basically provides for 1 second between steps, reducing by
-   200ms every time the player scores 5 points (eating 1 piece of food = 1 point), subject to a
-   floor of 200ms.
+2. Mostramos la matriz durante un tiempo determinado por el método `Game::step_len_ms`. Tal y como está implementado actualmente, este método establece básicamente un intervalo de 1 segundo entre pasos, que se reduce en 200 ms cada vez que el jugador suma 5 puntos (comer 1 trozo de comida = 1 punto), con un mínimo de 200 ms.
 
-3. Check the game status. If it is `Ongoing` (which is its initial value), run a step of the game
-   and update the game state (including its `status` property). Otherwise, the game is over, so
-   flash the current image three times, then show the player's score (represented as a number of
-   illuminated LEDs corresponding to the score), and exit the game loop.
+3. Comprobamos el estado del juego. Si es `Ongoing` (que es su valor inicial), ejecuta un paso del juego y actualiza el estado del juego (incluida la propiedad `status`). En caso contrario, el juego ha terminado, por lo que hacemos parpadear la imagen actual tres veces, a continuación, mostramos la puntuación del jugador (representada como un número de LEDs iluminados que se corresponden con la puntuación) y salimos del bucle del juego.
 
-Our main loop just runs the game loop repeatedly, resetting the game's state after each iteration.
+El bucle principal se limita a ejecutar el bucle del juego repetidamente, restableciendo el estado del juego tras cada iteración.
