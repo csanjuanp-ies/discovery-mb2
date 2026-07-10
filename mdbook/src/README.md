@@ -1,16 +1,16 @@
 # `micro::bit v2 Embedded Discovery Book`
 
-> ¡Descubriendo el mundo de los microcontraldores a través de [Rust]!
+>¡Descubriendo el mundo de los microcontraldores a través de [Rust]!
 
 [Rust]: https://www.rust-lang.org/
 
 Este libro es un curso introductorio sobre sistemas embebidos basados en microcontroladores que utiliza Rust como lenguaje de enseñanza en lugar del habitual C/C++.
 
 ## Ámbito
-Se desarrollarán los siguientes temas:
+En este libro se desarrollarán los siguientes temas:
 - Cómo escribir, compilar, flashear y depurar un programa "embebido" (en Rust).
 
-- Fundamentos ("periféricos") básicos de microcontroladores: Entrada y salida digital, temporizadores, modulación por ancho de pulso (PWM), convertidor analógico - digital (ADC), protocolos de comunicación comunes como: Serie, I2C y SPI, etc.
+- Fundamentos básicos de microcontroladores ("periféricos"): Entrada y salida digital, temporizadores, modulación por ancho de pulso (PWM), convertidor analógico - digital (ADC), protocolos de comunicación estándar como: Serie, I2C y SPI, etc.
 
 - Conceptos de multitarea: multitarea cooperativa vs. preemptiva, interrupciones, planificadores, etc.
 
@@ -21,9 +21,9 @@ Se desarrollarán los siguientes temas:
 
 - Para principiantes. No se requiere experiencia previa con microcontroladores o sistemas embebidos.
 
-- Práctico. Se proporcionan multitud de ejercicios para poner en práctica la teoría. *Tú* serás quien haga la mayor parte del trabajo.
+- Práctico. Se proporcionan multitud de ejercicios para poner en práctica la teoría. *Seremos* quienes hagan la mayor parte del trabajo.
 
-- Centrado en las herramientas. Haremos un amplio uso de herramientas para facilitar el desarrollo. La "depuración real", con GDB, y el registro se introducirán desde el comienzo. No abordaremos el uso de LED como mecanismo de depuración en este texto.
+- Centrado en las herramientas. Haremos un amplio uso de herramientas para facilitar el desarrollo. La "depuración real", con GDB, y el registro la utilizaremos desde el primer momento. No abordaremos el uso de LED como mecanismo de depuración.
 
 ## No son objetivos
 

@@ -4,32 +4,31 @@ Aquí se muestran instrucciones de instalación para algunas distribuciones:
 
 ## Ubuntu 20.04 o más reciente / Debian 10 o más reciente
 
-> **NOTA** `gdb-multiarch` es el comando de GDB que utilizarás para depurar los programas de Arm Cortex-M.
+> **NOTA** `gdb-multiarch` es el comando de GDB que se utilizará para depurar los programas de Arm Cortex-M.
 ``` console
 $ sudo apt install gdb-multiarch minicom libunwind-dev
 ```
 
 ## Fedora 32 o posterior
 
-> **NOTA** `gdb` es el comando de GDB que utilizarás para depurar los programas de Arm Cortex-M.
+> **NOTA** `gdb` es el comando de GDB que existe para depurar los programas de Arm Cortex-M.
 ``` console
 $ sudo dnf install gdb minicom libunwind-devel
 ```
 
 ## Arch Linux
 
-> **NOTA** `gdb` es el comando de GDB que utilizarás para depurar los programas de Arm Cortex-M.
+> **NOTA** `gdb` es el comando de GDB que aparece para depurar los programas de Arm Cortex-M.
 ``` console
 $ sudo pacman -S arm-none-eabi-gdb minicom libunwind
 ```
 
 ## Otras distros
 
-> **NOTA** `arm-none-eabi-gdb` es el comando de GDB que utilizarás para depurar los programas de Arm Cortex-M.
+> **NOTA** `arm-none-eabi-gdb` es el comando de GDB para depurar los programas de Arm Cortex-M.
 
-Para aquellas distribuciones que no incorporan paquetes, usaremos [Arm's pre-built
-toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads). Hay que descargar el fichero "Linux
-64-bit" y poner los binarios en un directorio `bin` del PATH. A continuación, mostramos una manera de hacerlo:
+En aquellas distribuciones que no incorporan paquetes, instalaremos [Arm's pre-built
+toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads). Hay que descargar el fichero "Linux 64-bit" y poner los binarios en un directorio `bin` del PATH. A continuación, mostramos una manera de hacerlo:
 
 ``` console
 $ mkdir -p ~/local
@@ -48,7 +47,7 @@ PATH=$PATH:$HOME/local/XXX/bin
 
 Las siguientes instrucciones tienen que tener permisos de administración para poder ejecutarse (son necesarias para usar el puerto USB): p. ej. `sudo`.
 
-Crea el siguiente fichero en `/etc/udev/rules.d`.
+Creamos el siguiente fichero en `/etc/udev/rules.d`.
 
 ``` console
 $ cat /etc/udev/rules.d/69-microbit.rules
@@ -61,12 +60,12 @@ SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", TAG+="uaccess
 LABEL="microbit_rules_end"
 ```
 
-A continuación, recarga las reglas de udev:
+A continuación, recargamos las reglas de udev:
 ``` console
 $ sudo udevadm control --reload
 ```
 
-Si tienes alguna tarjeta conectada al ordenador, desconéctala y vuelve a conectarla, o ejecuta el siguiente comando.
+Si tenemos alguna tarjeta conectada al ordenador, hay que desconectarla y volverla a conectar, o ejecutar el comando siguiente.
 
 ``` console
 $ sudo udevadm trigger
@@ -74,9 +73,9 @@ $ sudo udevadm trigger
 
 ## Verificación de los permisos
 
-Conecta la placa micro:bit al ordenador mediante un cable USB.
+Conectamos la placa micro:bit al ordenador mediante un cable USB.
 
-El micro:bit debería aparecer como un dispositivo USB (archivo) en `/dev/bus/usb`. Veamos cómo se ha identificado:
+La micro:bit debería aparecer como un dispositivo USB (archivo) en `/dev/bus/usb`. Veamos cómo se ha identificado:
 
 ``` console
 $ lsusb | grep -i "NXP Arm mbed"
@@ -84,15 +83,14 @@ Bus 001 Device 065: ID 0d28:0204 NXP Arm mbed
 $ # ^^^        ^^^
 ```
 
-En caso el microcontrolador esté conectado al bus #1 y se haya enumerado como el dispositivo #65. Esto significa que el fichero
-`/dev/bus/usb/001/065` *es* la placa MB2. Vamos a comprobar los permisos:
+En este caso el microcontrolador está conectado al bus #1 y se ha identificado como el dispositivo #65. Esto significa que el fichero `/dev/bus/usb/001/065` *es* la placa MB2. Vamos a comprobar los permisos:
 
 ``` console
 $ ls -l /dev/bus/usb/001/065
 crw-rw-r--+ 1 nobody nobody 189, 64 Sep  5 14:27 /dev/bus/usb/001/065
 ```
 
-Los permisos deberían ser `crw-rw-r--+`, fíjate en el `+` al final, a continuación, comprueba los derechos de acceso ejecutando el siguiente comando.
+Los permisos deberían ser `crw-rw-r--+`, nos fijaremos en el `+` al final, a continuación, comprobaremos los derechos de acceso ejecutando el siguiente comando.
 
 ``` console
 $ getfacl /dev/bus/usb/001/065
@@ -118,6 +116,6 @@ $ sudo udevadm control --reload
 $ sudo udevadm trigger
 ```
 
-Pasa ahora a la [siguiente sección].
+Pasamos a la [siguiente sección].
 
 [siguiente sección]: verify.md

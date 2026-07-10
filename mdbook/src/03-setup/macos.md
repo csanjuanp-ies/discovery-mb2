@@ -15,6 +15,6 @@ $ # lsusb lists USB ports
 $ brew install lsusb
 ```
 
-Pasa ahora a la [siguiente sección].
+Pasamos a la [siguiente sección].
 
 [siguiente sección]: verify.md

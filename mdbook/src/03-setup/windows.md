@@ -20,7 +20,7 @@ $ arm-none-eabi-gcc -v
 gcc version 5.4.1 20160919 (release) (..)
 ```
 
-En mi caso: 
+**Nota del tr.:** En mi caso: 
 
 ``` console
 $ arm-none-eabi-gcc -v
@@ -35,6 +35,6 @@ Se puede descargar `putty.exe` desde [aquí](http://www.chiark.greenend.org.uk/~
 
 
 
-Pasa ahora a la [siguiente sección].
+Pasamos a la [siguiente sección].
 
 [siguiente sección]: verify.md
