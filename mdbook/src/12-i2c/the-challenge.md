@@ -1,13 +1,10 @@
-# The challenge
+# El reto
 
-The challenge for this chapter is to build a small application that communicates with the outside
-world via the serial interface introduced in the last chapter. It should expect to receive the
-commands "mag" for magnetometer as well as "acc" for accelerometer from the serial port. It should
-then be able to send the corresponding sensor data to the serial port in response.
+El reto para este capítulo es construir una pequeña aplicación que se comunique con el mundo exterior a través de la interfaz serie introducida en el último capítulo. Debe esperar recibir los comandos "mag" para el magnetómetro así como "acc" para el acelerómetro desde el puerto serie. Luego, debería ser capaz de enviar los datos correspondientes del sensor al puerto serie en respuesta.
 
-This time no template code will be provided since all you need is already provided in the
-[UART](../11-uart/index.html) and this chapter. However, here are a few clues:
+En esta ocasión no se proporcionará ningúna plantilla con código, ya que todo lo que se necesita ya se encuentra en el [UART](../11-uart/README.md) y en este capítulo. No obstante, aquí hay algunas pistas:
 
--   You might be interested in `core::str::from_utf8` to convert the bytes in the buffer to a `&str`, since we need to compare with `"mag"` and `"acc"`.
+-   Quizá te interese utilizar `core::str::from_utf8` para convertir los bytes del búfer en un `&str`, ya que necesitamos compararlos con `"mag"` y `"acc"`.
 
--   You will have to read the documentation for the magnetometer API and functionality. While the `lsm303agr` crate provides the API interface, the [LSM303AGR datasheet](https://www.st.com/resource/en/datasheet/lsm303agr.pdf) details the sensor's magnetic field measurement parameters. See pages 13-15 for sensor characteristics and, importantly, pages 66-67 for the output register format.
+-   TEndremos que leer la documentación sobre la API y el funcionamiento del magnetómetro. Aunque el crate `lsm303agr` proporciona la interfaz, la [ficha técnica del LSM303AGR](https://www.st.com/resource/en/datasheet/lsm303agr.pdf) detalla los parámetros de medición del campo magnético del sensor. En las páginas 13-15 están las características del sensor y lo que es más importante, las páginas 66-67 para ver el formato del registro de salida.
+
