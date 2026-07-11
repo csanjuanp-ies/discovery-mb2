@@ -1,6 +1,6 @@
 # Configuración embebida
 
-Vamos a echar un vistazo a nuestro primer programa. Comprueba el fichero `examples/init.rs`:
+Vamos a echar un vistazo a nuestro primer programa. Comprobemos el fichero `examples/init.rs`:
 
 ``` rust
 {{#include examples/init.rs}}
@@ -14,20 +14,20 @@ El atributo `no_std` indica que este programa no usará la biblioteca estándar 
 El atributo `no_main` indica que este programa no usará la interfaz estándar 'main', que está diseñada para aplicaciones de línea de comandos que reciben argumentos. En lugar del 'main' estándar, usaremos el atributo 'entry' del crate [`cortex-m-rt`] para definir un punto de entrada personalizado. 
 En este programa hemos definido el punto de entrada como `main`, pero se podría haber usado cualquier otro nombre. 
 La función del punto de entrada debe tener la firma `fn() -> !`; este tipo indica que la función no termina. 
-Esto significa que el programa nunca finaliza: si el compilador detecta que esto sería posible, se negará a compilarlo.
+Significa que el programa nunca finaliza: si el compilador detecta que esto sería posible, se negará a compilarlo.
 
 
 [`cortex-m-rt`]: https://crates.io/crates/cortex-m-rt
 
-Si eres un observador cuidadoso, habrás notado que hay un directorio `.cargo` posiblemente oculto en el proyecto de Cargo. Este directorio contiene un archivo de configuración de Cargo `.cargo/config.toml`.
+Si observamos con cuidado el directorio del proyecto notaremos que hay un directorio `.cargo` posiblemente oculto en el proyecto. Este directorio contiene un archivo de configuración de Cargo `.cargo/config.toml`.
 
 ```toml
 {{#include .cargo/config.toml}}
 ```
 
-Este fichero modifica el proceso de enlace para adaptar la disposición de memoria del programa a los requisitos del dispositivo de desarrollo. Este proceso de enlace es un requisito del crate `cortex-m-rt`. El archivo `.cargo/config.toml` también le dice a Cargo cómo construir y ejecutar el código en nuestro MB2.
+Este fichero modifica el proceso de enlace para adaptar la disposición de memoria del programa a los requisitos del dispositivo de desarrollo. Este proceso de enlace es un requisito del crate `cortex-m-rt`. El archivo `.cargo/config.toml` también le dice a Cargo cómo construir y ejecutar el código en nuestra MB2.
 
-Hay también un fichero `Embed.toml` aquí:
+Hay también un fichero `Embed.toml`:
 
 ```toml
 {{#include Embed.toml}}
@@ -40,4 +40,4 @@ Este fichero informa a `cargo-embed` que:
 - Queremos deshabilitar RTT. RTT es un protocolo que permite al chip enviar texto a un depurador. Ya has visto RTT en acción: fue el protocolo que envió "Hello World" en el capítulo 3.
 - Queremos habilitar GDB. Este paso es necesario para procesos de depuración.
 
-Vamos a ver que está pasando, empecemos por construir este programa.
+Vamos a ver qué está pasando, empecemos por construir este programa.

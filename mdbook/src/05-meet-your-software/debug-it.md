@@ -10,7 +10,7 @@ La opción `default.gdb.enabled = true` en el fichero `Embed.toml` hace que `car
 
 ## Depuremos
 
-`cargo-embed` está ejecutándose en una consola de comandos. Debemos dejar esa consola abierta, ya que es el servidor de depuración. Abriremos otra consola para ejecutar la instrucción GDB. En esa nueva consola, nos dirigiremos a nuestro directorio de proyecto. Una vez allí, primero tenemos que abrir el binario gdb de esta manera:
+`cargo-embed` está ejecutándose en una consola de comandos. Debemos dejar esa consola abierta, ya que es el servidor de depuración. Abriremos otra consola para ejecutar la instrucción GDB. En esa nueva consola, nos dirigiremos al directorio de proyecto. Una vez allí, primero tenemos que abrir el binario gdb de esta manera:
 
 ```shell
 $ gdb ../../../target/thumbv7em-none-eabihf/debug/examples/init
@@ -21,16 +21,16 @@ O bajo windows:
 > arm-none-eabi-gdb ../../../target/thumbv7em-none-eabihf/debug/examples/init
 ```
 
-> **NOTA** Dependiendo del GDB que tengamos instalado, habrá que usar un comando diferente para lanzarlo. Consulta el [capítulo 3] si olvidaste cuál era.
+> **NOTA** Dependiendo del GDB que tengamos instalado, habrá que usar un comando diferente para lanzarlo. Consultaremos el [capítulo 3] si olvidamos cuál era.
 
 [capítulo 3]: ../03-setup/README.md#herramientas
 
-La ruta `../../..` de este comando es obligatoria, como este ejemplo pertenece al workspace de todo el libro, en él todos los binarios se generan en el mismo directorio `target`. Si no usáramos esta ruta, GDB no podría encontrar el binario que queremos depurar. Lee [Capítulo sobre espacios de trabajo] para más información.
+La ruta `../../..` de este comando es obligatoria, como este ejemplo pertenece al workspace de todo el libro, en él todos los binarios se generan en el mismo directorio `target`. Si no usáramos esta ruta, GDB no podría encontrar el binario que queremos depurar. Leeremos el [capítulo sobre espacios de trabajo] para más información.
 
 > **NOTA** Si `cargo-embed` imprime muchas advertencias, no hay que preocuparse. Por ahora no se implementa completamente el protocolo GDB, y por lo tanto podría no reconocer todos los comandos que le está enviando. Mientras GDB no se bloquee, todo está bien.
 
 
-[Capítulo sobre espacios de trabajo]: https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html#creating-a-workspace
+[capítulo sobre espacios de trabajo]: https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html#creating-a-workspace
 
 A continuación tenemos que conectar GDB con el servidor de depuración. Por defecto, este servidor se ejecuta en `localhost:1337`, así que para enlazarnos a él, ejecutamos lo siguiente:
 
@@ -53,8 +53,7 @@ Remote debugging using :1337
 > Target halted
 > ```
 
-Lo siguiente que queremos hacer es detener la ejecución en la función `main` de nuestro programa. Para ello, primero
-estableceremos un punto de interrupción en esa localización y, a continuación, continuaremos con la ejecución del programa hasta llegar al él:
+Lo siguiente que queremos hacer es detener la ejecución en la función `main` de nuestro programa. Para ello, primero estableceremos un punto de interrupción en esa localización y a continuación, empezaremos con la ejecución del programa hasta llegar al él:
 
 ```
 (gdb) break main
@@ -67,10 +66,10 @@ Breakpoint 1, init::__cortex_m_rt_main_trampoline () at src/05-meet-your-softwar
 9       #[entry]
 ```
 
-Los puntos de ruptura se pueden usar para detener el flujo normal de un programa. El comando `continue` permitirá que el programa se ejecute libremente *hasta* que alcance un punto de interrupción. En este caso, hasta que alcance la función `main` porque hemos establecido uno allí.
+Los puntos de ruptura se pueden usar para detener el flujo normal de un programa. El comando `continue` permitirá que el binario se ejecute libremente *hasta* que alcance un punto de ruptura. En este caso, hasta que alcance la función `main` porque hemos establecido uno allí.
 
 
-Indicar que la salida de GDB dice "Breakpoint 1". Recuerda que nuestro procesador solo puede usar una cantidad limitada de estos puntos de interrupción, así que es buena idea prestar atención a estos mensajes. Si por casualidad nos quedamos sin ellos, podemos listarlos con `info break` y eliminar alguno mediante `delete <breakpoint-num>`.
+Indicar que la salida de GDB dice "Breakpoint 1". Recordemos que nuestro procesador solo puede usar una cantidad limitada de estos puntos de interrupción, así que es una buena idea prestar atención a estos mensajes. Si por casualidad nos quedamos sin ellos, podemos listarlos con `info break` y eliminar alguno mediante `delete <breakpoint-num>`.
 
 Para una experiencia más agradable, usaremos la Interfaz de Usuario de Texto (TUI) de GDB. Para entrar en ese modo, en la consola de GDB ingresamos el siguiente comando:
 
@@ -136,7 +135,7 @@ _y = 42
 
 Si volvemos a usar `next` para avanzar una línea más, nos quedaremos atascados porque el programa nunca pasará de esa declaración. 
 En su lugar, cambiaremos a la vista de desensamblado con el comando `layout asm` y avanzaremos una instrucción a la vez usando `stepi`. 
-Siempre restauraremos la vista de código fuente de Rust mediante el comando `layout src`.
+Restauraremos la vista de código fuente de Rust mediante el comando `layout src`.
 
 > **NOTA** En caso de ejecutar el comando `next` o `continue` por error y que GDB se quedara atascado, podríamos salir de esa situación presionando `Ctrl+C`.
 
@@ -201,7 +200,7 @@ La orden `continue` hace que el programa se ejecute hasta que alcance el punto d
 Este conjunto de comandos es útil cuando, por error, saltamos una parte del programa que nos interesaba inspeccionar. De esta manera podemos restaurar fácilmente el estado del programa a su inicio.
 
 
-> **Una anotación**: Este comando de `reset` no limpia ni modifica la RAM. Mantendrá los valores de la ejecución anterior. 
+> **Una anotación**: El comando `reset` no limpia ni modifica la RAM. Mantendrá los valores de la ejecución anterior. 
 > Eso no debería ser un problema, a menos que el comportamiento del programa dependa del valor de variables *no inicializadas* — pero esa es la definición de Comportamiento Indefinido (UB).
 
 
@@ -219,11 +218,11 @@ Ending remote debugging.
 [Inferior 1 (Remote target) detached]
 ```
 
-> **NOTA** Si el cliente por defecto GDB no se está conectando correctamente, revisa [gdb-dashboard]. Esta herramienta usa Python para convertir la interfaz de línea de comandos de GDB en un panel de control que muestra los registros, la vista del código fuente, la vista de ensamblado y otras cosas.
+> **NOTA** Si el cliente por defecto GDB no se está conectando correctamente, revisaremos [gdb-dashboard]. Esta herramienta usa Python para convertir la interfaz de línea de comandos de GDB en un panel de control que muestra los registros, la vista del código fuente, la vista de ensamblado y más cosas.
 
 [gdb-dashboard]: https://github.com/cyrus-and/gdb-dashboard#gdb-dashboard
 
-Si quieres aprender más sobre GDB, echa un vistazo a la sección [Cómo usar GDB](../appendix/2-how-to-use-gdb/README.md).
+Si queremos profundizar en el uso de GDB, visitaremos la sección [Cómo usar GDB](../appendix/2-how-to-use-gdb/README.md).
 
 
 ## Depuremos bajo WSL2 en Windows

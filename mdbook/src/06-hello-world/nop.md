@@ -18,9 +18,9 @@ Volvemos a conseguir un LED que no parpadea. Sin la llamada a `nop()`, el compil
 asm!("nop", options(nomem, nostack, preserves_flags));
 ```
 
-La función `nop()` es una función en línea, lo que significa que no es realmente una función en el sentido tradicional. En su lugar, cuando llamamos a `nop()`, el código de la función se inserta directamente en el programa en ese punto. En este caso, el código de la función es una sola instrucción de máquina `NOP` Arm.
-Por ese motivo, `NOP` no será eliminada o desplazada por el compilador: se quedará justo ahí donde haya colocad.
+La función `nop()` es una función en línea, lo que significa que no es realmente una función en el sentido tradicional. En su lugar, cuando llamamos a `nop()`, el código de la función se inserta directamente en el programa en ese punto. En este caso, el código de la función es una sola instrucción máquina `NOP` Arm.
+Por ese motivo, `NOP` no será eliminada o desplazada por el compilador: se quedará justo ahí.
 
-La capacidad de insertar código de ensamblador en el programa donde sea necesario es a veces bastante importante en la programación embebida. A veces la CPU tendrá instrucciones que el compilador no conoce, pero que aún necesitamos para usar la CPU de manera efectiva. La directiva `asm!()` de Rust crea un mecanismo de hacer eso.
+La capacidad de insertar código ensamblador en el programa donde sea necesario es bastante importante en la programación embebida. A veces la CPU tendrá instrucciones que el compilador no conoce, pero que aún necesitamos para usar la CPU de manera efectiva. La directiva `asm!()` de Rust crea un mecanismo para hacer eso.
 
 El bucle de espera activa sigue siendo terrible, pero al menos ahora no es infinitamente rápido.

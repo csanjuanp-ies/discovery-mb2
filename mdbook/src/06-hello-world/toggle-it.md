@@ -4,7 +4,7 @@ Vamos a encencer y apagar el LED repetidamente. Así es como se hace parpadear, 
 
 
 En el fichero `examples/blink.rs` encontraremos el código para hacer parpadear el LED.
-Hemos decidido usar siguiente LED en lugar del original (dejando encendido el primero), pero eso es un cambio fácil de hacer.
+Hemos decidido usar el siguiente LED en lugar del original (dejando encendido el primero), pero eso es un cambio fácil de hacer.
 
 ```rust
 {{#include examples/fast-blink.rs}}

@@ -5,7 +5,7 @@ Vamos a familiarizarnos con el hardware con el que vamos a trabajar.
 ## micro:bit (MB2)
 
 <p align="center">
-<img title="micro:bit" src="../assets/microbit-v2.jpg" alt="Micro:bit" alt="microbit" />
+<img title="micro:bit" src="../assets/microbit-v2.jpg" alt="Micro:bit" />
 </p>
 
 A continuación, vemos algunos de los componentes que se encuentran en la placa:

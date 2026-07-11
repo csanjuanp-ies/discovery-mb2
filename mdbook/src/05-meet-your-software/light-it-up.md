@@ -6,7 +6,7 @@ Vamos a terminar el capítulo haciendo que uno de los muchos LEDs del MB2 se enc
 
 ## Los Led de la micro:bit 
 
-En la parte de atrás de la micro:bit encontramos un cuadrado de 5x5 LED, normalmente llamado matriz de LED. Esta estructura de matriz se utiliza para que en lugar de tener que usar 25 pines separados para controlar cada uno de los LED, podamos usar solo 10 (5+5) pines para controlar qué columna y qué fila se enciende.
+En la parte de atrás de la micro:bit encontramos un cuadrado de 5x5 LED, normalmente llamado matriz de LED. Esta estructura de matriz se utiliza para que en lugar de tener que usar 25 pines separados para controlar cada uno, podamos usar solo 10 (5+5) pines para establecer qué columna y qué fila se enciende.
 
 Pasemos a usar el crate `microbit-v2` para manipular los LED. En el [siguiente capítulo] entraremos en detalle sobre todas las opciones disponibles.
 
@@ -39,8 +39,7 @@ de los demás chips de la placa.
 > mismo recurso. Para evitarlo, los PAC se han implementado de tal manera que se produciría un error si se 
 > adquiriere la posesión de los periféricos dos veces.
 
-(Una vez más, si todo esto es un poco confuso, en el [siguiente capítulo] se volverá a explicar con
-mayor detalle.)
+(Una vez más, si todo esto es un poco confuso, en el [siguiente capítulo] se volverá a explicar con mayor detalle.)
 
 Ahora podemos encender el LED conectado a `row1`, `col1` poniendo el pin `row1` en estado alto
 (es decir, activándolo).  La razón por la que podemos dejar `col1` en estado bajo se debe al funcionamiento del circuito de la matriz de LED. 
@@ -50,9 +49,7 @@ En este caso es muy improbable, por lo que podemos usar simplemente `unwrap()` e
 
 ## Probarlo
 
-Probar nuestro pequeño programa es muy sencillo. Ejecutamos `cargo embed`
-y dejamos que se compile como antes. A continuación, abrimos nuestro GDB y
-nos conectamos a la sesión de GDB.
+Probar nuestro pequeño programa es muy sencillo. Ejecutamos `cargo embed` y dejamos que se compile como antes. A continuación, ejecutamos GDB y nos conectamos a la sesión de GDB.
 
 
 ```

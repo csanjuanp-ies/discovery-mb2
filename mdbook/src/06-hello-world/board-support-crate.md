@@ -1,6 +1,6 @@
 # Crate de soporte de placa
 
-Trabajar directamente con el PAC y el HAL es bastante agradable. La mayoría de los MCUs de Arm y muchos otros MCUs para los que Rust puede compilar tienen una crate PAC. Si estamos trabajando con un microcontrolador en el que no existe, programar una crate PAC puede ser tedioso, pero es bastante sencillo. Muchos MCUs que tienen una crate PAC también tienen una crate HAL; nuevamente, es principalmente un trabajo farragoso construir uno si no está presente. El código escrito a nivel de PAC y HAL da acceso a los detalles más internos del MCU.
+Trabajar directamente con el PAC y el HAL es bastante agradable. La mayoría de los MCUs de Arm y muchos otros MCUs para los que Rust puede compilar tienen una crate PAC. Si estamos trabajando con un microcontrolador en el que no existe, programar una crate PAC puede ser tedioso, pero es bastante sencillo. Muchos MCUs que tienen una crate PAC también tienen una crate HAL; nuevamente, es principalmente un trabajo farragoso construir uno si no se ha desarrollado. El código escrito a nivel de PAC y HAL da acceso a los detalles más internos del MCU.
 
 Como hemos visto, sin embargo, se vuelve bastante molesto mantener un seguimiento de lo que está sucediendo en la interfaz entre nuestro nRF52833 y el resto de la MB2. Hemos tenido que leer esquemas y cosas por el estilo para ver cómo usar el hardware de la placa.
 

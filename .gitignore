@@ -3,13 +3,8 @@ Cargo.lock
 target/
 .cargo/
 .vscode/
-/.idea/.gitignore
-/.idea/discovery-mb2.iml
-/.idea/encodings.xml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/inspectionProfiles/Project_Default.xml
-/.idea/vcs.xml
+.idea/
 /mdbook/src/07-led-roulette/examples/my_solution.rs
 /mdbook/src/08-inputs-and-outputs/examples/my_solution.rs
 /mdbook/book/html/
+/.idea/.name

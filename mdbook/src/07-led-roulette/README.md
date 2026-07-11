@@ -6,7 +6,7 @@ De acuerdo, vamos a crear una "aplicación real". El objetivo es llegar a esta p
 <video src="../assets/roulette_fast.mp4" width="500" loop="true" autoplay="true"/>
 </p>
 
-Como encender los LED por separado es bastante molesto (especialmente si tenemos que usar todos) podemos usar el crate BSP `microbit-v2`, discutido anteriormente, para trabajar con el "display" de LED del MB2. 
+Como encender los LEDs por separado es bastante molesto (especialmente si tenemos que usar todos) podemos usar el crate BSP `microbit-v2`, discutido anteriormente, para trabajar con el "display" de LEDs del MB2. 
 Funciona así (`examples/light-it-all.rs`):
 
 

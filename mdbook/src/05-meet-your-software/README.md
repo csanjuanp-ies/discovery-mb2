@@ -8,15 +8,11 @@ Primero, una nota rápida sobre las convenciones utilizadas en el resto de este 
 git clone http://github.com/rust-embedded/discovery-mb2
 ```
 
-El código fuente del libro está en `discovery-mb2/mdbook/src`. Se debería examinar la carpeta en profundidad. 
-Cada capítulo está en un directorio diferente y tiene tanto el texto Markdown *como* el código fuente completo de todos los programas en ese capítulo. 
-Cuando nos referimos a alguna ruta como `src/main.rs`, nos referimos a ese lugar comenzando desde el capítulo en el que estás trabajando. 
-Por ejemplo, `discovery-mb2` tiene un archivo llamado `mdbook/src/05-meet-your-software/examples/init.rs`. 
-Indicaremos ese archivo como simplemente `examples/init.rs` en este capítulo.
+El código fuente del libro está en `discovery-mb2/mdbook/src`. Se debería examinar la carpeta en profundidad. Cada capítulo está en un directorio diferente y tiene tanto el texto Markdown *como* el código fuente completo de todos los programas del capítulo. Cuando hablamos de alguna ruta como `src/main.rs`, nos referimos comenzando desde el capítulo en el que estamos trabajando. Por ejemplo, `discovery-mb2` tiene un archivo llamado `mdbook/src/05-meet-your-software/examples/init.rs`. Haremos referencia a ese archivo como simplemente `examples/init.rs` en el capítulo.
 
 Existen dos tipos básicos de código Rust: programas ejecutables "binarios" y "bibliotecas". 
 No desarrollaremos muchas bibliotecas a lo largo del libro. 
-El código fuente de los programas binarios reside en varios lugares:
+El código fuente de los programas reside en varios lugares:
 
 * La aplicación `src/main.rs` se compilará y ejecutará directamente con `cargo embed` o `cargo
   run`. No hace falta ninguna configuración especial.

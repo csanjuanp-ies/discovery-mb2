@@ -10,7 +10,7 @@ La primera idea que se nos ocurre es usar un bucle de espera activa (forma tonta
 
 Ahora ejecutamos `cargo run --release --example spin-wait`, en donde la opción `--release` es muy importante. Deberíamos ver el LED de nuestro MB2 parpadear aproximadamente una vez por segundo.
 
-Cosas que quizá te nos podemos preguntar:
+Cosas que quizá nos podemos preguntar:
 
 * **¿Qué son los caracteres `_` en el número?** Rust permite estos caracteres en los números y los ignora. Es visualmente adecuado para hacer que los números grandes sean más legibles. Aquí los estamos usando como puntos (o lo que sea el separador para grupos de tres dígitos en el idioma correspondiente).
 
@@ -34,7 +34,7 @@ Cosas que quizá te nos podemos preguntar:
       bne	.LBB1_6
   ```
 
-  Esto son solo tres o cuatro instrucciones, pero el salto hacia atrás también necesita tiempo. Observemos que la salida creada *no es igual:* el compilador elige generar diferentes instrucciones para el primer bucle y segundo bucle. Ver "Depende" más adelante.
+  Esto son solo tres o cuatro instrucciones, pero el salto hacia atrás también necesita tiempo. Observemos que la salida creada *no es igual:* el compilador elige generar diferentes instrucciones para el primer bucle y segundo bucle. Ver **"Depende"** más adelante.
   
   Aun así, estamos ejecutando alrededor de 4 instrucciones por iteración del bucle. Esto significa que en nuestra CPU de 64MHz un cambio de medio segundo debería tomar 64M/2/4 = 8M iteraciones para completarse. Así que algo nos está ralentizando por un factor de 2. ¿Qué lo causa? No se sabe. **Esto es terrible**.
 
