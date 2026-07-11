@@ -12,3 +12,4 @@ target/
 /.idea/vcs.xml
 /mdbook/src/07-led-roulette/examples/my_solution.rs
 /mdbook/src/08-inputs-and-outputs/examples/my_solution.rs
+/mdbook/book/html/

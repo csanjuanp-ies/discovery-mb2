@@ -81,7 +81,7 @@
 - [¿Qué queda por descubrir?](explore.md)
 
 ---
-- [Descarga de la versión ePUB del libro](DOWNLOAD.md)
+- [Descarga de la versión ePUB o PDF del libro](DOWNLOAD.md)
 - [Solución de problemas generales](appendix/1-general-troubleshooting/README.md)
 - [Cómo usar GDB](appendix/2-how-to-use-gdb/README.md)
 - [Calibración del Magenotómetro](appendix/3-mag-calibration/README.md)
