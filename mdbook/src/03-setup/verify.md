@@ -1,14 +1,14 @@
 # Verificación de la instalación
 
-Vamos a verificar que todas las herramientas están correctamente instaladas y funciona de acorde a lo esperado.
+Vamos a comprobar que todas las herramientas están correctamente instaladas y funcionan acorde a lo esperado.
 
 ## Verificación de cargo-embed
 
-En primer lugar, conectamos el micro:bit al ordenador mediante un cable USB.
+En primer lugar, conectamos la micro:bit al ordenador mediante un cable USB.
 
-Debería encenderse al menos un LED naranja situado justo al lado del puerto USB del micro:bit. Además, si nunca has flasheado otro programa en tu micro:bit, el programa predeterminado con el que viene el micro:bit debería hacer que los LED rojos de la parte trasera empiecen a parpadear: puedes ignorarlos o puedes jugar con la aplicación de demostración.
+Debería encenderse al menos un LED naranja situado justo al lado del puerto USB de la micro:bit. Además, si nunca hemos flasheado otro programa en la micro:bit, el programa predeterminado con el que viene en la micro:bit debería hacer que los LEDs rojos de la parte trasera empiecen a parpadear: podemos ignorarlos o jugar con la aplicación de demostración.
 
-Ahora veamos si probe-rs, y por extensión cargo-embed, pueden detectar tu micro:bit. Ejecutaremos el siguiente comando:
+Ahora veamos si probe-rs y por extensión cargo-embed, pueden detectar la micro:bit. Ejecutaremos el siguiente comando:
 
 ``` console
 $ probe-rs list
@@ -16,7 +16,7 @@ The following debug probes were found:
 [0]: BBC micro:bit CMSIS-DAP -- 0d28:0204:990636020005282030f57fa14252d446000000006e052820 (CMSIS-DAP)
 ```
 
-En mi caso
+**Nota del tr.:** En mi caso
 
 ``` console
 $ probe-rs list
@@ -24,7 +24,7 @@ The following debug probes were found:
 [0]: BBC micro:bit CMSIS-DAP -- 0d28:0204-5:9906360200052820977fb3a6b908b66f000000006e052820 (CMSIS-DAP)
 ```
 
-O si queremos más información sobre las funciones de depuración del micro:bit, podemos ejecutar:
+O si queremos más información sobre las funciones de depuración de la micro:bit, podemos ejecutar:
 
 ``` console
 $ probe-rs info
@@ -56,7 +56,7 @@ Debugging RISC-V targets over SWD is not supported. For these targets, JTAG is t
 Debugging Xtensa targets over SWD is not supported. For these targets, JTAG is the only supported protocol. Xtensa specific information cannot be printed.
 ```
 
-Para mi placa aparece:
+**Nota del tr.:** Para mi placa aparece:
 
 
 ``` console
@@ -88,7 +88,7 @@ Debug Port: DPv1, Designer: ARM Ltd
 Debug port version DPv1 does not support SWD multidrop. Stopping here.
 ```
 
-Seguidamente, tenemos que estar en el directorio `src/03-setup` de los ficheros fuente. A continuación, ejecutamos los siguientes comandos:
+Nos movemos ahora al directorio `src/03-setup` de los ficheros fuente. A continuación, ejecutamos los siguientes comandos:
 
 ```
 $ rustup target add thumbv7em-none-eabihf
@@ -96,7 +96,7 @@ $ cargo embed --target thumbv7em-none-eabihf
 ```
 
 Si todo funciona correctamente, cargo-embed debería compilar primero el pequeño programa de ejemplo
-que hay en este directorio, luego lo grabará en la memoria de la placa y, por último, abrirá una interfaz de texto en la que se muestre el mensaje "Hello World".
+que hay en este directorio, luego lo grabará en la memoria de la placa y por último, abrirá una interfaz de texto en la que se muestre el mensaje "Hello World".
 
   <p align="center">
   <img title="micro:bit" src="../assets/hello-world.png" width="500"  alt="Hello World"/>
@@ -106,5 +106,5 @@ que hay en este directorio, luego lo grabará en la memoria de la placa y, por �
 
 [solución general de problemas]: ../appendix/1-general-troubleshooting/README.md
 
-Esta salida procede del pequeño programa en Rust que acabas de cargar en tu micro:bit.
-¡Todo funciona correctamente y ya puedes continuar con los siguientes capítulos!
+Esta salida procede del pequeño programa en Rust que acabamos de cargar en la MB2.
+¡Todo funciona correctamente y ya podemos avanzar con los siguientes capítulos!

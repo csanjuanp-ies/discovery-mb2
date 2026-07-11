@@ -1,4 +1,4 @@
-# Conoce el software
+# Conocer el software
 
 En este capítulo aprenderemos a construir, ejecutar y depurar algunos programas *muy* simples. El objetivo aquí no es entrar en los detalles de la programación MB2 Rust (todavía), sino simplemente familiarizarse con la mecánica del proceso.
 

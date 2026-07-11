@@ -10,7 +10,5 @@ target/
 /.idea/modules.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
-/mdbook/src/id_mb2.txt
-/Freenove_Super_Starter_Kit_for_microbit-main.zip
 /mdbook/src/07-led-roulette/examples/my_solution.rs
 /mdbook/src/08-inputs-and-outputs/examples/my_solution.rs
