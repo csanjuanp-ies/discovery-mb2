@@ -6,7 +6,7 @@ Uno de los registros de `P0`, el registro `IN`, es un registro de solo lectura.
 
 Fijémonos en la columna 'Access' de la tabla, solo la letra 'R' está presente. Esto significa que se supone que no podemos escribir en este registro.
 
-Cada registro tiene permisos diferentes de lectura/escritura. Algunos de ellos son solo de escritura, otros pueden ser leídos y escritos, y otros que son solo de lectura.
+Cada registro tiene permisos diferentes de lectura/escritura. Algunos de ellos son solo de escritura, otros pueden ser leídos y escritos, que son solo leídos.
 
 Trabajar directamente con las direcciones de memoria es propenso a errores. Ya vimos que intentar acceder a una dirección de memoria no válida generó una excepción que interrumpió la ejecución del programa.
 
@@ -14,14 +14,14 @@ Trabajar directamente con las direcciones de memoria es propenso a errores. Ya v
 
 ¿No sería estupendo disponer de una API que permitiera manipular los registros de forma "segura"? Lo ideal sería que la API
 tuviera en cuenta estos tres puntos que he mencionado: no manipular las direcciones reales,
-respetar los permisos de lectura y escritura, y evitar la modificación de las partes reservadas de un registro.
+respetar los permisos de lectura y escritura; y evitar la modificación de las partes reservadas de un registro.
 
 Muy bien, la tenemos. `registers::init()` devuelve un valor que proporciona una API de tipo seguro para manipular los registros de los puertos `P0` y `P1`.
 
-Como recordarás: un grupo de registros asociados a un periférico se llama bloque de registros, y se encuentra en una región contigua de memoria. En esta API de tipo seguro, cada bloque de registros se modela como una `struct` donde cada uno de sus campos representa un registro. 
-Cada campo es nuevo tipo diferente sobre e.g. `u32` que expone una combinación de los siguientes métodos: `read`, `write` o `modify` según sus permisos de lectura/escritura. Finalmente, estos métodos no toman valores primitivos como `u32`, sino que aceptan otro nuevo tipo que se puede construir usando el patrón *builder* y que evita la modificación de las partes reservadas del registro.
+Como recordaremos: un grupo de registros asociados a un periférico se llama bloque de registros y se encuentra en una región contigua de memoria. En esta API de tipo seguro, cada bloque de registros se modela como una `struct` donde cada uno de sus campos representa un registro. 
+Cada campo es un nuevo tipo diferente basado en `u32` que expone una combinación de los siguientes métodos: `read`, `write` o `modify` según sus permisos de lectura/escritura. Finalmente, estos métodos no toman valores primitivos como `u32`, sino que aceptan otro nuevo tipo que se puede construir usando el patrón *builder* y que evita la modificación de las partes reservadas del registro.
 
-La mejor manera de familiarizarse con esta API es migrar nuestro ejemplo en ejecución a ella (`examples/type-safe.rs`).
+La mejor manera de familiarizarse con esta API es migrar el ejemplo anterior a la nueva API (`examples/type-safe.rs`).
 
 
 ```rust
@@ -34,9 +34,9 @@ Lo primero que llama la atención es que no hay direcciones mágicas de por medi
 El bloque de registros tiene un método [`modify`] que toma una closure. Antes de que se llame a esta, el valor del registro `OUT` se lee y se pasa como el parámetro `r`. Dado el valor de `r`, es posible manipular `w` para obtener el nuevo valor del registro utilizando sus métodos. El resultado se escribe en el registro una vez que la closure termina. En nuestro caso, el valor actual del registro también se pasa en el parámetro `w`, lo que nos permite simplemente manipular `w` cuando queramos mantener el resto de los bits del registro tal como están.
 
 
-El método `modify` se define para los registros que permiten tanto el acceso de escritura como de lectura. Si solo deseamos leer el valor de un registro, pero no actualizarlo, se puede usar el método [`read`]. O, si simplemente quieres escribir un valor de registro sin leerlo, existe el método [`write`].
+El método `modify` se define para los registros que permiten tanto el acceso de escritura como de lectura. Si solo deseamos leer el valor de un registro, pero no actualizarlo, se puede usar el método [`read`]. O, si simplemente queremos escribir un valor de registro sin leerlo, existe el método [`write`].
 
-Los registros de solo lectura implementan solo el método `read`, y los registros de solo escritura implementan el método `write`. Esto evita que los usuarios accedan a un registro de una manera incorrecta, y por lo tanto no es necesario envolver las llamadas en un bloque `unsafe`. ¡Y lo más importante, no necesitamos averiguar la dirección exacta del registro y las posiciones de los bits!
+Los registros de solo lectura implementan el método `read`, y los registros de solo escritura implementan el método `write`. Esto evita que los usuarios accedan a un registro de una manera incorrecta y, por lo tanto, no es necesario envolver las llamadas en un bloque `unsafe`. ¡Y lo más importante, no necesitamos averiguar la dirección exacta del registro y las posiciones de los bits!
 
 
 [`write`]: https://docs.rs/svd2rust/latest/svd2rust/#write
@@ -45,7 +45,7 @@ Los registros de solo lectura implementan solo el método `read`, y los registro
 
 Si ejecutamos el programa, veremos algo interesante que podemos hacer *mientras* depuramos.
 
-`p0` es una referencia al puerto `P0` del bloque de registros, `print p0` devolverá la dirección base del bloque de registros, y `print *p0` imprimirá su valor.
+`p0` es una referencia al puerto `P0` del bloque de registros, `print p0` devolverá la dirección base del bloque de registros y `print *p0` imprimirá su valor.
 
 
 ```
@@ -313,10 +313,10 @@ $1 = nrf52833_pac::p0::RegisterBlock {
 
 
 ```
-Todos estos tipos nuevos y closures para nada generarán programas más grandes. Si compilamos el programa con la optimización [LTO] habilitada, veremos exactamente las mismas instrucciones que la versión "insegura" que usaba `write_volatile` y las mismas direcciones hexadecimales que tenía!
+Todos estos tipos nuevos y closures para nada generarán programas más grandes. Si compilamos el programa con la optimización [IOP] habilitada, veremos exactamente las mismas instrucciones que la versión "insegura" que usaba `write_volatile` y las mismas direcciones hexadecimales que tenía!
 
 
-[LTO]: https://en.wikipedia.org/wiki/Interprocedural_optimization
+[IOP]: https://en.wikipedia.org/wiki/Interprocedural_optimization
 
 Utilizamos `cargo objdump` para crear el desemsamblado del código `release.type-safe.dump`:
 

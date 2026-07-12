@@ -1,10 +1,10 @@
 # (des)Optimización
 
-Leer y escribir en registros es algo bastante especial. Incluso me atrevería a decir que es la encarnación de los efectos secundarios. En el ejemplo anterior escribimos cuatro valores diferentes en el mismo registro. Si no hubieras sabido que esa dirección era un registro, podrías haber simplificado la lógica para escribir solo el valor final `0x00000000` en el registro.
+Leer y escribir en registros es algo bastante especial. Incluso me atrevería a decir que es la encarnación de los efectos secundarios. En el ejemplo anterior modificamos cuatro valores diferentes en el mismo registro. Si no hubiéramos sabido que esa dirección era un registro, podríamos haber simplificado la lógica para escribir solo el valor final `0x00000000` en el registro.
 
 Por defecto, LLVM, el optimizador del compilador, no sabe que estamos tratando con un registro y fusionará las escrituras, cambiando así el comportamiento de nuestro programa. Comprobémoslo.
 
-Primero, utilizaremos cargo objdump para obtener el ensamblado de los artefactos de construcción tanto de la versión optimizada como de la no optimizada.
+Primero, utilizaremos cargo objdump para obtener el ensamblado del código objeto tanto de la versión optimizada como de la no optimizada.
 
 
 ```
@@ -16,12 +16,12 @@ cargo objdump --release -- --disassemble --no-show-raw-insn --source > release.d
 
 Vamos a ver qué hay aquí. En concreto, hay que tratar de encontrar el ensamblado que manipula el registro `OUT`.
 
-Primero, echaremos un vistazo al contenido de `debug.dump`, el ensamblado de la construcción no optimizada.
+Primero, echaremos un vistazo al contenido de `debug.dump`, el código objeto no optimizado.
 Hemos saltado un montón de instrucciones, pero las que nos interesan están en la función `registers::__cortex_m_rt_main::h0b7888ca966441cf`, que es la función `main` de nuestro programa.
 
 Además de saltar las instrucciones, se han añadido comentarios detrás de `; <--`, indicando el número de línea del fichero fuente que corresponde a la instrucción.
 
-> Nota de tr.: Será dificil que coincida la numeración de líneas con la nuestra, pero buscando cerca de la dirección `0x160` deberíamos encontrar el mismo código ensamblador que el que se muestra a continuación, con las instrucciones que nos interesan.
+> **Nota de tr.**: Será dificil que coincida la numeración de líneas con la nuestra, pero buscando cerca de la dirección `0x160` deberíamos encontrar el mismo código ensamblador que el que se muestra a continuación, con las instrucciones que nos interesan.
 
 ```
 $ cat debug.dump
@@ -126,5 +126,5 @@ $ cat release.volatile.dump
 [...]
 ```
 
-Perfecto, hemos conseguido las cuatro instrucciones de carga de nuevo. Revisa el código de nuevo con el GDB para verlo en acción.
+Perfecto, hemos conseguido las cuatro instrucciones de carga de nuevo. Ejecutamos el código de nuevo con el GDB para verlo en acción.
 

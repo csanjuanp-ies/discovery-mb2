@@ -15,14 +15,14 @@ En pocas palabas, la llamada a `display_pins.row1.set_high()` simplemente escrib
 
 ¿Qué está pasando?
 
-La dirección `0x50000504` apunta a un *registro*. Un registro es una región especial de memoria que controla un *periférico*. Un periférico es una pieza de electrónica que se encuentra justo al lado del procesador dentro del sock del microcontrolador y proporciona al procesador funcionalidad adicional. Después de todo, el procesador, por sí solo, solo puede hacer matemáticas y lógica.
+La dirección `0x50000504` apunta a un *registro*. Un registro es una región especial de memoria que controla un *periférico*. Un periférico es una pieza de electrónica que se encuentra justo al lado del procesador dentro del socket del microcontrolador y proporciona al procesador funcionalidad adicional. Después de todo, el procesador, por sí solo, solo puede hacer matemáticas y lógica.
 
 Este registro en particular controla los pines de General Purpose Input/Output (GPIO) (GPIO es un periférico) y se puede usar para *alimentar* cada uno de esos pines a *bajo* o *alto*.
 
 (En el nRF52833 hay más de 32 GPIOs, pero la CPU es de 32 bits. 
 Por lo tanto, los pines GPIO están organizados en dos grupos "P0" y "P1", 
 con un conjunto de registros para leer, escribir y configurar cada grupo. 
-La dirección anterior es la dirección del registro de salida para los pines P0.)
+La dirección anterior es la dirección del registro de salida para los pines P0)
 
 ## Un apunte: LED, salidas digitales y niveles de tensión
 

@@ -16,7 +16,7 @@ Cada periférico tiene un bloque de registros asociado. Un bloque de registros e
 
 > Section 4.2.4 Instantiation - Page 22
 
-La tabla especifica que la dirección base del bloque de registros `P0` es `0x5000_0000`. 
+La tabla indica que la dirección base del bloque de registros `P0` es `0x5000_0000`. 
 
 Cada periférico tiene su propia sección en la documentación. Cada una de ellas termina con una tabla de los registros que contiene. Para la familia de periféricos `GPIO`, esa tabla está en:
 
@@ -28,12 +28,12 @@ La información de ese registro está en la tabla de registros `GPIO`:
 
 > Subsection 6.8.2.1 OUT - Page 145
 
-De todos modos, `0x5000_0000` + `0x504` = `0x50000504`, que es la dirección en la que estamos escribiendo en el código.
+De todos modos, `0x5000_0000` + `0x504` = `0x50000504`, es la dirección en la que estamos escribiendo en el código.
 
-Esa es la dirección del registro al que vamos a utilizar. La documentación dice cosas interesantes: Primero, este registro se puede escribir y leer. Segundo, el registro ocupa 32 bits de memoria, y cada bit representa el estado del pin correspondiente. 
+Esa es la dirección del registro que vamos a utilizar. La documentación dice cosas interesantes: Primero, este registro se puede escribir y leer. Segundo, el registro ocupa 32 bits de memoria y cada bit representa el estado del pin correspondiente. 
 Eso significa que el bit 19 coincide con el pin 19, por ejemplo. Establecer el bit en 1 habilitará la salida del pin, y establecerlo en 0 lo restablecerá. Además, podemos ver que todas las salidas de los pines están deshabilitadas por defecto, ya que el valor de reinicio de todos los bits es 0.
 
-Vamos a usar el comando `examine` de GDB (`x`). Dependiendo de la configuración del servidor, GDB se negará a leer de la memoria que no esté especificada. Se deshabilita este comportamiento ejecutando:
+Vamos a usar el comando `examine` de GDB (`x`). Dependiendo de la configuración del servidor, GDB podría negarse a leer de memoria que no esté especificada. Deshabilitamos este comportamiento ejecutando:
 
 ```
 set mem inaccessible-by-default off
@@ -41,7 +41,7 @@ set mem inaccessible-by-default off
 
 Vamos allá, Primero desactivamos  `inaccessible-by-default`, luego establecemos un par de puntos de interrupción, reiniciamos el dispositivo y lo detenemos.
 
->Nota del t.: He tenido que añadir en los puntos de interrupción, el nombre del fichero para que bajo windows los reconociera bien:  break **main.rs:**.
+>**Nota del tr.**: He tenido que añadir en los puntos de interrupción, el nombre del fichero para que bajo windows los reconociera bien:  break **main.rs:**.
 
 ```
 (gdb) set mem inaccessible-by-default off
@@ -71,7 +71,7 @@ Breakpoint 1, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:1
 0x50000504:     0x00000000
 ```
 
-Ok, vemos que el valor del registro es `0x00000000` o `0` en este punto. Esto corresponde con los datos de la [Especificación del Producto], que dice que `0` es el 'valor de reinicio' de este registro. Eso significa cada vez que el MCU se reinicia, el registro tendrá `0` como su valor.
+Ok, vemos que el valor del registro es `0x00000000` o `0` en este punto. Esto corresponde con los datos de la [Especificación del Producto], que dice que `0` es el 'valor de reinicio' de este registro. Eso significa que vez que el MCU se reinicia, el registro tendrá `0` como su valor.
 
 Sigamos. Esta línea consta de varias instrucciones (lectura, OR bit a bit y escritura), así que necesitamos indicarle al depurador que continúe la ejecución más de una vez, hasta que lleguemos al siguiente punto de interrupción.
 
@@ -128,9 +128,9 @@ Breakpoint 3, registers::__cortex_m_rt_main () at src/07-registers/src/main.rs:2
 
 En la línea 19, hemos puesto el bit 19 de `OUT` a 1, manteniendo el bit 21 como está. El resultado es `0x00280000`, que es `2621440` en decimal, o `2^19 + 2^21`, lo que significa que tanto el bit 19 como el bit 21 tiene valor 1.
 
-Fijar el valor `1 << 19` (`OUT[19]= 1`) en `OUT` fija `P0.19` *alto*. Eso enciende la fila inferior de LED. Comprueba que está encendida.
+Fijar el valor `1 << 19` (`OUT[19]= 1`) en `OUT` establece `P0.19` *alto*. Eso enciende la fila inferior de LED. Comprueba que está encendida.
 
-Las líneas siguientes apagan las filas de nuevo. Primero la fila superior, luego la fila inferior. Esta vez, estamos haciendo una operación bit a bit AND, combinada con un bit a bit NOT. Calculamos `!(1 << 21)`, que es todos los bits escritos a 1, excepto el bit 21. Luego, hacemos un AND bit a bit de eso con el valor actual de `OUT`, asegurándonos de que solo el bit 21 se establezca en 0, manteniendo el valor de los otros bits intacto.
+Las líneas siguientes apagan las filas de nuevo. Primero la fila superior, luego la fila inferior. Esta vez, haciendo una operación bit a bit AND, combinada con un bit a bit NOT. Calculamos `!(1 << 21)`, que es todos los bits escritos a 1, excepto el bit 21. Luego, hacemos un AND bit a bit de eso con el valor actual de `OUT`, asegurándonos de que solo el bit 21 se establezca en 0, manteniendo el valor de los otros bits intacto.
 
 Continuemos la ejecución y comprobemos que los valores existentes en el registro `OUT` coinciden con lo que esperamos. Para apusar la ejecución se puede pulsar `CTRL+C` una vez que el dispositivo entre en el bucle infinito al final de la función `main`.
 
