@@ -1,10 +1,10 @@
-# Linux USB←→serial
+# Linux USB←→serie
 
-La emulación serie USB de la placa MB2 se reconoce automáticamente cuando se conecta el MB2 a un puerto USB de Linux.
+La emulación serie USB de la placa MB2 se reconoce automáticamente cuando se conecta la MB2 a un puerto USB de Linux.
 
 ## Conectando la placa MB2
 
-Si conectas la placa MB2 al ordenador, tendría que aparecer un nuevo dispositivo TTY en el directorio
+Si conectamos la placa MB2 al ordenador, tendría que aparecer un nuevo dispositivo TTY en el directorio
 `/dev`.
 
 ``` console
@@ -20,12 +20,12 @@ Pero ¿Qué es exactamente `ttyACM0`? Es un fichero, por supuesto. ¡Todo es un 
 $ ls -l /dev/ttyACM0
 crw-rw----+ 1 root plugdev 166, 0 Jan 21 11:56 /dev/ttyACM0
 ```
-Ten en cuenta que, para leer y escribir en este dispositivo, deberemos estar ejecutando el comando como `root` (no recomendado) o ser miembro del grupo que aparece en la salida de `ls` (normalmente `plugdev` o `dialout`). A continuación, podemos enviar datos simplemente escribiendo en este archivo:
+Tendremos en cuenta que, para leer y escribir en este dispositivo, deberemos estar ejecutando el comando como `root` (no recomendado) o ser miembro del grupo que aparece en la salida de `ls` (normalmente `plugdev` o `dialout`). A continuación, podemos enviar datos simplemente escribiendo en este archivo:
 
 ``` console
 $ echo 'Hello, world!' > /dev/ttyACM0
 ```
-El LED naranja del MB2, justo al lado del puerto USB, parpadeará por un momento cada vez que ejecutemos esta orden. La velocidad de transmisión y otros parámetros de la comunicación pueden no estar configurados correctamente para el puerto serie del MB2, pero puede detectar que se le están enviando datos en serie.
+El LED naranja del MB2, justo al lado del puerto USB, parpadeará por un momento cada vez que ejecutemos esta orden. La velocidad de transmisión y otros parámetros de la comunicación pueden no estar configurados correctamente para el puerto serie de la MB2, pero detectará que se le están enviando datos en serie.
 
 ## minicom
 
