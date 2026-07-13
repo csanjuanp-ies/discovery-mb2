@@ -21,9 +21,9 @@ Como ya sabemos cómo crear una instancia de un objeto que implementa los traits
 {{#include examples/show-accel.rs}}
 ```
 
-De la misma manera que antes, podemos compilar y ejecutar este ejemplo en nuestro micro:bit.
+De la misma manera que antes, podemos compilar y ejecutar este ejemplo en la micro:bit.
 
 ```console
 $ cargo embed --example show-accel
 ```
-Es más, si te mueves un poco (físicamente) con la micro:bit deberíamos ver que los números de aceleración que se están imprimiendo cambian.
+Es más, si nos movemos un poco (físicamente) con la micro:bit deberíamos ver que los números de aceleración que se están imprimiendo cambian.

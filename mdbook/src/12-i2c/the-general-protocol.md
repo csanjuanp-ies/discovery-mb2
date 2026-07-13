@@ -34,4 +34,4 @@ Una operación denominada "combinada" o "dividida" puede consistir en una escrit
 
 Algunos elementos I2C pueden leer y escribir múltiples registros con direcciones adyacentes mediante alguna forma de "auto-incremento de dirección", lo que permite enviar solo la primera dirección del registro del dispositivo y luego confiar en que el dispositivo incremente la dirección para lecturas o escrituras posteriores.
 
-El protocolo I2C es un protocolo complejo, y existen muchas variaciones y características especiales. Lea el manual de su dispositivo cuidadosamente para ver qué se necesita hacer para comunicarse con él.
+El protocolo I2C es complejo y existen muchas variaciones y características especiales. Lea el manual del dispositivo cuidadosamente para ver qué se necesita hacer para comunicarse con él.
