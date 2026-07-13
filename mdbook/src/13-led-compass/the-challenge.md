@@ -12,7 +12,7 @@ Usaremos la función `atan2` de Rust. Esta función devuelve el ángulo en el ra
 
 Aunque no se muestra explícitamente, en este gráfico el eje X apunta hacia la derecha y el eje Y apunta hacia arriba. Hay que tener en cuenta que nuestro sistema de coordenadas está girado 180° con respecto a este.
 
-Aquí podemos encontrar la plantilla inicial (en `templates/compass.rs`). `theta`, en radianes, ya ha sido calculado. Necesitamos elegir qué LED encender en función del valor de `theta`.
+Podemos encontrar la plantilla en `templates/compass.rs`. `theta`, en radianes, ya está calculado. Necesitamos elegir qué LED encender en función del valor de `theta`.
 
 ```rs
 {{#include templates/compass.rs}}
