@@ -7,7 +7,7 @@
 > relevante de aplicaciones embebidas, ¡nos encantaría tener tu ayuda!
 > Por favor, [abre un tema] si deseas colaborar, pero necesitas ayuda u
 > orientación sobre cómo contribuir al libro o cómo abrir una solicitud de 
-> incorporación de cambios para añadir la información.
+> incorporación de cambios (Pull Request) para añadir la información.
 
 [abre un tema]: https://github.com/rust-embedded/discovery-mb2/issues/new
 
@@ -15,27 +15,27 @@
 Hemos cubierto mucho del hardware de la placa MB2 en este curso, pero quedan muchos otros elementos por explorar.
 
 ## Acceso directo a memoria (DMA).
-Algunos periféricos tienen DMA, una especie de `memcpy` *asíncrono* que te permite mover datos hacia o desde la memoria sin que la CPU esté involucrada.
+Algunos periféricos tienen DMA, una especie de `memcpy` *asíncrono* que permite mover datos hacia o desde la memoria sin que la CPU esté involucrada.
 
-Si estás trabajando con un micro:bit v2, en realidad ya has utilizado DMA: el HAL lo hace por ti con los periféricos UARTE y TWIM. Un DMA se puede usar para realizar transferencias masivas de datos: ya sea de RAM a RAM, de un periférico como un UARTE a RAM, o de RAM a un periférico. Puedes programar una transferencia DMA, por ejemplo "leer 256 bytes de UARTE en este búfer" y dejarla ejecutándose en segundo plano. Posteriormente, habra que verificar el registro de estado para ver si la transferencia se ha completado o pedir que se reciba una interrupción cuando la transferencia se complete. Por lo tanto, puedes programar la comunicacióm vía DMA y hacer otra tarea mientras la transferencia está en curso.
+Si estamos trabajando con una micro:bit v2, en realidad ya hemos utilizado DMA: el HAL lo hace por nosotros con los periféricos UARTE y TWIM. Un DMA se puede usar para realizar transferencias masivas de datos: ya sea de RAM a RAM, de un periférico como un UARTE a RAM, o de RAM a un periférico. Nos permite establecer una transferencia DMA, por ejemplo "leer 256 bytes de UARTE en este búfer" y dejarla ejecutándose en segundo plano. Posteriormente, habra que verificar el registro de estado para ver si se ha completado, o configurar que se reciba una interrupción cuando la transferencia se complete. Por lo tanto, es posible programar la comunicacióm vía DMA y hacer otra tarea mientras la transferencia está en curso.
 
 Los detalles del DMA a bajo nivel pueden ser un poco complicados. Esperamos agregar un capítulo que cubra este tema en un futuro cercano.
 
-Hay implementadas algunas abstraciones para trabajar con el cobntrolador de modulación en amplitud (PWM) en el crate `embedded-hal`, [módulo `pwm`], y existen implementaciones de estos traits en `nrf52833-hal`.
+Hay implementadas algunas abstraciones para trabajar con el controlador de modulación en amplitud (PWM) en el crate `embedded-hal`, módulo [`pwm`], y existen implementaciones de estos traits en `nrf52833-hal`.
 
-[módulo `pwm`]: https://docs.rs/embedded-hal/latest/embedded_hal/pwm/index.html
+[`pwm`]: https://docs.rs/embedded-hal/latest/embedded_hal/pwm/index.html
 
 
 ## Entradas y salidas digitales
-Hemos usado los pines del microcontrolador como salidas digitales, para controlar los leds. Cuando construimos el juego de la serpiente, también vimos brevemente cómo estos pines pueden configurarse como entradas digitales. Como entradas digitales, estos pines pueden leer el estado binario de interruptores (encendido/apagado) o botones (presionado/no presionado).
+Hemos usado los pines del microcontrolador como salidas digitales, para controlar los LEDs. Cuando construimos el juego de la serpiente, también vimos brevemente cómo estos pines pueden configurarse como entradas digitales. Como entradas digitales, estos pines pueden leer el estado binario de interruptores (encendido/apagado) o botones (presionado/no presionado).
 
-La programación de las entradas y salidas se abstrae dentro del módulo `embedded-hal` en el [módulo `digital`] y en el [crate `nrf52833-hal`]. Ambos tienen implementación para las entradas - salidas digitales.
+La programación de las entradas y salidas se abstrae dentro del módulo `embedded-hal` en el módulo [`digital`] y en el crate [`nrf52833-hal`]. Ambos tienen implementación para las entradas - salidas digitales.
 
 (*spoiler*: leer el estado binario de interruptores / botones no es tan sencillo como parece 
 ;-))
 
-[módulo `digital`]: https://docs.rs/embedded-hal/latest/embedded_hal/digital/index.html
-[crate `nrf52833-hal`]: https://docs.rs/nrf52833-hal/latest/nrf52833_hal/
+[`digital`]: https://docs.rs/embedded-hal/latest/embedded_hal/digital/index.html
+[`nrf52833-hal`]: https://docs.rs/nrf52833-hal/latest/nrf52833_hal/
 
 ## Conversión analógica - digital (ADC)
 Se han creado multitud de sensores difgitales, que se pueden leer usando protocolos como I2C o SPI. Pero también existen sensores analógicos. Estos sensores simplemente envían una lectura a la CPU del voltaje que están midiendo en un pin de entrada ADC.
@@ -47,7 +47,7 @@ Había implementaciones genéricas de traits para ADC en `embedded-hal`, pero fu
 [issue #377]: https://github.com/rust-embedded/embedded-hal/issues/377
 
 ## Conversor digital - analógica (DAC)
-Como puedes haber adivinado, un DAC es exactamente lo opuesto a un ADC. Puedes escribir un número digital en un registro para producir un voltaje específico en algún pin de salida analógica. Cuando este pin de salida analógica está conectado a la electrónica adecuada y el registro se escribe rápidamente con los valores correctos, puedes hacer cosas como producir sonidos o música.
+Como se puede adivinar, un DAC es exactamente lo opuesto a un ADC. Es posible escribir un número digital en un registro para producir un voltaje específico en algún pin de salida analógica. Cuando este pin de salida analógica está conectado a la electrónica adecuada y el registro se escribe rápidamente con los valores correctos, nos permite hacer cosas como producir sonidos o música.
 
 Ni el chip nRF52833 ni la placa MB2 tienen un DAC dedicado. Normalmente, se obtiene una especie de efecto DAC al emitir PWM y usar un poco de electrónica en la salida (filtro RC) para "suavizar" la forma de onda PWM.
 

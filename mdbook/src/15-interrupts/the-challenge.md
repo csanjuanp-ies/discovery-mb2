@@ -1,6 +1,6 @@
 # El reto
 
-¡Convirtamos el MB2 en una sirena! Pero no en una sirena cualquiera, sino en una
+¡Convirtamos la MB2 en una sirena! Pero no en una sirena cualquiera, sino en una
 sirena controlada por interrupciones. De esa forma, podremos activar la sirena
 y el resto de nuestro programa seguirá ejecutándose, sin tenerla en cuenta.
 

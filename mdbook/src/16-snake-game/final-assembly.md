@@ -6,7 +6,7 @@ El código del archivo `src/main.rs` reúne todos los mecanismos que hemos visto
 {{#include src/main.rs}}
 ```
 
-Tras inicializar la placa y los periféricos de temporizador y generador aleatorio (RNG), inicializamos una estructura `Game` y un `Display` del módulo `microbit::display::blocking`.
+Tras inicializar la placa, el temporizador y el generador aleatorio (RNG), creamos una estructura `Game` y un `Display` del módulo `microbit::display::blocking`.
 
 En el "bucle de juego" (que se ejecuta dentro del "bucle principal" que colocamos en nuestra función `main`), realizamos repetidamente los siguientes pasos:
 

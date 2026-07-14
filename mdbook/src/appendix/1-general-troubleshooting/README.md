@@ -2,17 +2,16 @@
 
 ## Problemas con `cargo-embed`
 
-La mayoría de los problemas con `cargo-embed` se deben a que las reglas de `udev` no se han instalado correctamente en
-Linux, así que asegúrate de haberlo hecho bien.
+La mayoría de los problemas con `cargo-embed` se deben a que las reglas de `udev` no se han instalado correctamente en Linux, así que asegúrate de haberlo hecho bien.
 
 Si te quedas atascado, puedes abrir una incidencia en el [sistema de seguimiento de incidencias de `discovery`] o visitar el [canal de Matrix de Rust Embedded] o el [canal de Matrix de probe-rs] y pedir ayuda allí.
 
 
-[[sistema de seguimiento de incidencias de `discovery`]: https://github.com/rust-embedded/discovery-mb2/issues
+[sistema de seguimiento de incidencias de `discovery`]: https://github.com/rust-embedded/discovery-mb2/issues
 [canal de Matrix de Rust Embedded]: https://matrix.to/#/#rust-embedded:matrix.org
 [canal de Matrix de probe-rs]: https://matrix.to/#/#probe-rs:matrix.org
 
-## Probles con Cargo
+## Problemas con Cargo
 
 ### "can't find crate for `core`"
 

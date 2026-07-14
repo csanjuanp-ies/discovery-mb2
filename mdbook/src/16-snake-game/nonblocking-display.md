@@ -1,12 +1,9 @@
 # Visualización no bloqueante
 
-A continuación, mostraremos la serpiente y la comida en los LEDs de la pantalla MB2. Hasta ahora, hemos utilizado funciones de visualización bloqueantes, que permite que los LEDs estén al máximo de brillo o apagados. Con esto, sería posible crear un juego de la serpiente que funcionara a nivel básico. Pero quizá nos demos cuenta de que, cuando la serpiente se alargue un poco más, resulte difícil distinguirla de la comida y saber en qué dirección se dirige. Averigüemos cómo hacer que el brillo de los LEDs varíe: podemos hacer que el cuerpo de la serpiente sea un poco más tenue, lo que ayudará a aclarar la imagen.
+A continuación, mostraremos la serpiente y la comida en los LEDs de la pantalla MB2. Hasta ahora, hemos utilizado funciones de visualización bloqueantes, que permite que los LEDs estén al máximo de brillo o apagados. Con esto, sería posible crear un juego de la serpiente que funcionara a nivel básico. Pero quizá nos demos cuenta que, cuando la serpiente se alargue un poco más, resulta difícil distinguirla de la comida y saber en qué dirección se dirige. Averigüemos cómo hacer que el brillo de los LEDs varíe: podemos hacer que el cuerpo de la serpiente sea un poco más tenue, lo que ayudará a aclarar la imagen.
 
-La biblioteca `microbit` ofrece dos interfaces diferentes para la matriz de LED. Está la
-interfaz con bloqueo que ya hemos visto en capítulos anteriores. También hay una interfaz no bloqueante
-que permite personalizar el brillo de cada LED. A nivel de hardware, cada LED está o bien
-"encendido" o bien "apagado", pero el módulo `microbit::display::nonblocking` simula diez niveles de brillo
-para cada LED encendiéndolo y apagándolo rápidamente.
+La biblioteca `microbit` ofrece dos interfaces diferentes para la matriz de LEDs. Está la
+interfaz con bloqueo que ya hemos visto en capítulos anteriores. También hay una interfaz no bloqueante que permite personalizar el brillo de cada LED. A nivel de hardware, cada LED está o bien "encendido" o bien "apagado", pero el módulo `microbit::display::nonblocking` simula diez niveles de brillo para cada LED encendiéndolo y apagándolo rápidamente.
 
 (No hay ninguna razón de peso por la que los dos modos de visualización de la biblioteca `microbit` tengan que estar separados y utilizar código distinto. Un diseño más completo permitiría el uso, ya sea no bloqueante o bloqueante, de una única API de visualización con niveles de brillo y frecuencias de actualización variables especificados por el usuario. Nunca se debe dar por sentado que lo que te han entregado es perfecto, ni siquiera que se acerque a la perfección. Piensa siempre en lo que se podría hacer de otra manera. Por ahora, sin embargo, trabajaremos con lo que tenemos, que es suficiente para nuestro objetivo inmediato.)
 
@@ -22,13 +19,13 @@ En primer lugar, inicializamos una estructura `microbit::display::nonblocking::D
 
 ## API Display
 
-A continuación, definimos un par de funciones de conveniencia que nos permiten activar (o desactivar) fácilmente la imagen que se va a mostrar (`src/display/show.rs`).
+A continuación, definimos un par de funciones que nos permiten activar (o desactivar) fácilmente la imagen que se va a mostrar (`src/display/show.rs`).
 
 ```rust
 {{#include src/display/show.rs}}
 ```
 
-`display_image` toma una imagen y le indica a la pantalla que la muestre. Al igual que el método `Display::show` al que llama, esta función toma una estructura que implementa el trait `tiny_led_matrix::Render`. Ese trait garantiza que la estructura contenga los datos y métodos necesarios para que `Display` la represente en la matriz de LED. Las dos implementaciones de `Render` proporcionadas por el módulo `microbit::display::nonblocking` son `BitImage` y `GreyscaleImage`. En un `BitImage`, cada «píxel» (o LED) está iluminado o no (como cuando utilizábamos la interfaz bloqueante), mientras que en un `GreyscaleImage` cada «píxel» puede tener un brillo diferente.
+`display_image` toma una imagen y le indica a la pantalla que la muestre. Al igual que el método `Display::show` al que llama, esta función toma una estructura que implementa el trait `tiny_led_matrix::Render`. Ese trait garantiza que la estructura contenga los datos y métodos necesarios para que `Display` la represente en la matriz de LEDs. Las dos implementaciones de `Render` proporcionadas por el módulo `microbit::display::nonblocking` son `BitImage` y `GreyscaleImage`. En un `BitImage`, cada "píxel" (o LED) está iluminado o no (como cuando utilizábamos la interfaz bloqueante), mientras que en un `GreyscaleImage` cada "píxel" puede tener un brillo diferente.
 
 `clear_display` hace exactamente lo que su nombre sugiere.
 

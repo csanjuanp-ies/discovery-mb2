@@ -1,4 +1,4 @@
-# My Solution
+# Mi Solución
 
 Me costó un poco averiguar cómo debía calcular el controlador de interrupciones
 el momento de la siguiente interrupción para mantener

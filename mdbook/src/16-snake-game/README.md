@@ -1,6 +1,6 @@
 # Juego de la serpiente
 
-Ahora vamos a implementar un juego básico de [serpiente](https://en.wikipedia.org/wiki/Snake_(video_game_genre)) al que podrás jugar en un MB2 utilizando su matriz de LED de 5×5 como pantalla y sus dos botones como mandos. Para ello, nos basaremos en algunos de los conceptos tratados en los capítulos anteriores de este libro y también aprenderemos sobre algunos periféricos y conceptos nuevos.
+Ahora vamos a implementar un juego básico de la [serpiente](https://en.wikipedia.org/wiki/Snake_(video_game_genre)) al que podrás jugar en una MB2 utilizando su matriz de LEDs de 5×5 como pantalla y sus dos botones como mandos. Para ello, nos basaremos en algunos de los conceptos tratados en los capítulos anteriores de este libro y también aprenderemos sobre algunos periféricos y conceptos nuevos.
 
 ## Modularidad
 

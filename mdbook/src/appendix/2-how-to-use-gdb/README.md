@@ -1,7 +1,6 @@
 # Cómo usar GDB
 
-A continuación se muestran algunos comandos útiles de GDB que pueden ayudarnos a depurar nuestros programas. Se da por hecho que ya has [programado un programa](../../05-meet-your-software/flash-it.md) en tu microcontrolador y
-has conectado GDB a una sesión de `cargo-embed`.
+A continuación se muestran algunos comandos útiles de GDB que pueden ayudarnos a depurar los programas. Se da por hecho que ya hemos [creado un programa](../../05-meet-your-software/flash-it.md) en el microcontrolador y hemos conectado GDB a una sesión de `cargo-embed`.
 
 ## Depuración general
 

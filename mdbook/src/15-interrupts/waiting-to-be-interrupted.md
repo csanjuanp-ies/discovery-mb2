@@ -2,7 +2,7 @@
 
 Quizá te hayas preguntado por qué hemos estado utilizando `asm::wfi()` (espera a la instrucción) en nuestro bucle principal en lugar de algo como `asm::nop()`.
 
-Como ya se ha comentado anteriormente, `asm::nop()` significa "no-op" (sin operación) y es una instrucción que la CPU no ejecuta nada.  Sin duda, podríamos haber utilizado `asm::nop()` en nuestro bucle principal y el programa se habría comportado de la misma manera.  El microcontrolador, por su parte, se comportaría de forma diferente.
+Como ya se ha comentado anteriormente, `asm::nop()` significa "no-op" (sin operación) y es una instrucción que en la CPU no ejecuta nada.  Sin duda, podríamos haber utilizado `asm::nop()` en nuestro bucle principal y el programa se habría comportado de la misma manera.  El microcontrolador, por su parte, se comportaría de forma diferente.
 
 Al llamar a `asm::wfi()`, la CPU entra en modo "Wait For Interrupt" (WFI). Cuando la CPU está en modo WFI, permanece inactiva hasta que una interrupción la activa. Durante este estado de inactividad, la CPU deja de ejecutar instrucciones, desactiva algunos relojes y periféricos, y entra en un estado de bajo consumo, aunque mantiene el núcleo en funcionamiento.  Cuando se produce una interrupción, la CPU se activa y ejecuta las instrucciones con normalidad.
 

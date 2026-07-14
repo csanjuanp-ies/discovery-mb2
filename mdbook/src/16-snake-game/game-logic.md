@@ -1,16 +1,10 @@
 # Lógica del Juego
 
-El primer módulo que vamos a crear es la lógica del juego. Probablemente, ya conozcamos el juego de la [serpiente], pero
-si no es así, la idea básica es que el jugador guíe a una serpiente por una cuadrícula en 2D. En todo momento, hay
-alguna "comida" en una ubicación aleatoria de la cuadrícula y el objetivo del juego es conseguir que la serpiente
-"coma" tanta como sea posible. Cada vez que la serpiente come, aumenta de longitud. El jugador pierde
-si la serpiente se choca contra su propia cola.
+El primer módulo que vamos a crear es la lógica del juego. Probablemente, ya conozcamos el juego de la [serpiente], pero si no es así, la idea básica es que el jugador guíe a una serpiente por una cuadrícula en 2D. En todo momento, hay alguna "comida" en una ubicación aleatoria de la cuadrícula y el objetivo del juego es conseguir que la serpiente "coma" tanta como sea posible. Cada vez que la serpiente come, aumenta de longitud. El jugador pierde si la serpiente se choca contra su propia cola.
 
 [serpiente]: https://en.wikipedia.org/wiki/Snake_%28video_game_genre%29
 
-En algunas variantes del juego, el jugador también pierde si la serpiente choca contra el borde del tablero,
-pero, dado el reducido tamaño de nuestro tablero, vamos a aplicar una regla de "reenvío": si la serpiente
-se sale por uno de los bordes del tablero, continuará desde el borde opuesto.
+En algunas variantes del juego, el jugador también pierde si la serpiente choca contra el borde del tablero, pero, dado el reducido tamaño de nuestro tablero, vamos a aplicar una regla de "reenvío": si la serpiente se sale por uno de los bordes del tablero, continuará desde el borde opuesto.
 
 ## El módulo `game` 
 Construiremos la lógica del juego en el módulo `game`. 
@@ -22,16 +16,14 @@ Lo primero es definir el sistema de coordenadas para nuestro juego (`src/game/co
 {{#include src/game/coords.rs}}
 ```
 
-Usamos una estructura `Coords` para gestionar una posición en la cuadrícula. 
-Dado que `Coords` solo contiene dos enteros, le indicamos al compilador que derive una implementación del trait `Copy` 
-para que podamos pasar estructuras `Coords` sin tener que preocuparnos por la propiedad.
+Usamos una estructura `Coords` para gestionar una posición en la cuadrícula.  Dado que `Coords` solo contiene dos enteros, le indicamos al compilador que derive una implementación del trait `Copy` para que podamos pasar estructuras `Coords` sin tener que preocuparnos por la propiedad.
 
 
 ### Generación aleatoria de coordenadas
 
 Definimos una función asociada, `Coords::random`, que nos dará una posición aleatoria en la cuadrícula. Usaremos esto más adelante para determinar dónde colocar la comida de la serpiente.
 
-Para generar coordenadas aleatorias, necesitamos una fuente de números aleatorios. El nRF52833 tiene un periférico generador de números aleatorios por hardware (HWRNG), documentado en la sección 6.19 de la [especificación del nRF52833]. La HAL nos proporciona una interfaz sencilla para el HWRNG a través de la estructura `microbit::hal::rng::Rng`. El HWRNG puede no ser lo suficientemente rápido para un juego; también es conveniente para las pruebas poder replicar la secuencia de números aleatorios producida por el generador entre ejecuciones, lo cual es imposible para el HWRNG por diseño. Por lo tanto, también definimos un generador de números pseudoaleatorios (PRNG [pseudo-random]). El PRNG utiliza un algoritmo [xorshift] para generar valores pseudoaleatorios `u32`. El algoritmo es básico y no es criptográficamente seguro, pero es eficiente, fácil de implementar y lo suficientemente bueno para nuestro humilde juego de la serpiente. 
+Para generar coordenadas aleatorias, necesitamos una fuente de números aleatorios. El nRF52833 tiene un periférico generador de números aleatorios por hardware (HWRNG), documentado en la sección 6.19 de la [especificación del nRF52833]. La HAL nos proporciona una interfaz sencilla para el HWRNG a través de la estructura `microbit::hal::rng::Rng`. El HWRNG puede no ser lo suficientemente rápido para un juego; también es importante para las pruebas poder replicar la secuencia de números aleatorios producida por el generador entre ejecuciones, lo cual es imposible para el HWRNG por diseño. Por lo tanto, definimos un generador de números pseudoaleatorios (PRNG [pseudo-random]). El PRNG utiliza un algoritmo [xorshift] para generar valores pseudoaleatorios `u32`. El algoritmo es básico y no es criptográficamente seguro, pero es eficiente, fácil de implementar y lo suficientemente bueno para nuestro humilde juego de la serpiente. 
  La estructura `Prng` requiere un valor inicial de semilla, que obtenemos del periférico RNG.
 
 
@@ -46,7 +38,7 @@ Todo esto se materializa en `src/game/rng.rs`.
 ```
 
 ### Movimiento
-También necesitamos definir algunas `enum`s (enumeraciones) que nos ayuden a gestionar el estado del juego: dirección de movimiento, dirección de giro, el estado actual del juego y el resultado de un "paso" particular en el juego (es decir, un único movimiento de la serpiente). El fichero `src/game/movement.rs` contiene estas implementaciones.
+Necesitamos definir algunas enumeraciones (`enum`) que nos ayuden a gestionar el estado del juego: dirección de movimiento, dirección de giro, el estado actual del juego y el resultado de un "paso" particular en el juego (es decir, un único movimiento de la serpiente). El fichero `src/game/movement.rs` contiene estas implementaciones.
 
 ```rust
 {{#include src/game/movement.rs}}
@@ -61,7 +53,7 @@ La serpiente la modelaremos con una estructura `Snake`. Esta mantiene un registr
 {{#include src/game/snake.rs}}
 ```
 
-### El módulo Game superior
+### El módulo (superior) Game
 
 La estructura `Game` es la que mantiene el estado del juego. Contiene un objeto `Snake`, las coordenadas actuales de la comida, la velocidad del juego (que se utiliza para determinar el tiempo que transcurre entre cada movimiento de la serpiente), el estado del juego (si el juego está en curso o si el jugador ha ganado o perdido) y la puntuación del jugador.
 

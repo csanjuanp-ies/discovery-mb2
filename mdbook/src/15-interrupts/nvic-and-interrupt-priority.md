@@ -1,6 +1,6 @@
 ## NVIC y Prioridad de Interrupción
 
-Hemos visto que las interrupciones hacen que el procesador salte inmediatamente a otra función en el código, pero ¿qué está pasando por debajo para permitir que esto suceda? En esta sección cubriremos algunos detalles técnicos que no serán necesarios para el resto del libro, así que, si no estás interesado, se puede saltar esta sección.
+Hemos visto que las interrupciones hacen que el procesador salte inmediatamente a otra función en el código, pero ¿qué está pasando por debajo para permitir que esto suceda? En esta sección cubriremos algunos detalles técnicos que no serán necesarios para el resto del libro, así que, si no estás interesado, se puede saltar.
 
 ### El controlador de interrupciones
 
@@ -9,7 +9,7 @@ Las interrupciones permiten que el procesador responda a eventos producidos en l
 
 > **NOTA** En otras arquitecturas de microcontroladores como RISC-V, los nombres y detalles explicados aquí serán diferentes, pero los principios subyacentes son muy similares.
 
-El NVIC puede recibir peticiones para elevar una interrupción desde muchos periféricos. Incluso es común que un periférico tenga múltiples posibles interrupciones por ejemplo, un puerto GPIO posee una interrupción para cada pin, o una UART usando tanto una interrupción de "datos recibidos" como una de "transmisión de datos finalizada". La tarea del NVIC es priorizar estas interrupciones, recordar cuáles aún necesitan ser procesadas y luego hacer que el procesador ejecute el código del manejador de interrupciones asociado.
+El NVIC puede recibir peticiones para elevar una interrupción desde muchos periféricos. Incluso es común que un periférico tenga múltiples interrupciones por ejemplo, un puerto GPIO posee una interrupción para cada pin, o una UART usando tanto una interrupción de "datos recibidos" como una de "transmisión de datos finalizada". La tarea del NVIC es priorizar estas interrupciones, recordar cuáles aún necesitan ser procesadas y luego hacer que el procesador ejecute el código del manejador de interrupciones asociado.
 
 ### Prioridad en las interrupciones
 
